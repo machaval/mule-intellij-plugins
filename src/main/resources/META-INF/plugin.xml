@@ -2,12 +2,14 @@
     <id>org.mule.intellij.plugin</id>
     <name>Mule Plugin For Intellij</name>
     <version>0.1</version>
-    <vendor email="mariano.achaval@mulesoft.com" url="http://www.mulesoft.org">MuleSoft</vendor>
+    <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
 
     <description><![CDATA[
       This plugins allows the user to :
         <em>Debug run a mule application.<em>
         <em>DataWeave Editor.<em>
+        <em>Mel Editor.<em>
+        <em>Navigate through flow references and test flows.<em>
     ]]></description>
 
     <change-notes><![CDATA[
