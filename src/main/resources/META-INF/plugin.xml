@@ -34,7 +34,11 @@
 
         <dom.fileDescription implementation="org.mule.MuleDomFileDescription"/>
         <psi.referenceContributor language="XML"
-                                  implementation="org.mule.config.reference.FlowReferencePsiReferenceProvider"/>
+                                  implementation="org.mule.config.reference.FlowReferenceReferenceContributor"/>
+
+        <psi.referenceContributor language="JAVA"
+                                  implementation="org.mule.config.reference.FlowConstructReferenceContributor"/>
+
         <languageInjector implementation="org.mule.config.MuleLanguageInjector"/>
         <gotoSymbolContributor implementation="org.mule.config.FlowGoToSymbol"/>
 

@@ -18,8 +18,8 @@ import java.util.List;
 
 import static com.intellij.util.containers.ContainerUtil.mapNotNull;
 
-public class FlowRefPsiReference extends PsiReferenceBase<PsiElement> {
-    public FlowRefPsiReference(@NotNull PsiElement element) {
+public class XmlAttributeFlowRefPsiReference extends PsiReferenceBase<XmlAttribute> {
+    public XmlAttributeFlowRefPsiReference(@NotNull XmlAttribute element) {
         super(element);
     }
 
@@ -36,7 +36,7 @@ public class FlowRefPsiReference extends PsiReferenceBase<PsiElement> {
     }
 
     private String getFlowName() {
-        return ((XmlAttribute) myElement).getValue();
+        return myElement.getValue();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FlowRefPsiReference extends PsiReferenceBase<PsiElement> {
 
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        ((XmlAttribute) myElement).setValue(newElementName);
+        myElement.setValue(newElementName);
         return myElement;
     }
 

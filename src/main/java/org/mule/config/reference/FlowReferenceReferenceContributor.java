@@ -7,7 +7,7 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.mule.config.MuleConfigConstants;
 
-public class FlowReferencePsiReferenceProvider extends PsiReferenceContributor {
+public class FlowReferenceReferenceContributor extends PsiReferenceContributor {
 
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
@@ -23,7 +23,7 @@ public class FlowReferencePsiReferenceProvider extends PsiReferenceContributor {
         @Override
         public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull final ProcessingContext context) {
             if (element instanceof XmlAttribute) {
-                return new PsiReference[]{new FlowRefPsiReference(element)};
+                return new PsiReference[]{new XmlAttributeFlowRefPsiReference((XmlAttribute) element)};
             }
             return PsiReference.EMPTY_ARRAY;
         }
