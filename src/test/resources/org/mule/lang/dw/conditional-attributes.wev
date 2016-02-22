@@ -1,0 +1,4 @@
+users: {
+    user @((name: "Mariano") when (in0.male), age: 31) : "Achaval",
+    country: { c @((loc: "Arg") when true) : {}}.c.@loc
+}

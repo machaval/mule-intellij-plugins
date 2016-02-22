@@ -1,0 +1,6 @@
+{
+  a: null,
+  b: "Mariano" when in0.male otherwise null,
+  c: "Emiliano" when null otherwise "Mariano",
+  d: [0, 1, 2, 3] map ((item) -> null)
+}

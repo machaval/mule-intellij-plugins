@@ -1,0 +1,19 @@
+{
+  a: a map $.b,
+  b: a map { b: $.b, d: $.c },
+  c: a map { b: $.b, d: "f" },
+  d: a map { b: $.b, b: [ $.a, $.b ] },
+  e: a map { b: $.b, b: { a: $.a, b: $.b } },
+  f: (["Mariano"]) map $,
+  g: a map ((value) -> value.b),
+  h: a map ((value) -> { b: value.b, d: value.c }),
+  i: a map ((value) -> { b: value.b, d: "f" }),
+  j: a map ((value) -> { b: value.b, b: [ value.a, value.b ] }),
+  k: a map ((value) -> { b: value.b, b: { a: $.a, b: value.b } }),
+  l: (["Mariano"]) map ((value) -> value),
+  m: a map { key: $$, value: $ },
+  n: a map ((key, value) -> key),
+  o: a map ((key, value) -> { b: value.b, d: key }),
+  p: a map ((value) -> key),
+  p: a map value -> key
+}

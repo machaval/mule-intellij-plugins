@@ -1,0 +1,9 @@
+{
+  a: "true" == "false",
+  b: a == "Hello World",
+  c: a != b,
+  d: a == 3,
+  e: a == 3 and
+     (b map
+     { a: $.a } == [{ a: 4 }])[0]
+}

@@ -1,0 +1,6 @@
+%dw 1.0
+%var x=(param1, param2) -> { param1: param2 }
+---
+{
+  a: x("a", "b")
+}

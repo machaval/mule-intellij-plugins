@@ -1,0 +1,3 @@
+%dw 1.0   // This is my first DFL
+---
+{ empty: "empty" }

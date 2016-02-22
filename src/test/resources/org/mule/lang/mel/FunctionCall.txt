@@ -1,0 +1,12 @@
+FILE
+  MelMethodCallExpressionImpl(METHOD_CALL_EXPRESSION)
+    MelFqnTypeExpressionImpl(FQN_TYPE_EXPRESSION)
+      PsiElement(IDENTIFIER)('split')
+    PsiElement(()('(')
+    MelParameterListImpl(PARAMETER_LIST)
+      MelLiteralExpressionImpl(LITERAL_EXPRESSION)
+        PsiElement(CHARACTER_LITERAL)(''payload'')
+      PsiElement(,)(',')
+      MelLiteralExpressionImpl(LITERAL_EXPRESSION)
+        PsiElement(CHARACTER_LITERAL)(''application/json'')
+    PsiElement())(')')

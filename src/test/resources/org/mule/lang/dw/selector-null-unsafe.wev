@@ -1,0 +1,14 @@
+{
+  a: a.b.c.d!,
+  b: a['b']['c']['d']!,
+  c: a['b'].c['d'].e!,
+  d: a.b[0][1]!,
+  e: ['Mariano'][0]!,
+  f: { name: "Mariano", age: 2 }['age']!,
+  g: { name: "Mariano", age: 2 }.age!,
+  h: { name: "Mariano", age: 2 }[(a.b)]!,
+  i: { name: "Mariano", age: 2 }[(a.b map $.b)]!,
+  j: a[0..4]!,
+  k: a.b[@'c']!,
+  l: a.b.@c!
+}

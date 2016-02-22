@@ -1,0 +1,9 @@
+{
+  a: a.b.c.d default 1,
+  b: a['b']['c']['d'] default "A",
+  c: a['b'].c['d'].e default { firstName: "Emiliano" },
+  d: a.b[0][1] default -3,
+  e: ['Mariano'][0] default a['b'],
+  f: { name: "Mariano", age: 2 }['age'] default 30,
+  g: { name: "Mariano", age: 2 }.age default 33
+}

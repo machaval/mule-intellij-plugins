@@ -1,0 +1,94 @@
+<idea-plugin version="2">
+    <id>org.mule.intellij.plugin</id>
+    <name>Mule Plugin For Intellij</name>
+    <version>0.1</version>
+    <vendor email="mariano.achaval@mulesoft.com" url="http://www.mulesoft.org">MuleSoft</vendor>
+
+    <description><![CDATA[
+      This plugins allows the user to :
+        <em>Debug run a mule application.<em>
+        <em>DataWeave Editor.<em>
+    ]]></description>
+
+    <change-notes><![CDATA[
+
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="131"/>
+
+    <depends>org.jetbrains.idea.maven</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Mule Runner/Debugger -->
+        <configurationType implementation="org.mule.lanucher.configuration.MuleConfigurationType"/>
+        <programRunner id="Debug" implementation="org.mule.lanucher.configuration.runner.MuleProgramDebugger"
+                       order="last"/>
+        <stepsBeforeRunProvider implementation="org.mule.lanucher.MuleBeforeRunTasksProvider"/>
+        <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
+        <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
+
+        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider" order="first"/>
+
+        <!--Mule Config-->
+
+        <dom.fileDescription implementation="org.mule.MuleDomFileDescription"/>
+        <psi.referenceContributor language="XML"
+                                  implementation="org.mule.config.reference.FlowReferencePsiReferenceProvider"/>
+        <languageInjector implementation="org.mule.config.MuleLanguageInjector"/>
+        <gotoSymbolContributor implementation="org.mule.config.FlowGoToSymbol"/>
+
+        <!--Data Weave-->
+        <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
+        <lang.parserDefinition language="Weave" implementationClass="org.mule.lang.dw.parser.WeaveParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Weave" implementationClass="org.mule.lang.dw.highlighter.WeaveSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="org.mule.lang.dw.highlighter.WeaveColorSettingsPage"/>
+        <lang.commenter language="Weave" implementationClass="org.mule.lang.dw.WeaveCommenter"/>
+        <lang.braceMatcher language="Weave" implementationClass="org.mule.lang.dw.WeavePairedBraceMatcher"/>
+        <quoteHandler fileType="Weave" className="org.mule.lang.dw.WeaveQuoteHandler"/>
+        <completion.contributor language="Weave" implementationClass="org.mule.lang.dw.parser.WeaveCompletionContributor"/>
+        <lang.refactoringSupport language="Weave" implementationClass="org.mule.lang.dw.refactor.WeaveRefactoringSupportProvider"/>
+        <lang.elementManipulator forClass="org.mule.lang.dw.parser.psi.WeaveNamedElement" implementationClass="org.mule.lang.dw.parser.psi.WeaveNamedElementManipulator"/>
+        <lang.findUsagesProvider language="Weave" implementationClass="org.mule.lang.dw.parser.psi.WeaveFindUsagesProvider"/>
+        <lang.foldingBuilder language="Weave" implementationClass="org.mule.lang.dw.folding.WeaveFolding"/>
+        <annotator language="Weave" implementationClass="org.mule.lang.dw.annotator.WeaveAnnotator"/>
+        <lang.psiStructureViewFactory language="Weave" implementationClass="org.mule.lang.dw.structure.WeaveStructureViewBuilderFactory"/>
+        <!--MEL Support-->
+        <fileTypeFactory implementation="org.mule.lang.mel.MelFileTypeFactory"/>
+        <lang.parserDefinition language="Mel" implementationClass="org.mule.lang.mel.parser.MelParserDefinition"/>
+        <colorSettingsPage implementation="org.mule.lang.mel.highlighter.MelColorSettingsPage"/>
+        <lang.syntaxHighlighterFactory language="Mel" implementationClass="org.mule.lang.mel.highlighter.MelSyntaxHighlighterFactory"/>
+        <lang.commenter language="Mel" implementationClass="org.mule.lang.mel.MelCommenter"/>
+        <lang.braceMatcher language="Mel" implementationClass="org.mule.lang.mel.MelPairedBraceMatcher"/>
+
+        <!--Templates-->
+        <internalFileTemplate name="Data Weave"/>
+        <internalFileTemplate name="Mule Config"/>
+        <internalFileTemplate name="Mel File"/>
+
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>org.mule.lanucher.configuration.archive.MuleAppManager</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+    </project-components>
+
+    <actions>
+        <!--
+            Creates an item on the context menu to allow the user
+            to create a new Camel related file
+        -->
+        <action id="Mule.CreateMuleComponent"
+                class="org.mule.actions.CreateMuleComponentFile">
+            <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+        </action>
+
+    </actions>
+
+</idea-plugin>

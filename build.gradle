@@ -1,0 +1,27 @@
+plugins {
+  id "org.jetbrains.intellij" version "0.0.27"
+}
+
+apply plugin: 'org.jetbrains.intellij'
+
+intellij{
+    plugins = ["maven", "groovy"]
+}
+
+
+sourceSets {
+	main{
+	    java{
+	        srcDir 'gen'
+	    }
+    }    
+}
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+ 	compile files('lib/mule-plugin-debugger-3.8.0.jar')
+    
+}

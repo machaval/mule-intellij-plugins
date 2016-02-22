@@ -1,0 +1,9 @@
+{
+  a: { a: "a", (b: "b") when true, c: "c" },
+  b: { a: "a", (b: "b") when false, c: "c" },
+  c: { a: "a", (b: "b") when in0.true, c: "c" },
+  d: { a: "a", (b: "b") when in0.false, c: "c" },
+  e: { a: "a", (b: "b") when true, c: "c" }.b,
+  f: { a: "a", (b: "b") when false, c: "c" }.b,
+  g: { a: "a", (b: "b") when false, c: "c" } == { a: "a", (b: "b") when true, c: "c" }
+}

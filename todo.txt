@@ -1,0 +1,25 @@
+//How to find output
+ModuleRootManager.getInstance(module).getCompilerOutputPath();
+//How to extend the debugger
+
+https://devnet.jetbrains.com/message/5507158#5507158
+
+
+XsltBreakpointType
+
+    @Nullable
+    private PsiElement getElementAtLine(PsiFile file, int line) {
+        Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
+        int offset = document.getLineStartOffset(line);
+        PsiElement element = file.getViewProvider().findElementAt(offset);
+        if (document.getLineNumber(element.getTextOffset()) != line) {
+            element = element.getNextSibling();
+        }
+        return element;
+    }
+
+
+    LanguageInjector
+
+    //To scan
+    com.intellij.xml.util.XmlReferenceContributor

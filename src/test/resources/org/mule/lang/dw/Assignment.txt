@@ -1,0 +1,7 @@
+{
+  a: using (groupedByFirstName = a groupBy $.firstName) groupedByFirstName,
+  b: using (groupedBySalary = c map $.firstName filter $.lastName == "Emiliano" groupBy $.salary) groupedBySalary,
+  c: using (students = a map { firstName: $.firstName, lastName: $.lastName }) (students orderBy $.firstName),
+  d: a map using (firstName = $.firstName, lastName = $.lastName) { firstName: firstName, lastName: lastName, fullName: firstName + ' ' + lastName },
+  e: using (groupedByFirstName = a groupBy $.firstName) groupedByFirstName
+}

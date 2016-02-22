@@ -1,0 +1,7 @@
+{
+  a: (true and false) or true,
+  b: true and false or
+     true,
+  c: (a.b or a.c) and
+     (a.d or a.e)
+}

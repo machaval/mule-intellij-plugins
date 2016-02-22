@@ -1,0 +1,6 @@
+out
+build
+.gradle
+*.iml
+**/.idea/workspace.xml
+**/.idea/tasks.xml

@@ -1,0 +1,20 @@
+{
+  a: [0, 1, 2, 3, 4, 5][?($ > 2)],
+  b: [0, 1, 2, 3, 4, 5][?($ < 2)],
+  c: ["t", "f", "f", "t", "t"][?($ + "rue")],
+  d: ["t", "f", "f", "t", "t"][?($$ > 2)],
+  e: [{ letter: "a" }, { letter: "b" }, { letter: "c" }, { letter: "d" }, { letter: "e" }][?($.letter >= "c")],
+  f: [{ letter: "a" }, { letter: "b" }, { letter: "c" }, { letter: "d" }, { letter: "e" }][?($$ > 2)],
+  g: [true, false, false, true, true][?($)],
+  h: [true, false, false, true, true][?($$ < 2)],
+  i: in0.a[?($ > 2)],
+  j: in0.a[?($$ < 2)],
+  k: in0.b[?($ + "rue")],
+  l: in0.b[?($$ > 2)],
+  m: in0.c[?($.letter >= "c")],
+  n: in0.c[?($$ > 2)],
+  o: in0.d[?($)],
+  p: in0.d[?($$ < 2)],
+  q: { a: "a", b: "b", c: "c", d: "d" }[?($$ == "c")],
+  r: { a: 0, b: 0, c: 1, d: 1 }[?($ == 1)]
+}

@@ -1,0 +1,4 @@
+{
+  a: "Mariano" when in0.male otherwise "Mariana",
+  b: "Mariana" unless in0.male otherwise "Mariano"
+}
