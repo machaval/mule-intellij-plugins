@@ -2,9 +2,11 @@
 
 #Intellij Plugin For Mule ESB
 
-This plugin is allows any Mule ESB developer to work with intellij and have some features such as 
+This plugin allows any Mule ESB developer to work with intellij.
+ 
+## Features
 
-* Run Configuration Integration
+* Run Mule Configuration Integration
 * Mule Debugger Integration
 * Mel Script Support
     * Color Highlighting
@@ -18,5 +20,16 @@ This plugin is allows any Mule ESB developer to work with intellij and have some
     * Flow Subflow Outline
     * Navigate through flow-ref
     * Scripting injection inside xml.
+    * Navigate from test to xml through getFlowConstruct("flowName")
     
+## Status and Roadmap
     
+* Support for new mule product
+* Improve mel support with more features such as auto-completion and java navigation
+* Graphical UI????
+
+# Note
+If you liked what the plugin please contribute either with code or issues.
+
+# Disclaimer
+This is not an official mulesoft product and is not a replacement for the excellent Anypoint Studio product. This means there is no support for this!
