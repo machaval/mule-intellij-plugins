@@ -1,3 +1,5 @@
+![Build status](https://travis-ci.org/machaval/mule-esb-plugin.svg?branch=master)
+
 #Intellij Plugin For Mule ESB
 
 This plugin is allows any Mule ESB developer to work with intellij and have some features such as 
