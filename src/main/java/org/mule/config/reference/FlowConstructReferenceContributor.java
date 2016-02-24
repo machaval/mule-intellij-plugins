@@ -5,7 +5,13 @@ import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class FlowConstructReferenceContributor extends PsiReferenceContributor {
+
+    private static List<String> FLOW_REF_METHOD_NAMES = Arrays.asList("flowRunner", "getFlowConstruct");
+
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiLiteralExpression.class),
@@ -18,7 +24,7 @@ public class FlowConstructReferenceContributor extends PsiReferenceContributor {
                         final PsiElement granParent = parent.getParent();
                         if (granParent instanceof PsiMethodCallExpression) {
                             final PsiReferenceExpression methodExpression = ((PsiMethodCallExpression) granParent).getMethodExpression();
-                            if ("getFlowConstruct".equals(methodExpression.getReferenceName())) {
+                            if (FLOW_REF_METHOD_NAMES.contains(methodExpression.getReferenceName())) {
                                 return new PsiReference[]{new StringLiteralPsiReference(literalExpression)};
                             }
                         }

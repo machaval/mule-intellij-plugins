@@ -14,6 +14,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.SchemaReferencesProvider;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
@@ -46,7 +47,7 @@ import java.util.*;
 
 public class MuleSupport {
 
-    public static final String FLOW_LOCAL_NAME = "flow";
+
     public static final String MULE_LOCAL_NAME = "mule";
 
     public static boolean isMuleFile(PsiFile psiFile) {
@@ -67,6 +68,37 @@ public class MuleSupport {
 
     @Nullable
     public static XmlTag findFlow(Project project, String flowName) {
+        final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
+        return findFlowInScope(project, flowName, searchScope);
+    }
+
+
+    @Nullable
+    public static XmlTag findGlobalElement(PsiElement element, String elementName) {
+        final Project project = element.getProject();
+        final PsiFile psiFile = PsiTreeUtil.getParentOfType(element, PsiFile.class);
+        //Search first in the local file else we search globally
+        if (psiFile != null) {
+            final XmlTag xmlTag = findGlobalElementInFile(project, elementName, psiFile.getVirtualFile());
+            if (xmlTag != null) {
+                return xmlTag;
+            }
+        }
+        final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
+        return findGlobalElementInScope(project, elementName, searchScope);
+    }
+
+    @Nullable
+    public static XmlTag findFlow(PsiElement element, String flowName) {
+        final Project project = element.getProject();
+        final PsiFile psiFile = PsiTreeUtil.getParentOfType(element, PsiFile.class);
+        //Search first in the local file else we search globally
+        if (psiFile != null) {
+            final XmlTag xmlTag = findFlowInFile(project, flowName, psiFile.getVirtualFile());
+            if (xmlTag != null) {
+                return xmlTag;
+            }
+        }
         final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
         return findFlowInScope(project, flowName, searchScope);
     }
@@ -108,25 +140,43 @@ public class MuleSupport {
     }
 
     @Nullable
+    private static XmlTag findGlobalElementInScope(Project project, String elementName, GlobalSearchScope searchScope) {
+        final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, searchScope);
+        for (VirtualFile file : files) {
+            XmlTag flow = findGlobalElementInFile(project, elementName, file);
+            if (flow != null) {
+                return flow;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
     private static XmlTag findFlowInScope(Project project, String flowName, GlobalSearchScope searchScope) {
         final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, searchScope);
-        final DomManager manager = DomManager.getDomManager(project);
         for (VirtualFile file : files) {
-            final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
-            if (isMuleFile(xmlFile)) {
-                final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
-                if (fileElement != null) {
-                    final Mule rootElement = fileElement.getRootElement();
-                    final List<Flow> flows = rootElement.getFlows();
-                    for (Flow flow : flows) {
-                        if (flowName.equals(flow.getName().getValue())) {
-                            return flow.getXmlTag();
-                        }
-                    }
-                    final List<SubFlow> subFlows = rootElement.getSubFlows();
-                    for (SubFlow subFlow : subFlows) {
-                        if (flowName.equals(subFlow.getName().getValue())) {
-                            return subFlow.getXmlTag();
+            XmlTag flow = findFlowInFile(project, flowName, file);
+            if (flow != null) {
+                return flow;
+            }
+        }
+        return null;
+    }
+
+
+    @Nullable
+    private static XmlTag findGlobalElementInFile(Project project, String elementName, VirtualFile file) {
+        final DomManager manager = DomManager.getDomManager(project);
+        final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
+        if (isMuleFile(xmlFile)) {
+            final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
+            if (fileElement != null) {
+                final Mule rootElement = fileElement.getRootElement();
+                final XmlTag[] subTags = rootElement.getXmlTag().getSubTags();
+                for (XmlTag subTag : subTags) {
+                    if (isGlobalElement(subTag)) {
+                        if (elementName.equals(subTag.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE))) {
+                            return subTag;
                         }
                     }
                 }
@@ -135,37 +185,33 @@ public class MuleSupport {
         return null;
     }
 
-
-    @NotNull
-    public static List<XmlTag> findFlowRef(Project project, String flowName) {
-        List<XmlTag> flowRefs = new ArrayList<>();
-        final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, GlobalSearchScope.projectScope(project));
+    @Nullable
+    private static XmlTag findFlowInFile(Project project, String flowName, VirtualFile file) {
         final DomManager manager = DomManager.getDomManager(project);
-        for (VirtualFile file : files) {
-            final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
-            if (isMuleFile(xmlFile)) {
-                final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
-                if (fileElement != null) {
-                    final Mule rootElement = fileElement.getRootElement();
-                    final XmlTag rootTag = rootElement.getXmlTag();
-                    addSubFlowsNamed(flowRefs, rootTag, flowName);
+        final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
+        if (isMuleFile(xmlFile)) {
+            final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
+            if (fileElement != null) {
+                final Mule rootElement = fileElement.getRootElement();
+                final List<Flow> flows = rootElement.getFlows();
+                for (Flow flow : flows) {
+                    if (flowName.equals(flow.getName().getValue())) {
+                        return flow.getXmlTag();
+                    }
+                }
+                final List<SubFlow> subFlows = rootElement.getSubFlows();
+                for (SubFlow subFlow : subFlows) {
+                    if (flowName.equals(subFlow.getName().getValue())) {
+                        return subFlow.getXmlTag();
+                    }
                 }
             }
         }
-        return flowRefs;
+        return null;
     }
 
-    private static void addSubFlowsNamed(List<XmlTag> flowRefs, XmlTag rootTag, String flowName) {
-        final XmlTag[] subTags = rootTag.getSubTags();
-        for (XmlTag subTag : subTags) {
-            if (subTag.getLocalName().equals(MuleConfigConstants.FLOW_REF_TAG_NAME) && flowName.equals(subTag.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE))) {
-                flowRefs.add(subTag);
-            } else {
-                addSubFlowsNamed(flowRefs, subTag, flowName);
-            }
-        }
-    }
 
+    @Nullable
     public static XmlTag getTagAt(Project project, String path) {
         final MessageProcessorPath messageProcessorPath = MessageProcessorPath.fromPath(path);
         final MessageProcessorPathType type = messageProcessorPath.getType();
@@ -175,36 +221,42 @@ public class MuleSupport {
         for (VirtualFile file : files) {
             final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
             if (isMuleFile(xmlFile)) {
-                final Mule rootElement = manager.getFileElement((XmlFile) xmlFile, Mule.class).getRootElement();
-                switch (type) {
-                    case processors:
-                        final List<Flow> flows = rootElement.getFlows();
-                        for (Flow flow : flows) {
-                            if (flow.getName().getXmlAttributeValue().getValue().equals(flowName)) {
-                                XmlTag xmlTag = flow.getXmlTag();
-                                return findChildMessageProcessorByPath(messageProcessorPath, xmlTag);
+                final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
+                if (fileElement != null) {
+                    final Mule rootElement = fileElement.getRootElement();
+                    switch (type) {
+                        case processors:
+                            final List<Flow> flows = rootElement.getFlows();
+                            for (Flow flow : flows) {
+                                final XmlAttributeValue xmlAttributeValue = flow.getName().getXmlAttributeValue();
+                                if (xmlAttributeValue != null) {
+                                    if (flowName.equals(xmlAttributeValue.getValue())) {
+                                        XmlTag xmlTag = flow.getXmlTag();
+                                        return findChildMessageProcessorByPath(messageProcessorPath, xmlTag);
+                                    }
+                                }
                             }
-                        }
-                        break;
-                    case subprocessors:
-                        final List<SubFlow> subFlows = rootElement.getSubFlows();
-                        for (SubFlow subFlow : subFlows) {
-                            final XmlAttributeValue xmlAttributeValue = subFlow.getName().getXmlAttributeValue();
-                            if (xmlAttributeValue != null && xmlAttributeValue.getValue().equals(flowName)) {
-                                XmlTag xmlTag = subFlow.getXmlTag();
-                                return findChildMessageProcessorByPath(messageProcessorPath, xmlTag);
+                            break;
+                        case subprocessors:
+                            final List<SubFlow> subFlows = rootElement.getSubFlows();
+                            for (SubFlow subFlow : subFlows) {
+                                final XmlAttributeValue xmlAttributeValue = subFlow.getName().getXmlAttributeValue();
+                                if (xmlAttributeValue != null && xmlAttributeValue.getValue().equals(flowName)) {
+                                    XmlTag xmlTag = subFlow.getXmlTag();
+                                    return findChildMessageProcessorByPath(messageProcessorPath, xmlTag);
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        final XmlTag[] subTags = ((XmlFile) xmlFile).getRootTag().getSubTags();
-                        for (XmlTag subTag : subTags) {
-                            final XmlAttribute name = subTag.getAttribute("name");
-                            if (name != null && name.getValue() != null && name.getValue().equals(flowName)) {
-                                return findChildMessageProcessorByPath(messageProcessorPath, subTag);
+                            break;
+                        default:
+                            final XmlTag[] subTags = ((XmlFile) xmlFile).getRootTag().getSubTags();
+                            for (XmlTag subTag : subTags) {
+                                final XmlAttribute name = subTag.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
+                                if (name != null && name.getValue() != null && name.getValue().equals(flowName)) {
+                                    return findChildMessageProcessorByPath(messageProcessorPath, subTag);
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         }
@@ -402,7 +454,7 @@ public class MuleSupport {
             final PsiElement resolve = baseType.resolve();
             if (resolve instanceof XmlTag) {
                 final XmlTag typeReference = (XmlTag) resolve;
-                final String name = typeReference.getAttributeValue("name");
+                final String name = typeReference.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
                 if (name != null && !name.isEmpty()) {
                     final MessageProcessorType[] messageProcessorTypes = MessageProcessorType.values();
                     for (MessageProcessorType messageProcessorType : messageProcessorTypes) {
@@ -461,6 +513,37 @@ public class MuleSupport {
     @NotNull
     public static String asMelScript(@NotNull String script) {
         return !script.startsWith("#[") ? "#[" + script + "]" : script;
+    }
+
+    public static List<XmlTag> getGlobalElements(Project project) {
+        return getGlobalElementsInScope(project, GlobalSearchScope.allScope(project));
+    }
+
+    @NotNull
+    private static List<XmlTag> getGlobalElementsInScope(Project project, GlobalSearchScope searchScope) {
+        final List<XmlTag> result = new ArrayList<>();
+        final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, searchScope);
+        final DomManager manager = DomManager.getDomManager(project);
+        for (VirtualFile file : files) {
+            final PsiFile xmlFile = PsiManager.getInstance(project).findFile(file);
+            if (isMuleFile(xmlFile)) {
+                final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
+                if (fileElement != null) {
+                    final Mule rootElement = fileElement.getRootElement();
+                    final XmlTag[] subTags = rootElement.getXmlTag().getSubTags();
+                    for (XmlTag subTag : subTags) {
+                        if (isGlobalElement(subTag)) {
+                            result.add(subTag);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean isGlobalElement(XmlTag subTag) {
+        return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow"));
     }
 
     public enum MessageProcessorType {

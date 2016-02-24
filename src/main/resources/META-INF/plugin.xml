@@ -20,6 +20,7 @@
     <idea-version since-build="131"/>
 
     <depends>org.jetbrains.idea.maven</depends>
+    <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Mule Runner/Debugger -->
@@ -36,7 +37,7 @@
 
         <dom.fileDescription implementation="org.mule.MuleDomFileDescription"/>
         <psi.referenceContributor language="XML"
-                                  implementation="org.mule.config.reference.FlowReferenceReferenceContributor"/>
+                                  implementation="org.mule.config.reference.MuleConfigurationReferenceContributor"/>
 
         <psi.referenceContributor language="JAVA"
                                   implementation="org.mule.config.reference.FlowConstructReferenceContributor"/>

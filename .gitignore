@@ -4,3 +4,4 @@ build
 *.iml
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+*.zip

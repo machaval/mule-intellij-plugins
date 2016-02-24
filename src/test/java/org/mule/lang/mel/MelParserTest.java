@@ -23,6 +23,10 @@ public class MelParserTest extends ParsingTestCase {
         doTest(true);
     }
 
+    public void testConditional() {
+        doTest(true);
+    }
+
     @Override
     protected String getTestDataPath() {
         final String path = getClass().getResource("Simple.mel").getPath();

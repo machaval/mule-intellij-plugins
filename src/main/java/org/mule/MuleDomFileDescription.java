@@ -28,4 +28,8 @@ public class MuleDomFileDescription extends DomFileDescription<Mule> {
         return MuleIcons.MuleFileType;
     }
 
+    @Override
+    protected void initializeFileDescription() {
+        super.initializeFileDescription();
+    }
 }
