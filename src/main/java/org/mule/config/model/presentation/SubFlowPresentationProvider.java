@@ -26,6 +26,6 @@ public class SubFlowPresentationProvider extends PresentationProvider<SubFlow> {
     @Nullable
     @Override
     public Icon getIcon(SubFlow flow) {
-        return MuleIcons.MuleFlow;
+        return MuleIcons.MuleSubFlow;
     }
 }
