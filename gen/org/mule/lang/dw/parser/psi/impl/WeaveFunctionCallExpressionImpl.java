@@ -8,11 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.mule.lang.dw.parser.psi.WeaveTypes.*;
-import org.mule.lang.dw.parser.psi.WeaveNamedElementImpl;
 import org.mule.lang.dw.parser.psi.*;
-import com.intellij.psi.PsiReference;
 
-public class WeaveFunctionCallExpressionImpl extends WeaveNamedElementImpl implements WeaveFunctionCallExpression {
+public class WeaveFunctionCallExpressionImpl extends WeaveExpressionImpl implements WeaveFunctionCallExpression {
 
   public WeaveFunctionCallExpressionImpl(ASTNode node) {
     super(node);
@@ -27,16 +25,6 @@ public class WeaveFunctionCallExpressionImpl extends WeaveNamedElementImpl imple
   @NotNull
   public List<WeaveExpression> getExpressionList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public WeaveIdentifier getIdentifier() {
-    return findNotNullChildByClass(WeaveIdentifier.class);
-  }
-
-  public PsiReference getReference() {
-    return WeavePsiImplUtils.getReference(this);
   }
 
 }

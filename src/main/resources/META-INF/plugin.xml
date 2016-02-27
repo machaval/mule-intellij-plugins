@@ -17,7 +17,7 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="131"/>
+    <idea-version since-build="140"/>
 
     <depends>org.jetbrains.idea.maven</depends>
     <depends>org.intellij.groovy</depends>

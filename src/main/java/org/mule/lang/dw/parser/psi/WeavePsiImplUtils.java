@@ -165,8 +165,8 @@ public class WeavePsiImplUtils {
     }
 
     //Function Call
-    public static PsiReference getReference(WeaveFunctionCallExpression variable) {
-        return new WeaveFunctionPsiReference(variable, new TextRange(0, variable.getName().length()));
-    }
+//    public static PsiReference getReference(WeaveFunctionCallExpression variable) {
+//        return new WeaveFunctionPsiReference(variable, new TextRange(0, variable.getName().length()));
+//    }
 
 }

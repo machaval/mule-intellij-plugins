@@ -9,7 +9,7 @@ import com.intellij.navigation.ItemPresentation;
 
 public interface WeaveSimpleKeyValuePair extends NavigatablePsiElement {
 
-  @Nullable
+  @NotNull
   WeaveExpression getExpression();
 
   @NotNull

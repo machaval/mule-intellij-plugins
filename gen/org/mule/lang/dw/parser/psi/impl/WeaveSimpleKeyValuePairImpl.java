@@ -24,9 +24,9 @@ public class WeaveSimpleKeyValuePairImpl extends ASTWrapperPsiElement implements
   }
 
   @Override
-  @Nullable
+  @NotNull
   public WeaveExpression getExpression() {
-    return findChildByClass(WeaveExpression.class);
+    return findNotNullChildByClass(WeaveExpression.class);
   }
 
   @Override

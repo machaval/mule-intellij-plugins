@@ -30,12 +30,6 @@ public class WeaveKeyValuePairImpl extends ASTWrapperPsiElement implements Weave
 
   @Override
   @Nullable
-  public WeaveDynamicKeyValuePair getDynamicKeyValuePair() {
-    return findChildByClass(WeaveDynamicKeyValuePair.class);
-  }
-
-  @Override
-  @Nullable
   public WeaveSimpleKeyValuePair getSimpleKeyValuePair() {
     return findChildByClass(WeaveSimpleKeyValuePair.class);
   }

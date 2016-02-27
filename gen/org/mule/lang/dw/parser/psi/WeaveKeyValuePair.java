@@ -11,9 +11,6 @@ public interface WeaveKeyValuePair extends PsiElement {
   WeaveConditionalKeyValuePair getConditionalKeyValuePair();
 
   @Nullable
-  WeaveDynamicKeyValuePair getDynamicKeyValuePair();
-
-  @Nullable
   WeaveSimpleKeyValuePair getSimpleKeyValuePair();
 
 }

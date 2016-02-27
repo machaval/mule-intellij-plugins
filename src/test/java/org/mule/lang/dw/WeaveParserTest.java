@@ -27,15 +27,19 @@ public class WeaveParserTest extends ParsingTestCase {
         doTest(true);
     }
 
-    public void testComment(){
+    public void testComment() {
         doTest(true);
     }
 
-    public void testString(){
+    public void testString() {
         doTest(true);
     }
 
-    public void testMatch(){
+    public void testMatch() {
+        doTest(true);
+    }
+
+    public void testFunctions() {
         doTest(true);
     }
 

@@ -155,17 +155,15 @@ SingleKeyValuePairObj ::= KeyValuePair
 
 MultipleKeyValuePairObj::= '{' KeyValuePairWithComma* '}'
 
-private KeyValuePairWithComma ::= (KeyValuePair) (',' | &'}')
+private KeyValuePairWithComma ::= (KeyValuePair | DynamicKeyValuePair) (',' | &'}')
 
 KeyValuePair::= ConditionalKeyValuePair
            | SimpleKeyValuePair
-           | DynamicKeyValuePair
 
 DynamicKeyValuePair ::= EnclosedExpression
 
 SimpleKeyValuePair ::= Key ':' Expression
 {
-    pin=2
     implements="com.intellij.psi.NavigatablePsiElement"
     methods=[getPresentation]
 }
@@ -204,6 +202,7 @@ Expression::= ConditionalExpression|
             AdditionSubtractionExpression|
             RightLeftExpression|
             MultiplicationDivisionExpression|
+            FunctionCallExpression|
             DotSelectorExpression|
             BracketSelectorExpression|
             DynamicSelectorExpression|
@@ -255,7 +254,6 @@ DefaultPattern ::= DEFAULT '->' Expression
 
 ValueExpression::= ObjectExpression
                   |LiteralExpression
-                  |FunctionCallExpression
                   |RangeExpression
                   |ArrayExpression
                   |VariableReferenceExpression
@@ -309,11 +307,7 @@ RightLeftExpression
 
 MultiplicationDivisionExpression ::= Expression  ( '*' | '/' ) Expression {pin=2}
 
-FunctionCallExpression ::= Identifier '(' ( Expression ( ',' Expression )* )? ')'  {
-      methods = [getReference getName setName getNameIdentifier]
-      implements="org.mule.lang.dw.parser.psi.WeaveNamedElement"
-      mixin="org.mule.lang.dw.parser.psi.WeaveNamedElementImpl"
- }
+FunctionCallExpression ::= Expression '(' ( Expression ( ',' Expression )* )? ')'
 
 
 UsingExpression ::=USING '(' VariableDefinition ( ',' VariableDefinition )* ')' Expression {pin=1}
