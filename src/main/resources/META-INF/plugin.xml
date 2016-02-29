@@ -31,7 +31,7 @@
         <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
         <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
 
-        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider" order="first"/>
+        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider"  order="first"/>
 
         <!--Mule Config-->
 
@@ -44,6 +44,8 @@
 
         <languageInjector implementation="org.mule.config.MuleLanguageInjector"/>
         <gotoSymbolContributor implementation="org.mule.config.FlowGoToSymbol"/>
+
+        <moduleBuilder builderClass="org.mule.wizzard.MuleMavenModuleBuilder" id="DEMO_STEP" order="first"/>
 
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
@@ -72,6 +74,7 @@
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
         <internalFileTemplate name="Mel File"/>
+        <internalFileTemplate name="Mule Maven Project"/>
 
     </extensions>
 
