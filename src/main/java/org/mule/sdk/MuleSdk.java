@@ -42,9 +42,12 @@ public class MuleSdk {
     protected static final String MULE_DIR = "/lib/mule";
     protected static final String USER_DIR = "/lib/user";
     protected static final String OPT_DIR = "/lib/opt";
+    
+    protected static final String ENDORSED_DIR = "/lib/endorsed";
+    
     public static final String UNDEFINED_VERSION = "0.0.0";
 
-    public static List<String> MULE_JARS_FOLDERS = Arrays.asList(BOOT_DIR, PATCH_DIR, MULE_DIR, USER_DIR, OPT_DIR);
+    public static List<String> MULE_JARS_FOLDERS = Arrays.asList(BOOT_DIR, ENDORSED_DIR, PATCH_DIR, MULE_DIR, USER_DIR, OPT_DIR);
     protected static final String BIN_DIR = "/bin";
     private static final Logger LOG = Logger.getInstance("#com.intellij.appengine.sdk.impl.MuleSdk");
 
