@@ -59,7 +59,9 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
         for (File jar : urLs) {
             javaParams.getClassPath().add(jar);
         }
-
+        //EE license location 
+        javaParams.getClassPath().add(muleHome + "/conf");
+        
         //Mule main class
         javaParams.setMainClass(MAIN_CLASS);
 
