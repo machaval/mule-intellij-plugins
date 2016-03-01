@@ -11,7 +11,10 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
     public static final String MULE_CONFIGURATION_FILE = "Mule Config";
     public static final String DATA_WEAVE_FILE = "Data Weave";
     public static final String MEL_FILE = "Mel File";
-    public static final String MULE_MAVEN_PROJECT = "Mule Maven Project.xml";
+//    public static final String MULE_MAVEN_PROJECT = "Mule Maven Project.xml";
+    public static final String MULE_MAVEN_PROJECT = "Mule Maven Project";
+    public static final String MUNIT_FILE = "MUnit Config";
+    
 
     @Override
     public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
@@ -19,6 +22,7 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
         group.addTemplate(new FileTemplateDescriptor(MULE_CONFIGURATION_FILE, MuleIcons.MuleFileType));
         group.addTemplate(new FileTemplateDescriptor(DATA_WEAVE_FILE, MuleIcons.DataFileType));
         group.addTemplate(new FileTemplateDescriptor(MULE_MAVEN_PROJECT, MavenIcons.MavenLogo));
+        group.addTemplate(new FileTemplateDescriptor(MUNIT_FILE, MuleIcons.MUnitFileType));
         return group;
     }
 }

@@ -2,6 +2,14 @@ out
 build
 .gradle
 *.iml
-**/.idea/workspace.xml
-**/.idea/tasks.xml
+**/.idea/**
+
 *.zip
+
+gradlew
+
+gradlew.bat
+
+gradle/wrapper/gradle-wrapper.jar
+
+gradle/wrapper/gradle-wrapper.properties

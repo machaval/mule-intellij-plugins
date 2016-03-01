@@ -20,8 +20,9 @@ public class CreateMuleComponentFile extends CreateFileFromTemplateAction implem
     protected void buildDialog(Project project, PsiDirectory psiDirectory, CreateFileFromTemplateDialog.Builder builder) {
         builder.setTitle(MULE_CONFIGURATION)
                 .addKind("Mule Configuration", MuleIcons.MuleFileType, MuleFileTemplateDescriptorManager.MULE_CONFIGURATION_FILE)
+                .addKind("MUnit Test", MuleIcons.MUnitFileType, MuleFileTemplateDescriptorManager.MUNIT_FILE)
                 .addKind("Data Weave", MuleIcons.DataFileType, MuleFileTemplateDescriptorManager.DATA_WEAVE_FILE)
-                .addKind("Mel Script", MuleIcons.MelFIleType, MuleFileTemplateDescriptorManager.MEL_FILE);
+                .addKind("Mel Script", MuleIcons.MelFileType, MuleFileTemplateDescriptorManager.MEL_FILE);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class MelFileType extends LanguageFileType {
     @Nullable
     @Override
     public Icon getIcon() {
-        return MuleIcons.MelFIleType;
+        return MuleIcons.MelFileType;
     }
 
     public static MelFileType getInstance(){

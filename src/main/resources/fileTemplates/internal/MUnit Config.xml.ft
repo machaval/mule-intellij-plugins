@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit" 
+      xmlns:mock="http://www.mulesoft.org/schema/mule/mock" 
+      xmlns:spring="http://www.springframework.org/schema/beans" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+          http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+          ttp://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+          http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+      ">
+    
+    <munit:config name="${NAME}-munit-config"/>
+    <mock:config name="${NAME}-mock-config"/>
+      
+    <munit:test name="${NAME}Test">
+      <logger/>
+    </munit:test>
+    
+</mule>
