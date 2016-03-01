@@ -73,6 +73,7 @@
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
+        <internalFileTemplate name="MUnit Config"/>
         <internalFileTemplate name="Mel File"/>
         <internalFileTemplate name="Mule Maven Project"/>
 
@@ -98,7 +99,13 @@
                 class="org.mule.actions.CreateMuleComponentFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
         </action>
-
+        <!-- TODO: Shound MUnit config be a separate action or CreateMuleComponent action with MUnit kind? -->
+        <!--          
+        <action id="Mule.CreateMUnitTest"
+                class="org.mule.actions.CreateMUnitTestFile">
+            <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="Mule.CreateMuleComponent"/>
+        </action>
+          -->
     </actions>
 
 </idea-plugin>

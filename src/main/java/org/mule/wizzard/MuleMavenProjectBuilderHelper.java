@@ -28,6 +28,9 @@ public class MuleMavenProjectBuilderHelper {
             final VirtualFile appDirectory = VfsUtil.createDirectories(root.getPath() + "/src/main/app");
             final VirtualFile muleConfigFile = createMuleConfigFile(project, projectId, appDirectory);
             VfsUtil.createDirectories(root.getPath() + "/src/main/api");
+            //MUnit support
+            VfsUtil.createDirectories(root.getPath() + "/src/test/munit");
+            VfsUtil.createDirectories(root.getPath() + "/src/test/resources");
             createPomFile(project, projectId, muleVersion, root);
             // execute when current dialog is closed (e.g. Project Structure)
             MavenUtil.invokeLater(project, ModalityState.NON_MODAL, new Runnable() {
