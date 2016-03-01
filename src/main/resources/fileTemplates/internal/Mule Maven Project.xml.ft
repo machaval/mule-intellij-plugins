@@ -52,10 +52,7 @@
 								<resource>
 									<directory>src/main/app/</directory>
 								</resource>
-								<resource>
-									<directory>mappings/</directory>
-								</resource>
-							<resource>
+							    <resource>
                                     <directory>src/main/api/</directory>
                                 </resource>
                             </resources>
@@ -82,50 +79,13 @@
 			<version>${mule.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Mule Transports -->
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-file</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-http</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-        	<groupId>com.mulesoft.muleesb.transports</groupId>
-			<artifactId>mule-transport-jdbc-ee</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-        	<groupId>com.mulesoft.muleesb.transports</groupId>
-			<artifactId>mule-transport-jms-ee</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-vm</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Mule Modules -->
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-module-scripting</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-module-xml</artifactId>
-			<version>${mule.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-db</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 		<!-- for testing -->
 		<dependency>
 			<groupId>org.mule.tests</groupId>

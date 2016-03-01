@@ -31,10 +31,9 @@ import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.impl.schema.ComplexTypeDescriptor;
 import com.intellij.xml.impl.schema.TypeDescriptor;
 import com.intellij.xml.impl.schema.XmlElementDescriptorImpl;
-import com.mulesoft.mule.debugger.commons.Breakpoint;
-import com.mulesoft.mule.debugger.commons.MessageProcessorPath;
-import com.mulesoft.mule.debugger.commons.MessageProcessorPathNode;
-import com.mulesoft.mule.debugger.commons.MessageProcessorPathType;
+import com.intellij.xml.util.XmlPsiUtil;
+import com.intellij.xml.util.XmlUtil;
+import com.mulesoft.mule.debugger.commons.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.MuleConfigConstants;
@@ -47,12 +46,15 @@ import java.util.*;
 
 public class MuleSupport {
 
-
     public static final String MULE_LOCAL_NAME = "mule";
 
     public static boolean isMuleFile(PsiFile psiFile) {
-        if (psiFile.getFileType() != StdFileTypes.XML) return false;
-        if (!(psiFile instanceof XmlFile)) return false;
+        if (!(psiFile instanceof XmlFile)) {
+            return false;
+        }
+        if (psiFile.getFileType() != StdFileTypes.XML) {
+            return false;
+        }
         final XmlFile psiFile1 = (XmlFile) psiFile;
         final XmlTag rootTag = psiFile1.getRootTag();
         return isMuleConfig(rootTag);
@@ -211,9 +213,44 @@ public class MuleSupport {
     }
 
 
+    public static MessageProcessorPath fromPath(String path) {
+        final ArrayList<MessageProcessorPathNode> elements = new ArrayList<>();
+        final List<String> tokens = new MessageProcessorPathTokenizer().tokens(path);
+        String flowName = null;
+        MessageProcessorPathType type = MessageProcessorPathType.unknown;
+        for (String token : tokens) {
+            if (flowName == null) {
+                flowName = token;
+            } else if (type == MessageProcessorPathType.unknown) {
+                try {
+                    type = MessageProcessorPathType.valueOf(token);
+                } catch (IllegalArgumentException iae) {
+                    //Ignore
+                }
+            } else if (isElementNumber(token)) {
+                elements.add(new MessageProcessorPathNode(flowName, token));
+            } else {
+                flowName = token;
+                elements.clear();
+                type = MessageProcessorPathType.unknown;
+            }
+        }
+
+        return new MessageProcessorPath(flowName, type, elements);
+    }
+
+    private static boolean isElementNumber(String token) {
+        try {
+            Integer.parseInt(token);
+            return true;
+        } catch (NumberFormatException var2) {
+            return false;
+        }
+    }
+
     @Nullable
     public static XmlTag getTagAt(Project project, String path) {
-        final MessageProcessorPath messageProcessorPath = MessageProcessorPath.fromPath(path);
+        final MessageProcessorPath messageProcessorPath = fromPath(path);
         final MessageProcessorPathType type = messageProcessorPath.getType();
         final String flowName = messageProcessorPath.getFlowName();
         final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, GlobalSearchScope.projectScope(project));
@@ -456,14 +493,28 @@ public class MuleSupport {
                 final XmlTag typeReference = (XmlTag) resolve;
                 final String name = typeReference.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
                 if (name != null && !name.isEmpty()) {
-                    final MessageProcessorType[] messageProcessorTypes = MessageProcessorType.values();
-                    for (MessageProcessorType messageProcessorType : messageProcessorTypes) {
-                        if (messageProcessorType.isValidType(name)) {
-                            return messageProcessorType;
-                        }
+                    MessageProcessorType messageProcessorType = getMessageProcessorType(name);
+                    if (messageProcessorType != null) {
+                        return messageProcessorType;
                     }
                     return resolveMuleType(typeReference);
                 }
+            } else {
+                final String name = baseType.getCanonicalText();
+                if (!name.isEmpty()) {
+                    return getMessageProcessorType(name);
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static MessageProcessorType getMessageProcessorType(String name) {
+        final MessageProcessorType[] messageProcessorTypes = MessageProcessorType.values();
+        for (MessageProcessorType messageProcessorType : messageProcessorTypes) {
+            if (messageProcessorType.isValidType(name)) {
+                return messageProcessorType;
             }
         }
         return null;
@@ -478,7 +529,13 @@ public class MuleSupport {
             if (extension != null) {
                 final XmlAttribute base = extension.getAttribute("base");
                 if (base != null && base.getValueElement() != null) {
-                    return SchemaReferencesProvider.createTypeOrElementOrAttributeReference(base.getValueElement());
+                    final String text = base.getValue();
+                    if (text != null && text.indexOf(":") > 0) {
+                        final String prefix = text.substring(0, text.indexOf(":"));
+                        return SchemaReferencesProvider.createTypeOrElementOrAttributeReference(base.getValueElement(), prefix);
+                    } else {
+                        return SchemaReferencesProvider.createTypeOrElementOrAttributeReference(base.getValueElement());
+                    }
                 }
             }
         }
