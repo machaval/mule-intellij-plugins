@@ -26,11 +26,16 @@ public class MuleMavenProjectBuilderHelper {
         try {
             //Create mule folders.
             final VirtualFile appDirectory = VfsUtil.createDirectories(root.getPath() + "/src/main/app");
+            final VirtualFile resources = VfsUtil.createDirectories(root.getPath() + "/src/main/resources");
+            createLog4J(project, projectId, resources);
             final VirtualFile muleConfigFile = createMuleConfigFile(project, projectId, appDirectory);
+            createMuleDeployPropertiesFile(project, projectId, appDirectory);
+            createMuleAppPropertiesFiles(project, appDirectory);
             VfsUtil.createDirectories(root.getPath() + "/src/main/api");
             //MUnit support
             VfsUtil.createDirectories(root.getPath() + "/src/test/munit");
             VfsUtil.createDirectories(root.getPath() + "/src/test/resources");
+
             createPomFile(project, projectId, muleVersion, root);
             // execute when current dialog is closed (e.g. Project Structure)
             MavenUtil.invokeLater(project, ModalityState.NON_MODAL, new Runnable() {
@@ -41,6 +46,15 @@ public class MuleMavenProjectBuilderHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createMuleAppPropertiesFiles(final Project project, final VirtualFile appDirectory) {
+        new WriteCommandAction<VirtualFile>(project, "Create Mule Config File", PsiFile.EMPTY_ARRAY) {
+            @Override
+            protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+                appDirectory.createChildData(this, "mule-app.properties");
+            }
+        }.execute();
     }
 
     private static PsiFile getPsiFile(Project project, VirtualFile pom) {
@@ -70,6 +84,52 @@ public class MuleMavenProjectBuilderHelper {
         }.execute().getResultObject();
     }
 
+    private VirtualFile createLog4J(final Project project, final MavenId projectId, final VirtualFile appDirectory) {
+        return new WriteCommandAction<VirtualFile>(project, "Create Mule Deploy Properties File", PsiFile.EMPTY_ARRAY) {
+            @Override
+            protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+
+                try {
+                    VirtualFile configFile = appDirectory.findOrCreateChildData(this, "log4j2.xml");
+                    final Properties templateProps = new Properties();
+                    templateProps.setProperty("FILE_NAME", "${sys:mule.home}${sys:file.separator}logs${sys:file.separator}" + projectId.getArtifactId().toLowerCase() + ".log");
+                    templateProps.setProperty("FILE_PATTERN", "${sys:mule.home}${sys:file.separator}logs${sys:file.separator}" + projectId.getArtifactId().toLowerCase() + "-%i.log");
+                    final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.LOG4J2);
+                    final Properties defaultProperties = manager.getDefaultProperties();
+                    defaultProperties.putAll(templateProps);
+                    final String text = template.getText(defaultProperties);
+                    VfsUtil.saveText(configFile, text);
+                    result.setResult(configFile);
+                } catch (IOException e) {
+                    showError(project, e);
+                }
+            }
+        }.execute().getResultObject();
+    }
+
+    private VirtualFile createMuleDeployPropertiesFile(final Project project, final MavenId projectId, final VirtualFile appDirectory) {
+        return new WriteCommandAction<VirtualFile>(project, "Create Mule Deploy Properties File", PsiFile.EMPTY_ARRAY) {
+            @Override
+            protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+
+                try {
+                    VirtualFile configFile = appDirectory.findOrCreateChildData(this, "mule-deploy.properties");
+                    final Properties templateProps = new Properties();
+                    templateProps.setProperty("NAME", projectId.getArtifactId());
+                    final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.MULE_DEPLOY_PROPERTIES);
+                    final Properties defaultProperties = manager.getDefaultProperties();
+                    defaultProperties.putAll(templateProps);
+                    final String text = template.getText(defaultProperties);
+                    VfsUtil.saveText(configFile, text);
+                    result.setResult(configFile);
+                } catch (IOException e) {
+                    showError(project, e);
+                }
+            }
+        }.execute().getResultObject();
+    }
 
     private static void showError(Project project, Throwable e) {
         MavenUtil.showError(project, "Failed to create a Mule project", e);

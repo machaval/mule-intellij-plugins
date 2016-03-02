@@ -76,6 +76,8 @@
         <internalFileTemplate name="MUnit Config"/>
         <internalFileTemplate name="Mel File"/>
         <internalFileTemplate name="Mule Maven Project"/>
+        <internalFileTemplate name="log4j2"/>
+        <internalFileTemplate name="Mule Deploy Properties"/>
 
     </extensions>
 
