@@ -4,5 +4,6 @@
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
     <flow name="${NAME}Flow">
         <description>Example Flow for ${NAME}</description>
+        <logger message="#[payload]" />
     </flow>
 </mule>

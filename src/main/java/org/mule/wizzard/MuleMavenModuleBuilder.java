@@ -3,7 +3,6 @@ package org.mule.wizzard;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.ide.wizard.StepAdapter;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -14,6 +13,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.wizards.MavenArchetypesStep;
 import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
@@ -24,19 +24,26 @@ import java.io.File;
 
 public class MuleMavenModuleBuilder extends MavenModuleBuilder implements SourcePathsBuilder {
 
+    private String muleVersion = "3.8.0-SNAPSHOT";
+
+    public MuleMavenModuleBuilder() {
+        setProjectId(new MavenId("org.mule.app", "my-app", "1.0.0-SNAPSHOT"));
+    }
 
     @Override
     public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
         super.setupRootModel(rootModel);
-
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
         MavenUtil.runWhenInitialized(project, new DumbAwareRunnable() {
             public void run() {
-                new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), "3.8.0-SNAPSHOT", root);
+
+                new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root);
             }
         });
+
+
     }
 
     private VirtualFile createAndGetContentEntry() {
@@ -70,4 +77,17 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
     public String getDescription() {
         return "Create a Mule ESB Maven Based Project. Maven modules are used for developing <b>JVM-based</b> applications with dependencies managed by <b>Maven</b>. ";
     }
+
+    @Nullable
+    @Override
+    public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
+        MuleVersionConfiguration step = new MuleVersionConfiguration(this, muleVersion);
+        Disposer.register(parentDisposable, step);
+        return step;
+    }
+
+    public void setMuleVersion(String muleVersion) {
+        this.muleVersion = muleVersion;
+    }
+
 }

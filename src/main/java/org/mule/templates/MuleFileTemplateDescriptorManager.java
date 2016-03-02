@@ -11,8 +11,9 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
     public static final String MULE_CONFIGURATION_FILE = "Mule Config";
     public static final String DATA_WEAVE_FILE = "Data Weave";
     public static final String MEL_FILE = "Mel File";
-//    public static final String MULE_MAVEN_PROJECT = "Mule Maven Project.xml";
     public static final String MULE_MAVEN_PROJECT = "Mule Maven Project";
+    public static final String MULE_DEPLOY_PROPERTIES = "Mule Deploy Properties";
+    public static final String LOG4J2 = "log4j2";
     public static final String MUNIT_FILE = "MUnit Config";
     
 
