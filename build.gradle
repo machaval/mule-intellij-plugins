@@ -1,5 +1,5 @@
 plugins {
-  id "org.jetbrains.intellij" version "0.0.27"
+  id "org.jetbrains.intellij" version "0.0.43"
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -24,4 +24,9 @@ repositories {
 dependencies {
  	compile files('lib/mule-plugin-debugger-3.8.0.jar')
     
+}
+
+intellij {
+	updateSinceUntilBuild false
+
 }
