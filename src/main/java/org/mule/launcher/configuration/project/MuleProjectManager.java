@@ -7,6 +7,8 @@ import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileMoveEvent;
+import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
+import com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;

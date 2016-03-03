@@ -1,0 +1,5 @@
+#%RAML 0.8
+title: MyAPI
+version: 1.0
+baseUri: http://com.foo.bar/api
+

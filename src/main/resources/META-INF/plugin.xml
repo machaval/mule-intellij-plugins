@@ -79,6 +79,7 @@
         <internalFileTemplate name="Mule Maven Project"/>
         <internalFileTemplate name="log4j2"/>
         <internalFileTemplate name="Mule Deploy Properties"/>
+        <internalFileTemplate name="RAML File"/>
 
     </extensions>
 

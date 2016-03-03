@@ -14,6 +14,7 @@ public class MuleIcons {
     public static final Icon MUnitFileType = IconLoader.findIcon("/munit_type.png");
     public static final Icon DataFileType = IconLoader.findIcon("/weave_type.png");
     public static final Icon MelFileType = IconLoader.findIcon("/mel_type.png");
+    public static final Icon RamlFileType = IconLoader.findIcon("/raml_type.png");
 
     private MuleIcons() {
         super();

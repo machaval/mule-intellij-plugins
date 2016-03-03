@@ -15,7 +15,9 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
     public static final String MULE_DEPLOY_PROPERTIES = "Mule Deploy Properties";
     public static final String LOG4J2 = "log4j2";
     public static final String MUNIT_FILE = "MUnit Config";
-    
+    public static final String RAML_FILE = "RAML File";
+
+
 
     @Override
     public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
@@ -24,6 +26,8 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
         group.addTemplate(new FileTemplateDescriptor(DATA_WEAVE_FILE, MuleIcons.DataFileType));
         group.addTemplate(new FileTemplateDescriptor(MULE_MAVEN_PROJECT, MavenIcons.MavenLogo));
         group.addTemplate(new FileTemplateDescriptor(MUNIT_FILE, MuleIcons.MUnitFileType));
+        group.addTemplate(new FileTemplateDescriptor(RAML_FILE, MuleIcons.RamlFileType));
+
         return group;
     }
 }

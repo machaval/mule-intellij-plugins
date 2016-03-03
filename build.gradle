@@ -23,7 +23,8 @@ repositories {
 
 dependencies {
  	compile files('lib/mule-plugin-debugger-3.8.0.jar')
-    
+	compile files('lib/snakeyaml-1.17.jar')
+
 }
 
 intellij {
