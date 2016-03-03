@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.runner;
+package org.mule.launcher.configuration.runner;
 
 
 public interface MuleRunner {

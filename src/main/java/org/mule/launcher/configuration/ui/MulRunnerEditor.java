@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.ui;
+package org.mule.launcher.configuration.ui;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -7,7 +7,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.mule.lanucher.configuration.MuleConfiguration;
+import org.mule.launcher.configuration.MuleConfiguration;
 
 import javax.swing.*;
 import java.util.Arrays;

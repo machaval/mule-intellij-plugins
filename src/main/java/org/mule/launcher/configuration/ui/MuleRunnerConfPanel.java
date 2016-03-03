@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.ui;
+package org.mule.launcher.configuration.ui;
 
 import com.intellij.application.options.ModulesComboBox;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;

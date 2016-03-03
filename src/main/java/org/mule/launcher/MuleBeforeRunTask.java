@@ -1,4 +1,4 @@
-package org.mule.lanucher;
+package org.mule.launcher;
 
 
 import com.intellij.execution.BeforeRunTask;

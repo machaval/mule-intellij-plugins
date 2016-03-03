@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.archive;
+package org.mule.launcher.configuration.archive;
 
 
 import com.intellij.execution.ExecutionException;

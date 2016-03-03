@@ -2,19 +2,13 @@ package org.mule.actions;
 
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import org.mule.lanucher.configuration.archive.MuleAppManager;
 import org.mule.templates.MuleFileTemplateDescriptorManager;
 import org.mule.util.MuleIcons;
 
@@ -61,7 +55,7 @@ public class CreateMuleComponentFile extends CreateFileFromTemplateAction implem
         if (MuleFileTemplateDescriptorManager.MULE_CONFIGURATION_FILE.equals(templateName)) {
             log.warn("Template is Mule Config, Created Element name is " + createdElement.getName());
             Module module = ModuleUtilCore.findModuleForPsiElement(createdElement);
-            MuleAppManager.getInstance(module.getProject()).getDeployProperties().addConfigFile(createdElement.getName());
+//            MuleAppManager.getInstance(module.getProject()).getDeployProperties().addConfigFile(createdElement.getName());
         }
 
 

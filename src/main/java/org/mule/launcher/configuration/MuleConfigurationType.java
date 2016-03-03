@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration;
+package org.mule.launcher.configuration;
 
 
 import com.intellij.execution.configurations.ConfigurationFactory;

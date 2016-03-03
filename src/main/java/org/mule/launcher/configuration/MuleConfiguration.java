@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration;
+package org.mule.launcher.configuration;
 
 
 import com.intellij.execution.ExecutionException;
@@ -15,8 +15,8 @@ import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mule.lanucher.configuration.runner.MuleRunnerCommandLine;
-import org.mule.lanucher.configuration.ui.MulRunnerEditor;
+import org.mule.launcher.configuration.runner.MuleRunnerCommandLine;
+import org.mule.launcher.configuration.ui.MulRunnerEditor;
 
 public class MuleConfiguration extends LocatableConfigurationBase implements ModuleRunProfile, RunConfigurationWithSuppressedDefaultDebugAction {
 

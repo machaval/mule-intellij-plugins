@@ -1,11 +1,8 @@
-package org.mule.lanucher.configuration;
+package org.mule.launcher.configuration;
 
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
-import org.mule.util.MuleIcons;
-
-import javax.swing.*;
 
 
 class MuleConfigurationFactory extends ConfigurationFactory {

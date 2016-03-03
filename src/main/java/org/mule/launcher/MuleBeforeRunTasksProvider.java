@@ -1,4 +1,4 @@
-package org.mule.lanucher;
+package org.mule.launcher;
 
 
 import com.intellij.execution.BeforeRunTaskProvider;
@@ -23,7 +23,7 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.idea.maven.tasks.MavenBeforeRunTask;
 import org.jetbrains.idea.maven.tasks.TasksBundle;
-import org.mule.lanucher.configuration.MuleConfiguration;
+import org.mule.launcher.configuration.MuleConfiguration;
 import org.mule.util.MuleIcons;
 
 import javax.swing.*;

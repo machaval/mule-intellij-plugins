@@ -23,11 +23,12 @@
     <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
         <!-- Mule Runner/Debugger -->
-        <configurationType implementation="org.mule.lanucher.configuration.MuleConfigurationType"/>
-        <programRunner id="Debug" implementation="org.mule.lanucher.configuration.runner.MuleProgramDebugger"
+        <configurationType implementation="org.mule.launcher.configuration.MuleConfigurationType"/>
+        <programRunner id="Debug" implementation="org.mule.launcher.configuration.runner.MuleProgramDebugger"
                        order="last"/>
-        <stepsBeforeRunProvider implementation="org.mule.lanucher.MuleBeforeRunTasksProvider"/>
+        <stepsBeforeRunProvider implementation="org.mule.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
         <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
 
@@ -87,8 +88,11 @@
 
     <project-components>
         <component>
-            <implementation-class>org.mule.lanucher.configuration.archive.MuleAppManager</implementation-class>
+            <implementation-class>org.mule.launcher.configuration.archive.MuleAppManager</implementation-class>
             <loadForDefaultProject/>
+        </component>
+        <component>
+            <implementation-class>org.mule.launcher.configuration.project.MuleProjectManager</implementation-class>
         </component>
     </project-components>
 

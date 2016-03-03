@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.runner;
+package org.mule.launcher.configuration.runner;
 
 import com.intellij.debugger.DebuggerManagerEx;
 import com.intellij.debugger.DefaultDebugEnvironment;
@@ -32,10 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.ContextAwareDebugProcess;
 import org.mule.debugger.MuleDebugProcess;
-import org.mule.debugger.MuleSuspendContext;
 import org.mule.debugger.session.MessageReceivedListener;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.lanucher.configuration.MuleConfiguration;
+import org.mule.launcher.configuration.MuleConfiguration;
 
 import java.util.Map;
 

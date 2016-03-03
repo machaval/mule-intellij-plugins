@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.archive;
+package org.mule.launcher.configuration.archive;
 
 
 import com.intellij.execution.ExecutionException;
@@ -6,7 +6,9 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
@@ -14,12 +16,10 @@ import java.io.File;
 
 public class MuleAppManager extends AbstractProjectComponent {
 
-    private MuleDeployProperties deployProperties;
-    Logger log = Logger.getInstance(MuleAppManager.class);
+    Logger logger = Logger.getInstance(MuleAppManager.class);
 
     protected MuleAppManager(Project project) {
         super(project);
-        deployProperties = new MuleDeployProperties(project.getBasePath());
     }
 
     @NotNull
@@ -29,10 +29,6 @@ public class MuleAppManager extends AbstractProjectComponent {
             return new MuleAppMavenHandler().getMuleApp(module);
         }
         throw new ExecutionException("Unable to find application builder");
-    }
-
-    public MuleDeployProperties getDeployProperties() {
-        return deployProperties;
     }
 
     public static MuleAppManager getInstance(Project p) {

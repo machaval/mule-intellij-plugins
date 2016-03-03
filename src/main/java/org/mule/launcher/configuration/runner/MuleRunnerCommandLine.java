@@ -1,4 +1,4 @@
-package org.mule.lanucher.configuration.runner;
+package org.mule.launcher.configuration.runner;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
@@ -14,13 +14,12 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.mulesoft.mule.debugger.server.MuleDebuggerProperties;
 import org.codehaus.plexus.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
-import org.mule.lanucher.configuration.MuleConfiguration;
-import org.mule.lanucher.configuration.archive.MuleAppManager;
+import org.mule.launcher.configuration.MuleConfiguration;
+import org.mule.launcher.configuration.archive.MuleAppManager;
 import org.mule.sdk.MuleClassPath;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleRunner {
