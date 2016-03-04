@@ -19,13 +19,13 @@ public class RamlFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "RAML";
+        return "RAML file";
     }
 
     @NotNull
     @Override
     public String getDescription() {
-        return "RAML";
+        return "RAML file";
     }
 
     @NotNull

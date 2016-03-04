@@ -71,6 +71,9 @@
         <lang.commenter language="Mel" implementationClass="org.mule.lang.mel.MelCommenter"/>
         <lang.braceMatcher language="Mel" implementationClass="org.mule.lang.mel.MelPairedBraceMatcher"/>
 
+        <!-- RAML -->
+        <fileTypeFactory implementation="org.mule.lang.raml.RamlFileTypeFactory"/>
+
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
@@ -105,6 +108,12 @@
         <action id="Mule.CreateMuleComponent"
                 class="org.mule.actions.CreateMuleComponentFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+
+        </action>
+        <action id="Mule.GenerateFlowsFromRAML"
+                class="org.mule.actions.APIKitScaffoldingAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="NewGroup1"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <!-- TODO: Shound MUnit config be a separate action or CreateMuleComponent action with MUnit kind? -->
         <!--          

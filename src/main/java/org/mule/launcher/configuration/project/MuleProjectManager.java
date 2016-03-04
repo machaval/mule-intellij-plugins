@@ -2,11 +2,12 @@ package org.mule.launcher.configuration.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileMoveEvent;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +25,6 @@ public class MuleProjectManager  extends AbstractProjectComponent {
         super(project);
     }
 
-    private final String appPath = MuleProjectManager.this.myProject.getBasePath() + "/" + MuleDeployProperties.MULE_DEPLOY_PROPERTIES_DIR;
-
     @Override
     public void projectOpened() {
         VirtualFileManager manager = VirtualFileManager.getInstance();
@@ -34,52 +33,81 @@ public class MuleProjectManager  extends AbstractProjectComponent {
         {
             @Override
             public void fileCreated(@NotNull VirtualFileEvent event) {
-                String fileName = event.getFileName();
-                String fileAbsolutePath = event.getFile().getPath();
 
-                if (fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
-                    if (fileName.endsWith(".xml")) { //This is config file
-                        String pathRelative = getRelativePath(fileAbsolutePath, appPath);
-                        MuleDeployProperties.addConfigFile(MuleProjectManager.this.myProject.getBasePath(), pathRelative);
+                ProjectFileIndex projectIndex = ProjectRootManager.getInstance(MuleProjectManager.this.myProject).getFileIndex();
+                Module module = projectIndex.getModuleForFile(event.getFile());
+
+                if (module != null) { // File belongs to this module
+
+                    String fileName = event.getFileName();
+                    String fileAbsolutePath = event.getFile().getPath();
+
+                    String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
+                    String appPath = moduleContentRoot + "/src/main/app";
+                    if (fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
+                        if (fileName.endsWith(".xml")) { //This is config file
+                            String pathRelative = getRelativePath(fileAbsolutePath, appPath);
+                            MuleDeployProperties.addConfigFile(appPath, pathRelative);
+                        }
                     }
                 }
             }
 
             @Override
-            public void fileDeleted(@NotNull VirtualFileEvent event) {
-                String fileName = event.getFileName();
-                String fileAbsolutePath = event.getFile().getPath();
+            public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
 
-                if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
-                    if (fileName.endsWith(".xml")) { //This is config file
-                        String pathRelative = getRelativePath(fileAbsolutePath, appPath);
-                        MuleDeployProperties.deleteConfigFile(MuleProjectManager.this.myProject.getBasePath(), pathRelative);
-                    } else if (event.getFile().isDirectory()) {
-                        //TODO - how to delete all files in directory...
+                ProjectFileIndex projectIndex = ProjectRootManager.getInstance(MuleProjectManager.this.myProject).getFileIndex();
+                Module module = projectIndex.getModuleForFile(event.getFile());
+
+                if (module != null) { // File belongs to this module
+                    String fileName = event.getFileName();
+                    String fileAbsolutePath = event.getFile().getPath();
+
+                    String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
+                    String appPath = moduleContentRoot + "/src/main/app";
+
+                    if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
+                        if (fileName.endsWith(".xml")) { //This is config file
+                            String pathRelative = getRelativePath(fileAbsolutePath, appPath);
+                            MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
+                        } else if (event.getFile().isDirectory()) {
+                            /* TODO
+                            In `VirtualFileAdapter.beforeFileDeletion` the virtual directory still exists and you may invoke `getChildren()` on it.
+                            */
+                        }
                     }
                 }
             }
 
             @Override
-            public void fileMoved(@NotNull VirtualFileMoveEvent event) {
-                String fileName = event.getFileName();
+            public void beforeFileMovement(@NotNull VirtualFileMoveEvent event) {
 
-                String oldAbsolutePath = event.getOldParent().getPath() + "/" + fileName;
-                String newAbsolutePath = event.getNewParent() + "/" + fileName;
+                ProjectFileIndex projectIndex = ProjectRootManager.getInstance(MuleProjectManager.this.myProject).getFileIndex();
+                Module module = projectIndex.getModuleForFile(event.getFile());
 
-                if (fileName.endsWith(".xml")) { //This is config file
+                if (module != null) { // File belongs to this module
 
-                    if (oldAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
-                        String pathRelative = getRelativePath(oldAbsolutePath, appPath);
-                        MuleDeployProperties.deleteConfigFile(MuleProjectManager.this.myProject.getBasePath(), pathRelative);
-                    }
-                    if (newAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
-                        String pathRelative = getRelativePath(newAbsolutePath, appPath);
-                        MuleDeployProperties.addConfigFile(MuleProjectManager.this.myProject.getBasePath(), pathRelative);
+                    String fileName = event.getFileName();
+
+                    String oldAbsolutePath = event.getOldParent().getPath() + "/" + fileName;
+                    String newAbsolutePath = event.getNewParent() + "/" + fileName;
+
+                    String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
+                    String appPath = moduleContentRoot + "/src/main/app";
+
+                    if (fileName.endsWith(".xml")) { //This is config file
+
+                        if (oldAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
+                            String pathRelative = getRelativePath(oldAbsolutePath, appPath);
+                            MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
+                        }
+                        if (newAbsolutePath.startsWith(appPath)) { //The file now is in src/main/app, add
+                            String pathRelative = getRelativePath(newAbsolutePath, appPath);
+                            MuleDeployProperties.addConfigFile(appPath, pathRelative);
+                        }
                     }
                 }
             }
-
             //=======================================
 
             private String getRelativePath(String absolutePath, String appPath) {

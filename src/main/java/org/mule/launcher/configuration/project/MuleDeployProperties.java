@@ -18,8 +18,8 @@ public class MuleDeployProperties {
 
     static Logger logger = Logger.getInstance(MuleDeployProperties.class);
 
-    public static void addConfigFile(String projectBaseDir, String configFile) {
-        String deployPropertiesFilePath = projectBaseDir + "/" + MULE_DEPLOY_PROPERTIES_DIR + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
+    public static void addConfigFile(String appPath, String configFile) {
+        String deployPropertiesFilePath = appPath + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
         List<String> configFiles = new ArrayList<String>();
         try {
             Properties deployProperties = new Properties();
@@ -29,18 +29,20 @@ public class MuleDeployProperties {
                 String[] configs = cfg.trim().split(",");
                 configFiles.addAll(Arrays.asList(configs));
             }
-            configFiles.add(configFile);
-            String configResourcesProperty = String.join(",", configFiles);
-            deployProperties.setProperty("config.resources", configResourcesProperty);
-            FileOutputStream out = new FileOutputStream(deployPropertiesFilePath);
-            deployProperties.store(out, "Deployment properties are managed by the IntelliJ IDEA Mule Plugin; do not modify!");
+            if (!configFiles.contains(configFile)) {//Avoid duplicates
+                configFiles.add(configFile);
+                String configResourcesProperty = String.join(",", configFiles);
+                deployProperties.setProperty("config.resources", configResourcesProperty);
+                FileOutputStream out = new FileOutputStream(deployPropertiesFilePath);
+                deployProperties.store(out, "Deployment properties are managed by the IntelliJ IDEA Mule Plugin; do not modify!");
+            }
         } catch (IOException e) {
             logger.error("Unable to add config resource to deployment properties: ", e);
         }
     }
 
-    public static void deleteConfigFile(String projectBaseDir, String configFile) {
-        String deployPropertiesFilePath = projectBaseDir + "/" + MULE_DEPLOY_PROPERTIES_DIR + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
+    public static void deleteConfigFile(String appPath, String configFile) {
+        String deployPropertiesFilePath = appPath + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
         List<String> configFiles = new ArrayList<String>();
         try {
             Properties deployProperties = new Properties();
