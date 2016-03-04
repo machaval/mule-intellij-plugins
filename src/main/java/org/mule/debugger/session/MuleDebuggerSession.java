@@ -201,6 +201,7 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     @Override
     public void onExit() {
         isConnected = false;
+        getDebuggerClient().disconnect();
     }
 
     public void eval(String script, final ScriptEvaluationCallback callback) {
