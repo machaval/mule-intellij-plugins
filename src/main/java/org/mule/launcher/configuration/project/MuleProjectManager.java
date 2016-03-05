@@ -2,6 +2,7 @@ package org.mule.launcher.configuration.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -10,7 +11,13 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
+import org.mule.config.model.Mule;
+import org.mule.util.MuleSupport;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,22 +41,36 @@ public class MuleProjectManager  extends AbstractProjectComponent {
             @Override
             public void fileCreated(@NotNull VirtualFileEvent event) {
 
-                ProjectFileIndex projectIndex = ProjectRootManager.getInstance(MuleProjectManager.this.myProject).getFileIndex();
-                Module module = projectIndex.getModuleForFile(event.getFile());
+                try {
+                    ProjectFileIndex projectIndex = ProjectRootManager.getInstance(MuleProjectManager.this.myProject).getFileIndex();
+                    Module module = projectIndex.getModuleForFile(event.getFile());
+                    if (module != null) { // File belongs to this module
 
-                if (module != null) { // File belongs to this module
+                        String fileName = event.getFileName();
+                        String fileAbsolutePath = event.getFile().getPath();
 
-                    String fileName = event.getFileName();
-                    String fileAbsolutePath = event.getFile().getPath();
+                        String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
+                        String appPath = moduleContentRoot + "/src/main/app";
 
-                    String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                    String appPath = moduleContentRoot + "/src/main/app";
-                    if (fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
-                        if (fileName.endsWith(".xml")) { //This is config file
-                            String pathRelative = getRelativePath(fileAbsolutePath, appPath);
-                            MuleDeployProperties.addConfigFile(appPath, pathRelative);
+                        PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
+
+                        /** TODO - this does not work becase rootTag is empty
+                        logger.warn("*** PSI FILE IS " + psiFile);
+                        final XmlFile psiFile1 = (XmlFile) psiFile;
+                        final XmlTag rootTag = psiFile1.getRootTag();
+                        logger.warn("*** ROOT TAG IS " + rootTag);
+                        logger.warn("*** LOCAL NAME IS " + rootTag.getLocalName());
+                        */
+
+                        if (fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
+                            if (psiFile.getFileType() == StdFileTypes.XML) { //This is config file
+                                String pathRelative = getRelativePath(fileAbsolutePath, appPath);
+                                MuleDeployProperties.addConfigFile(appPath, pathRelative);
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    logger.error(e);
                 }
             }
 
@@ -65,9 +86,9 @@ public class MuleProjectManager  extends AbstractProjectComponent {
 
                     String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
                     String appPath = moduleContentRoot + "/src/main/app";
-
+                    PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                     if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
-                        if (fileName.endsWith(".xml")) { //This is config file
+                        if (MuleSupport.isMuleFile(psiFile)) { //This is config file
                             String pathRelative = getRelativePath(fileAbsolutePath, appPath);
                             MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
                         } else if (event.getFile().isDirectory()) {
@@ -95,7 +116,8 @@ public class MuleProjectManager  extends AbstractProjectComponent {
                     String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
                     String appPath = moduleContentRoot + "/src/main/app";
 
-                    if (fileName.endsWith(".xml")) { //This is config file
+                    PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
+                    if (MuleSupport.isMuleFile(psiFile)) { //This is config file
 
                         if (oldAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
                             String pathRelative = getRelativePath(oldAbsolutePath, appPath);
