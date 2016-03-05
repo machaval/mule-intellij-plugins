@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'maven'
 
 intellij{
     plugins = ["maven", "groovy"]
@@ -19,41 +20,46 @@ sourceSets {
 
 repositories {
     mavenLocal()
+	mavenCentral()
+	maven {
+		url "http://central.maven.org/maven2/"
+	}
 	maven {
 		url "https://repository.mulesoft.org/releases/"
 	}
 	maven {
-		url "http://repo1.maven.org/maven2/"
+		url "https://repository.mulesoft.org/nexus/content/repositories/releases"
 	}
 }
 
 dependencies {
-	compile files('lib/apikit-scaffolder-1.7.3.jar')
-	compile files('lib/btf-1.2.jar')
-	compile files('lib/commons-beanutils-1.7.0.jar')
-	compile files('lib/commons-io-2.4.jar')
-	compile files('lib/jackson-annotations-2.4.0.jar')
-	compile files('lib/jackson-core-2.4.4.jar')
-	compile files('lib/jackson-coreutils-1.8.jar')
-	compile files('lib/jackson-databind-2.4.4.jar')
-	compile files('lib/jackson-module-jsonSchema-2.4.4.jar')
-	compile files('lib/jaxen-1.1.6.jar')
-	compile files('lib/jdom-2.0.6.jar')
-	compile files('lib/joda-time-2.3.jar')
-	compile files('lib/json-schema-core-1.2.5.jar')
-	compile files('lib/json-schema-validator-2.2.6.jar')
-	compile files('lib/juniversalchardet-1.0.3.jar')
-	compile files('lib/libphonenumber-6.2.jar')
-	compile files('lib/mailapi-1.4.3.jar')
-	compile files('lib/maven-plugin-api-3.2.5.jar')
-	compile files('lib/msg-simple-1.1.jar')
 	compile files('lib/mule-plugin-debugger-3.8.0.jar')
-	compile files('lib/raml-parser-0.8.13.jar')
-	compile files('lib/snakeyaml-1.17.jar')
-	compile files('lib/uri-template-0.9.jar')
+
+	compile 'org.mule.tools:apikit-scaffolder:1.7.3'
+	compile 'com.github.fge:btf:1.2'
+	compile 'commons-beanutils:commons-beanutils:1.7.0'
+	compile 'commons-io:commons-io:2.4'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
+	compile 'com.fasterxml.jackson.core:jackson-core:2.4.4'
+	compile 'com.github.fge:jackson-coreutils:1.8'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+	compile 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.4.4'
+	compile 'jaxen:jaxen:1.1.4'
+	compile 'org.jdom:jdom2:2.0.5'
+	compile 'joda-time:joda-time:2.3'
+	compile 'com.github.fge:json-schema-core:1.2.5'
+	compile 'com.github.fge:json-schema-validator:2.2.6'
+	compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+	compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
+	compile 'javax.mail:mailapi:1.4.3'
+	compile 'org.apache.maven:maven-plugin-api:2.2.1'
+	compile 'com.github.fge:msg-simple:1.1'
+	compile 'org.raml:raml-parser:0.8.13'
+	compile 'org.yaml:snakeyaml:1.17'
+	compile 'com.github.fge:uri-template:0.9'
+
 }
 
 intellij {
 	updateSinceUntilBuild false
-
 }
