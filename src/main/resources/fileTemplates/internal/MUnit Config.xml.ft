@@ -13,8 +13,12 @@
     
     <munit:config name="${NAME}-munit-config"/>
     <mock:config name="${NAME}-mock-config"/>
+
+    <spring:beans>
+      <spring:import resource="${NAME}.xml"/>
+    </spring:beans>
       
-    <munit:test name="${NAME}Test">
+    <munit:test name="${NAME}Test" description="">
       <logger/>
     </munit:test>
     
