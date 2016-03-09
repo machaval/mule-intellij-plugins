@@ -20,7 +20,8 @@ public class MuleDomFileDescription extends DomFileDescription<Mule> {
 
     @Override
     public boolean isMyFile(@NotNull XmlFile file, @Nullable Module module) {
-        return MuleSupport.isMuleFile(file);
+        boolean isMyFile = MuleSupport.isMuleFile(file) && !MuleSupport.isMUnitFile(file);
+        return isMyFile;
     }
 
     @Nullable

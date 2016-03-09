@@ -8,7 +8,7 @@ import org.mule.lang.mel.MelLanguage;
 
 public class RamlFile extends PsiFileBase {
     public RamlFile(@NotNull FileViewProvider viewProvider) {
-        super(viewProvider, MelLanguage.getInstance());
+        super(viewProvider, RamlLanguage.getInstance());
     }
 
     @NotNull

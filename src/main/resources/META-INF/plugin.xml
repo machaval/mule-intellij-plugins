@@ -73,6 +73,11 @@
 
         <!-- RAML -->
         <fileTypeFactory implementation="org.mule.lang.raml.RamlFileTypeFactory"/>
+        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.mule.lang.raml.highlighter.RamlSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
+
+        <!-- MUnit -->
+        <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
 
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
