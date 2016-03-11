@@ -1,5 +1,5 @@
 // Generated on Fri Nov 20 15:04:02 ART 2015
-// DTD/Schema  :    http://www.mulesoft.org/schema/mule/core
+// DTD/Schema  :    http://www.mulesoft.org/schema/mule/munit
 
 package org.mule.config.model;
 
@@ -13,7 +13,7 @@ import org.mule.config.model.presentation.FlowPresentationProvider;
 import org.mule.config.model.presentation.MUnitTestPresentationProvider;
 
 /**
- * http://www.mulesoft.org/schema/mule/core:flowType interface.
+ * http://www.mulesoft.org/schema/mule/munit:munitTestType interface.
  */
 @Presentation(provider = MUnitTestPresentationProvider.class)
 public interface MUnitTest extends Flow {

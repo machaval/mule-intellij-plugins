@@ -32,11 +32,13 @@ public class APIKitScaffoldingAction extends AnAction {
         Project project = anActionEvent.getProject();
         VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
         String appPath = moduleContentRoot.getPath() + "/src/main/app";
-        logger.warn("*** APP PATH IS " + appPath);
+        //logger.warn("*** APP PATH IS " + appPath);
         File appDir = new File(appPath);
         List<File> ramlFiles = new ArrayList<File>();
         ramlFiles.add(new File(file.getPath()));
-        new ScaffolderAPI().run(ramlFiles, appDir);
+        //new ScaffolderAPI().run(ramlFiles, appDir);
+        new ScaffolderAPI().execute(ramlFiles, appDir, null, null);
+        //logger.warn("*** ScaffolderAPI ran successfully");
     }
 
     @Override

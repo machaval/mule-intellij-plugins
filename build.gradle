@@ -9,6 +9,10 @@ intellij{
     plugins = ["maven", "groovy"]
 }
 
+configurations {
+	compile.exclude module: 'xml-apis'
+	all*.exclude group: 'xml-apis', module: 'xml-apis'
+}
 
 sourceSets {
 	main{
@@ -35,7 +39,9 @@ repositories {
 dependencies {
 	compile files('lib/mule-plugin-debugger-3.8.0.jar')
 
-	compile 'org.mule.tools:apikit-scaffolder:1.7.3'
+	compile ('org.mule.tools:apikit-scaffolder:1.7.3') {
+		exclude module: 'xml-apis'
+	}
 	compile 'com.github.fge:btf:1.2'
 	compile 'commons-beanutils:commons-beanutils:1.7.0'
 	compile 'commons-io:commons-io:2.4'
@@ -58,6 +64,7 @@ dependencies {
 	compile 'org.yaml:snakeyaml:1.17'
 	compile 'com.github.fge:uri-template:0.9'
 
+	//exclude module: 'xml-apis'
 }
 
 intellij {

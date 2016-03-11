@@ -580,6 +580,8 @@ public class MuleSupport {
                 return "/processors";
             case "sub-flow":
                 return "/subprocessors";
+            case "test":
+                return "/tests";
             default:
                 return "/es";
         }
