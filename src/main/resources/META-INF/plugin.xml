@@ -23,11 +23,12 @@
     <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
         <!-- Mule Runner/Debugger -->
-        <configurationType implementation="org.mule.lanucher.configuration.MuleConfigurationType"/>
-        <programRunner id="Debug" implementation="org.mule.lanucher.configuration.runner.MuleProgramDebugger"
+        <configurationType implementation="org.mule.launcher.configuration.MuleConfigurationType"/>
+        <programRunner id="Debug" implementation="org.mule.launcher.configuration.runner.MuleProgramDebugger"
                        order="last"/>
-        <stepsBeforeRunProvider implementation="org.mule.lanucher.MuleBeforeRunTasksProvider"/>
+        <stepsBeforeRunProvider implementation="org.mule.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
         <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
 
@@ -70,6 +71,14 @@
         <lang.commenter language="Mel" implementationClass="org.mule.lang.mel.MelCommenter"/>
         <lang.braceMatcher language="Mel" implementationClass="org.mule.lang.mel.MelPairedBraceMatcher"/>
 
+        <!-- RAML -->
+        <fileTypeFactory implementation="org.mule.lang.raml.RamlFileTypeFactory"/>
+        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.mule.lang.raml.highlighter.RamlSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
+
+        <!-- MUnit -->
+        <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
+
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
@@ -78,6 +87,7 @@
         <internalFileTemplate name="Mule Maven Project"/>
         <internalFileTemplate name="log4j2"/>
         <internalFileTemplate name="Mule Deploy Properties"/>
+        <internalFileTemplate name="RAML File"/>
 
     </extensions>
 
@@ -87,8 +97,11 @@
 
     <project-components>
         <component>
-            <implementation-class>org.mule.lanucher.configuration.archive.MuleAppManager</implementation-class>
+            <implementation-class>org.mule.launcher.configuration.archive.MuleAppManager</implementation-class>
             <loadForDefaultProject/>
+        </component>
+        <component>
+            <implementation-class>org.mule.launcher.configuration.project.MuleProjectManager</implementation-class>
         </component>
     </project-components>
 
@@ -100,6 +113,12 @@
         <action id="Mule.CreateMuleComponent"
                 class="org.mule.actions.CreateMuleComponentFile">
             <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+
+        </action>
+        <action id="Mule.GenerateFlowsFromRAML"
+                class="org.mule.actions.APIKitScaffoldingAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="NewGroup1"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <!-- TODO: Shound MUnit config be a separate action or CreateMuleComponent action with MUnit kind? -->
         <!--          

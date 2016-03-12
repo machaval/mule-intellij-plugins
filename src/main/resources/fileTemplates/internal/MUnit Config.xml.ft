@@ -18,7 +18,7 @@
       <spring:import resource="${NAME}.xml"/>
     </spring:beans>
       
-    <munit:test name="${NAME}Test" description="">
+    <munit:test name="${NAME}Test" description="My First MUnit Test">
       <logger/>
     </munit:test>
     

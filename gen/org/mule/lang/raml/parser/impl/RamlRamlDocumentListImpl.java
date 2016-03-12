@@ -1,0 +1,37 @@
+// This is a generated file. Not intended for manual editing.
+package org.mule.lang.raml.parser.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import static org.mule.lang.raml.parser.psi.RamlTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.mule.lang.raml.parser.psi.*;
+
+public class RamlRamlDocumentListImpl extends ASTWrapperPsiElement implements RamlRamlDocumentList {
+
+  public RamlRamlDocumentListImpl(ASTNode node) {
+    super(node);
+  }
+
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof RamlVisitor) ((RamlVisitor)visitor).visitRamlDocumentList(this);
+    else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public RamlRamlDocument getRamlDocument() {
+    return findNotNullChildByClass(RamlRamlDocument.class);
+  }
+
+  @Override
+  @Nullable
+  public RamlRamlDocumentList getRamlDocumentList() {
+    return findChildByClass(RamlRamlDocumentList.class);
+  }
+
+}

@@ -18,12 +18,10 @@ package org.mule.sdk;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.roots.OrderEnumerator;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mule.lanucher.configuration.runner.MuleRunnerCommandLine;
+import org.mule.launcher.configuration.runner.MuleRunnerCommandLine;
 
 
 import java.io.File;

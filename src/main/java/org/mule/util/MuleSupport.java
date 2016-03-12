@@ -47,6 +47,8 @@ import java.util.*;
 public class MuleSupport {
 
     public static final String MULE_LOCAL_NAME = "mule";
+    public static final String MUNIT_TEST_LOCAL_NAME = "test";
+    public static final String MUNIT_NAMESPACE = "munit";
 
     public static boolean isMuleFile(PsiFile psiFile) {
         if (!(psiFile instanceof XmlFile)) {
@@ -58,6 +60,23 @@ public class MuleSupport {
         final XmlFile psiFile1 = (XmlFile) psiFile;
         final XmlTag rootTag = psiFile1.getRootTag();
         return isMuleConfig(rootTag);
+    }
+
+    public static boolean isMUnitFile(PsiFile psiFile) {
+        if (!(psiFile instanceof XmlFile)) {
+            return false;
+        }
+        if (psiFile.getFileType() != StdFileTypes.XML) {
+            return false;
+        }
+        final XmlFile psiFile1 = (XmlFile) psiFile;
+        final XmlTag rootTag = psiFile1.getRootTag();
+        if (!isMuleConfig(rootTag))
+            return false;
+
+        XmlTag[] munitTags = rootTag.findSubTags("test", rootTag.getNamespaceByPrefix("munit"));
+        boolean isMUnit = (munitTags != null && munitTags.length > 0);
+        return isMUnit;
     }
 
     private static boolean isMuleConfig(XmlTag rootTag) {
@@ -561,6 +580,8 @@ public class MuleSupport {
                 return "/processors";
             case "sub-flow":
                 return "/subprocessors";
+            case "test":
+                return "/tests";
             default:
                 return "/es";
         }
@@ -600,7 +621,7 @@ public class MuleSupport {
     }
 
     private static boolean isGlobalElement(XmlTag subTag) {
-        return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow"));
+        return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow") || subTag.getLocalName().equals("test"));
     }
 
     public enum MessageProcessorType {
