@@ -18,7 +18,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleElementType;
+import org.mule.util.MuleConfigUtils;
 
 
 public class MuleBreakpointType extends XLineBreakpointType<XBreakpointProperties> {
@@ -36,15 +37,15 @@ public class MuleBreakpointType extends XLineBreakpointType<XBreakpointPropertie
             return false;
         }
         final FileType fileType = psiFile.getFileType();
-        final boolean isMuleAndXml = fileType == StdFileTypes.XML && MuleSupport.isMuleFile(psiFile);
+        final boolean isMuleAndXml = fileType == StdFileTypes.XML && MuleConfigUtils.isMuleFile(psiFile);
         if (!isMuleAndXml) {
             return false;
         } else {
-            final XmlTag xmlTagAt = MuleSupport.getXmlTagAt(project, XDebuggerUtil.getInstance().createPosition(file, line));
+            final XmlTag xmlTagAt = MuleConfigUtils.getXmlTagAt(project, XDebuggerUtil.getInstance().createPosition(file, line));
             if (xmlTagAt == null) {
                 return false;
             } else {
-                return MuleSupport.getMessageProcessorType(xmlTagAt) == MuleSupport.MessageProcessorType.MESSAGE_PROCESSOR;
+                return MuleConfigUtils.getMuleElementTypeFromXmlElement(xmlTagAt) == MuleElementType.MESSAGE_PROCESSOR;
             }
         }
     }

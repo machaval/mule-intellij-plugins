@@ -8,9 +8,8 @@ import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.model.MUnit;
-import org.mule.config.model.Mule;
+import org.mule.util.MuleConfigUtils;
 import org.mule.util.MuleIcons;
-import org.mule.util.MuleSupport;
 
 import javax.swing.*;
 
@@ -21,8 +20,7 @@ public class MUnitDomFileDescription extends DomFileDescription<MUnit> {
 
     @Override
     public boolean isMyFile(@NotNull XmlFile file, @Nullable Module module) {
-        boolean isMyFile = MuleSupport.isMUnitFile(file);
-        return isMyFile;
+        return MuleConfigUtils.isMUnitFile(file);
     }
 
     @Nullable

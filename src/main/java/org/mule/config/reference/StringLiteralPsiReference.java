@@ -8,7 +8,7 @@ import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.MuleConfigConstants;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 public class StringLiteralPsiReference extends PsiReferenceBase<PsiLiteralExpression> {
 
@@ -20,7 +20,7 @@ public class StringLiteralPsiReference extends PsiReferenceBase<PsiLiteralExpres
     @Override
     public PsiElement resolve() {
         final String flowName = getFlowName();
-        final XmlTag flow = MuleSupport.findFlow(myElement.getProject(), flowName);
+        final XmlTag flow = MuleConfigUtils.findFlow(myElement.getProject(), flowName);
         if (flow != null) {
             final XmlAttribute name = flow.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
             return name != null ? name.getValueElement() : null;

@@ -6,13 +6,11 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.MuleConfigConstants;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
     @Override
     public PsiElement resolve() {
         final String flowName = getFlowName();
-        final XmlTag flow = MuleSupport.findFlow(myElement, flowName);
+        final XmlTag flow = MuleConfigUtils.findFlow(myElement, flowName);
         if (flow != null) {
             final XmlAttribute name = flow.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
             return name != null ? name.getValueElement() : null;
@@ -42,7 +40,7 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        final List<DomElement> flow = MuleSupport.getFlows(getElement().getProject());
+        final List<DomElement> flow = MuleConfigUtils.getFlows(getElement().getProject());
         return mapNotNull(flow, new Function<DomElement, Object>() {
             @Override
             public String fun(DomElement domElement) {

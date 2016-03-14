@@ -7,9 +7,8 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.xdebugger.frame.*;
 import com.mulesoft.mule.debugger.response.ObjectFieldDefinition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import javax.swing.*;
 import java.util.List;
@@ -46,7 +45,7 @@ public class ObjectFieldDefinitionValue extends XValue {
     public void computeSourcePosition(@NotNull XNavigatable navigatable) {
         PsiClass aClass = JavaPsiFacade.getInstance(session.getProject()).findClass(fieldDefinition.getClassName(), GlobalSearchScope.allScope(session.getProject()));
         if (aClass != null) {
-            navigatable.setSourcePosition(MuleSupport.createPositionByElement(aClass));
+            navigatable.setSourcePosition(MuleConfigUtils.createPositionByElement(aClass));
         }
     }
 

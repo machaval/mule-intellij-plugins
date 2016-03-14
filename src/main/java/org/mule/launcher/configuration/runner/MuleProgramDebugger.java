@@ -71,6 +71,7 @@ public class MuleProgramDebugger extends GenericDebuggerRunner {
     protected RunContentDescriptor attachVirtualMachine(final RunProfileState state, final @NotNull ExecutionEnvironment env, RemoteConnection connection, boolean pollConnection) throws ExecutionException {
         DefaultDebugEnvironment environment = new DefaultDebugEnvironment(env, state, connection, pollConnection);
         final DebuggerSession debuggerSession = DebuggerManagerEx.getInstanceEx(env.getProject()).attachVirtualMachine(environment);
+        final MuleDebuggerSession muleDebuggerSession = new MuleDebuggerSession(env.getProject());
         if (debuggerSession == null) {
             return null;
         } else {
@@ -88,7 +89,7 @@ public class MuleProgramDebugger extends GenericDebuggerRunner {
                         final ExecutionResult executionResult = debugProcess.getExecutionResult();
                         final Map<String, XDebugProcess> context = new HashMap<>();
                         final ContextAwareDebugProcess contextAwareDebugProcess = new ContextAwareDebugProcess(session, executionResult.getProcessHandler(), context, JAVA_CONTEXT);
-                        final MuleDebuggerSession muleDebuggerSession = new MuleDebuggerSession(env.getProject());
+
                         muleDebuggerSession.addMessageReceivedListener(new MessageReceivedListener() {
                             @Override
                             public void onNewMessageReceived(MuleMessageInfo muleMessageInfo) {
@@ -128,6 +129,7 @@ public class MuleProgramDebugger extends GenericDebuggerRunner {
                 }).getRunContentDescriptor();
             } else {
                 debuggerSession.dispose();
+                muleDebuggerSession.disconnect();
                 return null;
             }
         }

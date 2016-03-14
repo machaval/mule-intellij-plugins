@@ -5,28 +5,23 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
-import com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileMoveEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
-import org.mule.config.model.Mule;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by eberman on 3/3/16.
- */
-public class MuleProjectManager  extends AbstractProjectComponent {
-    Logger logger = Logger.getInstance(MuleProjectManager.class);
+public class MuleProjectManager extends AbstractProjectComponent {
+
+    static final Logger logger = Logger.getInstance(MuleProjectManager.class);
 
     protected MuleProjectManager(Project project) {
         super(project);
@@ -35,12 +30,9 @@ public class MuleProjectManager  extends AbstractProjectComponent {
     @Override
     public void projectOpened() {
         VirtualFileManager manager = VirtualFileManager.getInstance();
-
-        manager.addVirtualFileListener(new VirtualFileAdapter()
-        {
+        manager.addVirtualFileListener(new VirtualFileAdapter() {
             @Override
             public void fileCreated(@NotNull VirtualFileEvent event) {
-
                 try {
                     if (MuleProjectManager.this.myProject != null && MuleProjectManager.this.myProject.isInitialized() && MuleProjectManager.this.myProject.isOpen()) {
                         ProjectRootManager mgr = ProjectRootManager.getInstance(MuleProjectManager.this.myProject);
@@ -65,7 +57,7 @@ public class MuleProjectManager  extends AbstractProjectComponent {
                                  logger.warn("*** LOCAL NAME IS " + rootTag.getLocalName());
                                  */
 
-                                if (fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
+                                if (psiFile != null && fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
                                     if (psiFile.getFileType() == StdFileTypes.XML) { //This is config file
                                         String pathRelative = getRelativePath(fileAbsolutePath, appPath);
                                         MuleDeployProperties.addConfigFile(appPath, pathRelative);
@@ -96,7 +88,7 @@ public class MuleProjectManager  extends AbstractProjectComponent {
                             String appPath = moduleContentRoot + "/src/main/app";
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                             if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
-                                if (MuleSupport.isMuleFile(psiFile)) { //This is config file
+                                if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
                                     String pathRelative = getRelativePath(fileAbsolutePath, appPath);
                                     MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
                                 } else if (event.getFile().isDirectory()) {
@@ -131,7 +123,7 @@ public class MuleProjectManager  extends AbstractProjectComponent {
                             String appPath = moduleContentRoot + "/src/main/app";
 
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
-                            if (MuleSupport.isMuleFile(psiFile)) { //This is config file
+                            if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
 
                                 if (oldAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
                                     String pathRelative = getRelativePath(oldAbsolutePath, appPath);

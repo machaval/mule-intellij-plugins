@@ -11,7 +11,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NonNavigatable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.SchemaReferencesProvider;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -31,8 +30,6 @@ import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.impl.schema.ComplexTypeDescriptor;
 import com.intellij.xml.impl.schema.TypeDescriptor;
 import com.intellij.xml.impl.schema.XmlElementDescriptorImpl;
-import com.intellij.xml.util.XmlPsiUtil;
-import com.intellij.xml.util.XmlUtil;
 import com.mulesoft.mule.debugger.commons.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,9 +39,12 @@ import org.mule.config.model.Mule;
 import org.mule.config.model.SubFlow;
 
 import javax.xml.namespace.QName;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
-public class MuleSupport {
+public class MuleConfigUtils {
 
     public static final String MULE_LOCAL_NAME = "mule";
     public static final String MUNIT_TEST_LOCAL_NAME = "test";
@@ -71,12 +71,11 @@ public class MuleSupport {
         }
         final XmlFile psiFile1 = (XmlFile) psiFile;
         final XmlTag rootTag = psiFile1.getRootTag();
-        if (!isMuleConfig(rootTag))
+        if (rootTag == null || !isMuleConfig(rootTag)) {
             return false;
-
-        XmlTag[] munitTags = rootTag.findSubTags("test", rootTag.getNamespaceByPrefix("munit"));
-        boolean isMUnit = (munitTags != null && munitTags.length > 0);
-        return isMUnit;
+        }
+        final XmlTag[] munitTags = rootTag.findSubTags(MUNIT_TEST_LOCAL_NAME, rootTag.getNamespaceByPrefix(MUNIT_NAMESPACE));
+        return munitTags.length > 0;
     }
 
     private static boolean isMuleConfig(XmlTag rootTag) {
@@ -304,11 +303,14 @@ public class MuleSupport {
                             }
                             break;
                         default:
-                            final XmlTag[] subTags = ((XmlFile) xmlFile).getRootTag().getSubTags();
-                            for (XmlTag subTag : subTags) {
-                                final XmlAttribute name = subTag.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
-                                if (name != null && name.getValue() != null && name.getValue().equals(flowName)) {
-                                    return findChildMessageProcessorByPath(messageProcessorPath, subTag);
+                            final XmlTag rootTag = ((XmlFile) xmlFile).getRootTag();
+                            if (rootTag != null) {
+                                final XmlTag[] subTags = rootTag.getSubTags();
+                                for (XmlTag subTag : subTags) {
+                                    final XmlAttribute name = subTag.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
+                                    if (name != null && name.getValue() != null && name.getValue().equals(flowName)) {
+                                        return findChildMessageProcessorByPath(messageProcessorPath, subTag);
+                                    }
                                 }
                             }
                             break;
@@ -327,8 +329,8 @@ public class MuleSupport {
             final XmlTag[] subTags = xmlTag.getSubTags();
             int index = -1;
             for (XmlTag subTag : subTags) {
-                final MessageProcessorType messageProcessorType = getMessageProcessorType(subTag);
-                if (messageProcessorType == MessageProcessorType.MESSAGE_PROCESSOR || messageProcessorType == MessageProcessorType.CONDITIONAL_ROUTE) {
+                final MuleElementType muleElementType = getMuleElementTypeFromXmlElement(subTag);
+                if (muleElementType == MuleElementType.MESSAGE_PROCESSOR) {
                     xmlTag = subTag;
                     index = index + 1;
                 }
@@ -473,8 +475,8 @@ public class MuleSupport {
                         if (xmlTag == element) {
                             break;
                         }
-                        final MessageProcessorType messageProcessorType = getMessageProcessorType(xmlTag);
-                        if (messageProcessorType == MessageProcessorType.MESSAGE_PROCESSOR || messageProcessorType == MessageProcessorType.CONDITIONAL_ROUTE) {
+                        final MuleElementType muleElementType = getMuleElementTypeFromXmlElement(xmlTag);
+                        if (muleElementType == MuleElementType.MESSAGE_PROCESSOR) {
                             index = index + 1;
                         }
                     }
@@ -487,14 +489,14 @@ public class MuleSupport {
     }
 
     @Nullable
-    public static MessageProcessorType getMessageProcessorType(XmlTag xmlTag) {
+    public static MuleElementType getMuleElementTypeFromXmlElement(XmlTag xmlTag) {
         final XmlElementDescriptor descriptor = xmlTag.getDescriptor();
         if (descriptor instanceof XmlElementDescriptorImpl) {
             final XmlElementDescriptorImpl xmlElementDescriptor = (XmlElementDescriptorImpl) descriptor;
             final TypeDescriptor schemaType = xmlElementDescriptor.getType();
             if (schemaType instanceof ComplexTypeDescriptor) {
                 final XmlTag complexTypeTag = ((ComplexTypeDescriptor) schemaType).getDeclaration();
-                final MessageProcessorType typeReference = resolveMuleType(complexTypeTag);
+                final MuleElementType typeReference = MuleSchemaUtils.getElementTypeFromComplexType(complexTypeTag);
                 if (typeReference != null) {
                     return typeReference;
                 }
@@ -503,75 +505,6 @@ public class MuleSupport {
         return null;
     }
 
-    @Nullable
-    private static MessageProcessorType resolveMuleType(XmlTag complexTypeTag) {
-        final PsiReference baseType = getBaseType(complexTypeTag);
-        if (baseType != null) {
-            final PsiElement resolve = baseType.resolve();
-            if (resolve instanceof XmlTag) {
-                final XmlTag typeReference = (XmlTag) resolve;
-                final String name = typeReference.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
-                if (name != null && !name.isEmpty()) {
-                    MessageProcessorType messageProcessorType = getMessageProcessorType(name);
-                    if (messageProcessorType != null) {
-                        return messageProcessorType;
-                    }
-                    return resolveMuleType(typeReference);
-                }
-            } else {
-                final String name = baseType.getCanonicalText();
-                if (!name.isEmpty()) {
-                    return getMessageProcessorType(name);
-                }
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private static MessageProcessorType getMessageProcessorType(String name) {
-        final MessageProcessorType[] messageProcessorTypes = MessageProcessorType.values();
-        for (MessageProcessorType messageProcessorType : messageProcessorTypes) {
-            if (messageProcessorType.isValidType(name)) {
-                return messageProcessorType;
-            }
-        }
-        return null;
-    }
-
-
-    @Nullable
-    private static PsiReference getBaseType(XmlTag complexTypeTag) {
-        final XmlTag complexContent = getComplexContents(complexTypeTag);
-        if (complexContent != null) {
-            final XmlTag extension = getExtensions(complexContent);
-            if (extension != null) {
-                final XmlAttribute base = extension.getAttribute("base");
-                if (base != null && base.getValueElement() != null) {
-                    final String text = base.getValue();
-                    if (text != null && text.indexOf(":") > 0) {
-                        final String prefix = text.substring(0, text.indexOf(":"));
-                        return SchemaReferencesProvider.createTypeOrElementOrAttributeReference(base.getValueElement(), prefix);
-                    } else {
-                        return SchemaReferencesProvider.createTypeOrElementOrAttributeReference(base.getValueElement());
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private static XmlTag getExtensions(XmlTag complexContent) {
-        final XmlTag[] complexContents = complexContent.findSubTags("extension", "http://www.w3.org/2001/XMLSchema");
-        return complexContents.length > 0 ? complexContents[0] : null;
-    }
-
-    @Nullable
-    private static XmlTag getComplexContents(XmlTag complexTypeTag) {
-        final XmlTag[] complexContents = complexTypeTag.findSubTags("complexContent", "http://www.w3.org/2001/XMLSchema");
-        return complexContents.length > 0 ? complexContents[0] : null;
-    }
 
     @NotNull
     private static String getGlobalElementCategory(XmlTag element) {
@@ -624,18 +557,4 @@ public class MuleSupport {
         return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow") || subTag.getLocalName().equals("test"));
     }
 
-    public enum MessageProcessorType {
-        MESSAGE_SOURCE("abstractMessageSourceType"), MESSAGE_PROCESSOR("abstractMessageProcessorType"), CONDITIONAL_ROUTE("abstractMessageProcessorFilterPairType");
-
-        private String[] validTypes;
-
-        MessageProcessorType(String... validTypes) {
-
-            this.validTypes = validTypes;
-        }
-
-        public boolean isValidType(String type) {
-            return Arrays.asList(validTypes).contains(type);
-        }
-    }
 }

@@ -4,15 +4,12 @@ import com.intellij.icons.AllIcons;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.OpenSourceUtil;
-import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
 import com.intellij.xdebugger.frame.*;
 import com.mulesoft.mule.debugger.response.MessageProcessorInfo;
 import com.mulesoft.mule.debugger.response.ObjectFieldDefinition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class MessageProcessorInfoValue extends XValue {
     public void computeSourcePosition(@NotNull XNavigatable navigatable) {
         PsiClass aClass = JavaPsiFacade.getInstance(session.getProject()).findClass(messageProcessorInfo.getClassName(), GlobalSearchScope.allScope(session.getProject()));
         if (aClass != null) {
-            navigatable.setSourcePosition(MuleSupport.createPositionByElement(aClass));
+            navigatable.setSourcePosition(MuleConfigUtils.createPositionByElement(aClass));
         }
     }
 

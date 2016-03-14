@@ -13,7 +13,7 @@ import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 import org.mule.lang.dw.WeaveLanguage;
 import org.mule.lang.mel.MelLanguage;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import javax.xml.namespace.QName;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class MuleLanguageInjector implements LanguageInjector {
     @Override
     public void getLanguagesToInject(@NotNull PsiLanguageInjectionHost host,
                                      @NotNull InjectedLanguagePlaces injectedLanguagePlaces) {
-        if (MuleSupport.isMuleFile(host.getContainingFile())) {
+        if (MuleConfigUtils.isMuleFile(host.getContainingFile())) {
             if (host instanceof XmlAttributeValue) {
                 // Try to inject a language, somewhat abusing the lazy evaluation of predicates :(
                 for (Pair<String, String> language : languages) {
@@ -55,7 +55,7 @@ public class MuleLanguageInjector implements LanguageInjector {
             } else if (host instanceof XmlText) {
                 final XmlTag tag = ((XmlText) host).getParentTag();
                 if (tag != null) {
-                    final QName tagName = MuleSupport.getQName(tag);
+                    final QName tagName = MuleConfigUtils.getQName(tag);
                     if (tagName.equals(globalFunctions) || tagName.equals(expressionComponent) || tagName.equals(expressionTransformer)) {
                         final String scriptingName = MelLanguage.MEL_LANGUAGE_ID;
                         injectLanguage(host, injectedLanguagePlaces, scriptingName);

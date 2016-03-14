@@ -69,7 +69,11 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
 
     public void disconnect() {
         if (isConnected) {
-            getDebuggerClient().disconnect();
+            try {
+                getDebuggerClient().disconnect();
+            } catch (Exception e) {
+                //ignore
+            }
         }
     }
 

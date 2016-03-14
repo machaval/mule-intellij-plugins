@@ -32,11 +32,12 @@
         <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
         <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
 
-        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider"  order="first"/>
+        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider"
+                                      order="first"/>
 
         <!--Mule Config-->
 
-        <dom.fileDescription implementation="org.mule.MuleDomFileDescription"/>
+        <dom.fileDescription implementation="org.mule.config.MuleDomFileDescription"/>
         <psi.referenceContributor language="XML"
                                   implementation="org.mule.config.reference.MuleConfigurationReferenceContributor"/>
 
@@ -48,32 +49,43 @@
 
         <moduleBuilder builderClass="org.mule.wizzard.MuleMavenModuleBuilder" id="DEMO_STEP" order="first"/>
 
+        <completion.contributor language="XML"
+                                implementationClass="org.mule.config.completion.MuleElementsCompletionContributor"/>
+
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
         <lang.parserDefinition language="Weave" implementationClass="org.mule.lang.dw.parser.WeaveParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="Weave" implementationClass="org.mule.lang.dw.highlighter.WeaveSyntaxHighlighterFactory"/>
+        <lang.syntaxHighlighterFactory language="Weave"
+                                       implementationClass="org.mule.lang.dw.highlighter.WeaveSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="org.mule.lang.dw.highlighter.WeaveColorSettingsPage"/>
         <lang.commenter language="Weave" implementationClass="org.mule.lang.dw.WeaveCommenter"/>
         <lang.braceMatcher language="Weave" implementationClass="org.mule.lang.dw.WeavePairedBraceMatcher"/>
         <quoteHandler fileType="Weave" className="org.mule.lang.dw.WeaveQuoteHandler"/>
-        <completion.contributor language="Weave" implementationClass="org.mule.lang.dw.parser.WeaveCompletionContributor"/>
-        <lang.refactoringSupport language="Weave" implementationClass="org.mule.lang.dw.refactor.WeaveRefactoringSupportProvider"/>
-        <lang.elementManipulator forClass="org.mule.lang.dw.parser.psi.WeaveNamedElement" implementationClass="org.mule.lang.dw.parser.psi.WeaveNamedElementManipulator"/>
-        <lang.findUsagesProvider language="Weave" implementationClass="org.mule.lang.dw.parser.psi.WeaveFindUsagesProvider"/>
+        <completion.contributor language="Weave"
+                                implementationClass="org.mule.lang.dw.parser.WeaveCompletionContributor"/>
+        <lang.refactoringSupport language="Weave"
+                                 implementationClass="org.mule.lang.dw.refactor.WeaveRefactoringSupportProvider"/>
+        <lang.elementManipulator forClass="org.mule.lang.dw.parser.psi.WeaveNamedElement"
+                                 implementationClass="org.mule.lang.dw.parser.psi.WeaveNamedElementManipulator"/>
+        <lang.findUsagesProvider language="Weave"
+                                 implementationClass="org.mule.lang.dw.parser.psi.WeaveFindUsagesProvider"/>
         <lang.foldingBuilder language="Weave" implementationClass="org.mule.lang.dw.folding.WeaveFolding"/>
         <annotator language="Weave" implementationClass="org.mule.lang.dw.annotator.WeaveAnnotator"/>
-        <lang.psiStructureViewFactory language="Weave" implementationClass="org.mule.lang.dw.structure.WeaveStructureViewBuilderFactory"/>
+        <lang.psiStructureViewFactory language="Weave"
+                                      implementationClass="org.mule.lang.dw.structure.WeaveStructureViewBuilderFactory"/>
         <!--MEL Support-->
         <fileTypeFactory implementation="org.mule.lang.mel.MelFileTypeFactory"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.lang.mel.parser.MelParserDefinition"/>
         <colorSettingsPage implementation="org.mule.lang.mel.highlighter.MelColorSettingsPage"/>
-        <lang.syntaxHighlighterFactory language="Mel" implementationClass="org.mule.lang.mel.highlighter.MelSyntaxHighlighterFactory"/>
+        <lang.syntaxHighlighterFactory language="Mel"
+                                       implementationClass="org.mule.lang.mel.highlighter.MelSyntaxHighlighterFactory"/>
         <lang.commenter language="Mel" implementationClass="org.mule.lang.mel.MelCommenter"/>
         <lang.braceMatcher language="Mel" implementationClass="org.mule.lang.mel.MelPairedBraceMatcher"/>
 
         <!-- RAML -->
         <fileTypeFactory implementation="org.mule.lang.raml.RamlFileTypeFactory"/>
-        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.mule.lang.raml.highlighter.RamlSyntaxHighlighterFactory"/>
+        <lang.syntaxHighlighterFactory language="RAML"
+                                       implementationClass="org.mule.lang.raml.highlighter.RamlSyntaxHighlighterFactory"/>
         <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
 
         <!-- MUnit -->
@@ -102,6 +114,10 @@
         </component>
         <component>
             <implementation-class>org.mule.launcher.configuration.project.MuleProjectManager</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.mule.config.MuleElementDefinitionService</implementation-class>
+            <loadForDefaultProject/>
         </component>
     </project-components>
 

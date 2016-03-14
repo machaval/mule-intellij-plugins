@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.session.MuleDebuggerSession;
 import org.mule.debugger.session.ScriptEvaluationCallback;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 public class MuleScriptEvaluator extends XDebuggerEvaluator {
 
@@ -22,7 +22,7 @@ public class MuleScriptEvaluator extends XDebuggerEvaluator {
 
     @Override
     public void evaluate(@NotNull String script, @NotNull final XEvaluationCallback xEvaluationCallback, @Nullable XSourcePosition xSourcePosition) {
-        final String melExpression = MuleSupport.asMelScript(script);
+        final String melExpression = MuleConfigUtils.asMelScript(script);
         session.eval(melExpression, new ScriptEvaluationCallback() {
             @Override
             public void onScriptEvaluationException(RemoteDebugException exception) {

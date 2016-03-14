@@ -1,4 +1,4 @@
-package org.mule;
+package org.mule.config;
 
 
 import com.intellij.openapi.module.Module;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.model.Mule;
 import org.mule.util.MuleIcons;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import javax.swing.*;
 
@@ -20,8 +20,8 @@ public class MuleDomFileDescription extends DomFileDescription<Mule> {
 
     @Override
     public boolean isMyFile(@NotNull XmlFile file, @Nullable Module module) {
-        boolean isMyFile = MuleSupport.isMuleFile(file) && !MuleSupport.isMUnitFile(file);
-        return isMyFile;
+        return MuleConfigUtils.isMuleFile(file) && !MuleConfigUtils.isMUnitFile(file);
+
     }
 
     @Nullable

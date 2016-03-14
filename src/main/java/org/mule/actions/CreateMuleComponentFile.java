@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class CreateMuleComponentFile extends CreateFileFromTemplateAction implements DumbAware {
 
-    Logger log = Logger.getInstance(CreateMuleComponentFile.class);
 
     public static final String MULE_CONFIGURATION = "Create Mule Component";
 
@@ -48,17 +47,4 @@ public class CreateMuleComponentFile extends CreateFileFromTemplateAction implem
     public boolean equals(Object obj) {
         return obj instanceof CreateMuleComponentFile;
     }
-
-//    @Override
-//    protected void postProcess(PsiFile createdElement, String templateName, Map<String, String> customProperties) {
-//        super.postProcess(createdElement, templateName, customProperties);
-//        //log.warn("IN PostProcess " + templateName + " :  " +  MuleFileTemplateDescriptorManager.MULE_CONFIGURATION_FILE );
-//        if (MuleFileTemplateDescriptorManager.MULE_CONFIGURATION_FILE.equals(templateName)) {
-//            log.warn("Template is Mule Config, Created Element name is " + createdElement.getName());
-//            Module module = ModuleUtilCore.findModuleForPsiElement(createdElement);
-////            MuleAppManager.getInstance(module.getProject()).getDeployProperties().addConfigFile(createdElement.getName());
-//        }
-//
-//
-//    }
 }
