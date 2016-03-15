@@ -4,6 +4,7 @@ package org.mule.config;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.InjectedLanguagePlaces;
 import com.intellij.psi.LanguageInjector;
 import com.intellij.psi.PsiLanguageInjectionHost;
@@ -13,7 +14,7 @@ import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 import org.mule.lang.dw.WeaveLanguage;
 import org.mule.lang.mel.MelLanguage;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import javax.xml.namespace.QName;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class MuleLanguageInjector implements LanguageInjector {
     @Override
     public void getLanguagesToInject(@NotNull PsiLanguageInjectionHost host,
                                      @NotNull InjectedLanguagePlaces injectedLanguagePlaces) {
-        if (MuleSupport.isMuleFile(host.getContainingFile())) {
+        if (MuleConfigUtils.isMuleFile(host.getContainingFile())) {
             if (host instanceof XmlAttributeValue) {
                 // Try to inject a language, somewhat abusing the lazy evaluation of predicates :(
                 for (Pair<String, String> language : languages) {
@@ -55,14 +56,14 @@ public class MuleLanguageInjector implements LanguageInjector {
             } else if (host instanceof XmlText) {
                 final XmlTag tag = ((XmlText) host).getParentTag();
                 if (tag != null) {
-                    final QName tagName = MuleSupport.getQName(tag);
+                    final QName tagName = MuleConfigUtils.getQName(tag);
                     if (tagName.equals(globalFunctions) || tagName.equals(expressionComponent) || tagName.equals(expressionTransformer)) {
                         final String scriptingName = MelLanguage.MEL_LANGUAGE_ID;
                         injectLanguage(host, injectedLanguagePlaces, scriptingName);
                     } else if (tagName.equals(scriptingScript)) {
                         final String engine = tag.getAttributeValue("engine");
                         if (engine != null) {
-                            injectLanguage(host, injectedLanguagePlaces, engine);
+                            injectLanguage(host, injectedLanguagePlaces, StringUtil.capitalize(engine));
                         }
                     } else if (tagName.equals(dwSetPayload) || tagName.equals(dwSetProperty) || tagName.equals(dwSetVariable) || tagName.equals(dwSetSessionVar)) {
                         injectLanguage(host, injectedLanguagePlaces, WeaveLanguage.WEAVE_LANGUAGE_ID);

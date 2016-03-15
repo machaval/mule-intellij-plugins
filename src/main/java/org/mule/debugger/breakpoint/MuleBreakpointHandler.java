@@ -8,7 +8,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.mulesoft.mule.debugger.commons.Breakpoint;
 import org.jetbrains.annotations.NotNull;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 public class MuleBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>> {
 
@@ -23,13 +23,13 @@ public class MuleBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XB
 
     @Override
     public void registerBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> xBreakpoint) {
-        final Breakpoint breakpoint = MuleSupport.toMuleBreakpoint(project, xBreakpoint);
+        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(project, xBreakpoint);
         debuggerManager.addBreakpoint(breakpoint);
     }
 
     @Override
     public void unregisterBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> xBreakpoint, boolean temporary) {
-        final Breakpoint breakpoint = MuleSupport.toMuleBreakpoint(project, xBreakpoint);
+        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(project, xBreakpoint);
         debuggerManager.removeBreakpoint(breakpoint);
     }
 }

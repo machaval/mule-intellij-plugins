@@ -6,11 +6,10 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Function;
-import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.MuleConfigConstants;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ConfigRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
     @Override
     public PsiElement resolve() {
         final String elementName = getElementName();
-        final XmlTag globalElement = MuleSupport.findGlobalElement(myElement, elementName);
+        final XmlTag globalElement = MuleConfigUtils.findGlobalElement(myElement, elementName);
         if (globalElement != null) {
             final XmlAttribute name = globalElement.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
             return name != null ? name.getValueElement() : null;
@@ -40,7 +39,7 @@ public class ConfigRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        final List<XmlTag> flow = MuleSupport.getGlobalElements(getElement().getProject());
+        final List<XmlTag> flow = MuleConfigUtils.getGlobalElements(getElement().getProject());
         return mapNotNull(flow, new Function<XmlTag, Object>() {
             @Override
             public String fun(XmlTag domElement) {

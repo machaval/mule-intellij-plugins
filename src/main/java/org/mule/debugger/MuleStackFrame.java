@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 public class MuleStackFrame extends XStackFrame {
     private final XSourcePosition position;
@@ -36,8 +36,8 @@ public class MuleStackFrame extends XStackFrame {
         this.session = session;
         this.muleMessageInfo = muleMessageInfo;
         this.exceptionThrown = exceptionThrown;
-        this.tag = MuleSupport.getTagAt(project, muleMessageInfo.getMessageProcessorInfo().getPath());
-        this.position = MuleSupport.createPositionByElement(tag);
+        this.tag = MuleConfigUtils.getTagAt(project, muleMessageInfo.getMessageProcessorInfo().getPath());
+        this.position = MuleConfigUtils.createPositionByElement(tag);
     }
 
     @Nullable

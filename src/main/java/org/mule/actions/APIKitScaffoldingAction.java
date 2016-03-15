@@ -15,12 +15,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by eberman on 3/4/16.
- */
+
 public class APIKitScaffoldingAction extends AnAction {
 
-    Logger logger = Logger.getInstance(APIKitScaffoldingAction.class);
+    final static Logger logger = Logger.getInstance(APIKitScaffoldingAction.class);
 
     public APIKitScaffoldingAction() {
         super("Generate Flows", "Generate APIKit scaffolding from the RAML definition", MuleIcons.RamlFileType);

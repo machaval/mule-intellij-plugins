@@ -21,7 +21,7 @@ import org.mule.debugger.actions.ExceptionBreakpointSwitchAction;
 import org.mule.debugger.breakpoint.MuleBreakpointHandler;
 import org.mule.debugger.session.MessageReceivedListener;
 import org.mule.debugger.session.MuleDebuggerSession;
-import org.mule.util.MuleSupport;
+import org.mule.util.MuleConfigUtils;
 
 public class MuleDebugProcess extends XDebugProcess {
 
@@ -31,7 +31,7 @@ public class MuleDebugProcess extends XDebugProcess {
     private final ProcessHandler processHandler;
     private final ExecutionConsole executionConsole;
 
-    public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull MuleDebuggerSession muleDebuggerSession, ExecutionResult result) {
+    public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull final MuleDebuggerSession muleDebuggerSession, ExecutionResult result) {
         super(session);
         this.muleDebuggerSession = muleDebuggerSession;
         this.muleBreakpointHandler = new MuleBreakpointHandler(session.getProject(), muleDebuggerSession);
@@ -104,7 +104,7 @@ public class MuleDebugProcess extends XDebugProcess {
 
     @Override
     public void runToPosition(@NotNull XSourcePosition xSourcePosition) {
-        muleDebuggerSession.runToCursor(MuleSupport.getMulePath(getProject(), xSourcePosition));
+        muleDebuggerSession.runToCursor(MuleConfigUtils.getMulePath(getProject(), xSourcePosition));
     }
 
     @Override
