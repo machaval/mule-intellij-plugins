@@ -28,12 +28,13 @@ public class MuleElementCompletionProvider extends CompletionProvider<Completion
                 final LookupElementBuilder lookupElement =
                         LookupElementBuilder.create(elementDefinition.getName())
                                 .withCaseSensitivity(false)
-                                .withTailText("\t" + StringUtil.capitalizeWords(elementDefinition.getType().name().toLowerCase(), "_", true, false), true)
+                                .withLookupString(definition.getName() + ":" + elementDefinition.getName())
+                                .withTypeText("\t" + StringUtil.capitalizeWords(elementDefinition.getType().name().toLowerCase(), "_", true, false), true)
                                 .withPresentableText(definition.getName() + ":" + elementDefinition.getName())
                                 .withInsertHandler(new MuleElementInsertHandler(elementDefinition.getName(), definition.getName(), definition.getNamespace(), definition.getLocationLookup()));
                 completionResultSet.addElement(lookupElement);
-
             }
         }
+        completionResultSet.stopHere();
     }
 }

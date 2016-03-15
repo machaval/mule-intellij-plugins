@@ -4,6 +4,7 @@ package org.mule.config;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.InjectedLanguagePlaces;
 import com.intellij.psi.LanguageInjector;
 import com.intellij.psi.PsiLanguageInjectionHost;
@@ -62,7 +63,7 @@ public class MuleLanguageInjector implements LanguageInjector {
                     } else if (tagName.equals(scriptingScript)) {
                         final String engine = tag.getAttributeValue("engine");
                         if (engine != null) {
-                            injectLanguage(host, injectedLanguagePlaces, engine);
+                            injectLanguage(host, injectedLanguagePlaces, StringUtil.capitalize(engine));
                         }
                     } else if (tagName.equals(dwSetPayload) || tagName.equals(dwSetProperty) || tagName.equals(dwSetVariable) || tagName.equals(dwSetSessionVar)) {
                         injectLanguage(host, injectedLanguagePlaces, WeaveLanguage.WEAVE_LANGUAGE_ID);

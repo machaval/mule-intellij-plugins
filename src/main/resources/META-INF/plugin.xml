@@ -50,7 +50,7 @@
         <moduleBuilder builderClass="org.mule.wizzard.MuleMavenModuleBuilder" id="DEMO_STEP" order="first"/>
 
         <completion.contributor language="XML"
-                                implementationClass="org.mule.config.completion.MuleElementsCompletionContributor"/>
+                                implementationClass="org.mule.config.completion.MuleElementsCompletionContributor" order="first"/>
 
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
