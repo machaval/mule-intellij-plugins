@@ -18,6 +18,7 @@ public class MuleAppMavenHandler implements MuleAppHandler {
         final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
         if (compilerModuleExtension != null) {
             final VirtualFile compilerOutputPath = compilerModuleExtension.getCompilerOutputPath();
+            //Throws NPE when runs for the first time - why?
             final File outputDir = new File(compilerOutputPath.getParent().getCanonicalPath());
             File applicationZip = null;
             final File[] zips = outputDir.listFiles(new FilenameFilter() {
