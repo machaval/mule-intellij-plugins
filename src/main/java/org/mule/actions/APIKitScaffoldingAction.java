@@ -7,7 +7,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.mule.lang.raml.RamlFileType;
+
+import org.mule.lang.raml.file.RamlFileType;
 import org.mule.tools.apikit.ScaffolderAPI;
 import org.mule.util.MuleIcons;
 

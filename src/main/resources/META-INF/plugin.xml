@@ -50,7 +50,8 @@
         <moduleBuilder builderClass="org.mule.wizzard.MuleMavenModuleBuilder" id="DEMO_STEP" order="first"/>
 
         <completion.contributor language="XML"
-                                implementationClass="org.mule.config.completion.MuleElementsCompletionContributor" order="first"/>
+                                implementationClass="org.mule.config.completion.MuleElementsCompletionContributor"
+                                order="first"/>
 
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
@@ -83,11 +84,17 @@
         <lang.braceMatcher language="Mel" implementationClass="org.mule.lang.mel.MelPairedBraceMatcher"/>
 
         <!-- RAML -->
-        <fileTypeFactory implementation="org.mule.lang.raml.RamlFileTypeFactory"/>
-        <lang.syntaxHighlighterFactory language="RAML"
-                                       implementationClass="org.mule.lang.raml.highlighter.RamlSyntaxHighlighterFactory"/>
-        <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
 
+        <fileTypeFactory implementation="org.mule.lang.raml.file.RamlFileTypeFactory"/>
+        <lang.syntaxHighlighterFactory language="RAML"
+                                       implementationClass="org.mule.lang.raml.editor.RamlSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
+        <lang.commenter language="RAML" implementationClass="org.mule.lang.raml.RamlCommenter"/>
+        <lang.braceMatcher language="RAML" implementationClass="org.mule.lang.raml.RamlBraceMatcher"/>
+        <lang.foldingBuilder language="RAML" implementationClass="org.mule.lang.raml.editor.RamlFoldingBuilder"/>
+        <breadcrumbsInfoProvider  implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
+        <lang.psiStructureViewFactory language="RAML"
+                                      implementationClass="org.mule.lang.raml.editor.RamlStructureViewFactory"/>
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
 

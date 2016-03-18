@@ -45,10 +45,4 @@ public class MuleLibraryPresentationProvider extends LibraryPresentationProvider
         return MuleIcons.MuleIcon;
     }
 
-    @Nullable
-    @Override
-    public Icon getIcon() {
-        return MuleIcons.MuleIcon;
-    }
-
 }
