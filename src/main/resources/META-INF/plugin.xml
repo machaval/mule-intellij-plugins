@@ -62,8 +62,7 @@
         <lang.commenter language="Weave" implementationClass="org.mule.lang.dw.WeaveCommenter"/>
         <lang.braceMatcher language="Weave" implementationClass="org.mule.lang.dw.WeavePairedBraceMatcher"/>
         <quoteHandler fileType="Weave" className="org.mule.lang.dw.WeaveQuoteHandler"/>
-        <completion.contributor language="Weave"
-                                implementationClass="org.mule.lang.dw.parser.WeaveCompletionContributor"/>
+
         <lang.refactoringSupport language="Weave"
                                  implementationClass="org.mule.lang.dw.refactor.WeaveRefactoringSupportProvider"/>
         <lang.elementManipulator forClass="org.mule.lang.dw.parser.psi.WeaveNamedElement"
@@ -74,6 +73,9 @@
         <annotator language="Weave" implementationClass="org.mule.lang.dw.annotator.WeaveAnnotator"/>
         <lang.psiStructureViewFactory language="Weave"
                                       implementationClass="org.mule.lang.dw.structure.WeaveStructureViewBuilderFactory"/>
+        <completion.contributor language="Weave"
+                                implementationClass="org.mule.lang.dw.completion.WeaveCompletionContributor"/>
+
         <!--MEL Support-->
         <fileTypeFactory implementation="org.mule.lang.mel.MelFileTypeFactory"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.lang.mel.parser.MelParserDefinition"/>
@@ -92,7 +94,7 @@
         <lang.commenter language="RAML" implementationClass="org.mule.lang.raml.RamlCommenter"/>
         <lang.braceMatcher language="RAML" implementationClass="org.mule.lang.raml.RamlBraceMatcher"/>
         <lang.foldingBuilder language="RAML" implementationClass="org.mule.lang.raml.editor.RamlFoldingBuilder"/>
-        <breadcrumbsInfoProvider  implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
+        <breadcrumbsInfoProvider implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
         <lang.psiStructureViewFactory language="RAML"
                                       implementationClass="org.mule.lang.raml.editor.RamlStructureViewFactory"/>
         <!-- MUnit -->

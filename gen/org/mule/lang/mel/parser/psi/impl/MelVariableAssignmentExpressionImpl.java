@@ -16,8 +16,12 @@ public class MelVariableAssignmentExpressionImpl extends MelExpressionImpl imple
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitVariableAssignmentExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitVariableAssignmentExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

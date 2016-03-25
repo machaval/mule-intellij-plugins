@@ -16,8 +16,12 @@ public class MelMethodCallExpressionImpl extends MelExpressionImpl implements Me
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitMethodCallExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitMethodCallExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

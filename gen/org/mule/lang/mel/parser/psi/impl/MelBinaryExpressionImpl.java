@@ -16,8 +16,12 @@ public class MelBinaryExpressionImpl extends MelExpressionImpl implements MelBin
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitBinaryExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitBinaryExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

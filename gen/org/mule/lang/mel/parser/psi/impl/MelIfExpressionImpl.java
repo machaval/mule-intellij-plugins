@@ -16,8 +16,12 @@ public class MelIfExpressionImpl extends MelExpressionImpl implements MelIfExpre
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitIfExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitIfExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

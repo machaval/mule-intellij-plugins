@@ -130,7 +130,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   static boolean binaryOperations(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "binaryOperations")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<operator>");
+    Marker m = enter_section_(b, l, _NONE_, null, "<operator>");
     r = plusMinusOperations(b, l + 1);
     if (!r) r = divideMultiplyOperations(b, l + 1);
     if (!r) r = bitwiseBooleanOperations(b, l + 1);
@@ -140,7 +140,7 @@ public class MelParser implements PsiParser, LightPsiParser {
     if (!r) r = equalityOperations(b, l + 1);
     if (!r) r = relationalOperations(b, l + 1);
     if (!r) r = setOperations(b, l + 1);
-    exit_section_(b, l, m, null, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -279,11 +279,11 @@ public class MelParser implements PsiParser, LightPsiParser {
   public static boolean mapEntryElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "mapEntryElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<map entry element>");
+    Marker m = enter_section_(b, l, _NONE_, MAP_ENTRY_ELEMENT, "<map entry element>");
     r = expression(b, l + 1, -1);
     r = r && consumeToken(b, COLON);
     r = r && expression(b, l + 1, -1);
-    exit_section_(b, l, m, MAP_ENTRY_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -341,10 +341,10 @@ public class MelParser implements PsiParser, LightPsiParser {
   public static boolean parameterList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "parameterList")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<parameter list>");
+    Marker m = enter_section_(b, l, _NONE_, PARAMETER_LIST, "<parameter list>");
     r = parameterList_0(b, l + 1);
     r = r && parameterList_1(b, l + 1);
-    exit_section_(b, l, m, PARAMETER_LIST, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -575,15 +575,15 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 'import' IDENTIFIER ('.' IDENTIFIER)* ('.' '*')?
   public static boolean importExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "importExpression")) return false;
-    if (!nextTokenIsFast(b, IMPORT)) return false;
+    if (!nextTokenIsSmart(b, IMPORT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, IMPORT_EXPRESSION, null);
     r = consumeTokenSmart(b, IMPORT);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, IDENTIFIER));
     r = p && report_error_(b, importExpression_2(b, l + 1)) && r;
     r = p && importExpression_3(b, l + 1) && r;
-    exit_section_(b, l, m, IMPORT_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -631,9 +631,9 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 'def' IDENTIFIER '(' parameterList ')' blockExpression
   public static boolean functionExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "functionExpression")) return false;
-    if (!nextTokenIsFast(b, DEF)) return false;
+    if (!nextTokenIsSmart(b, DEF)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_EXPRESSION, null);
     r = consumeTokenSmart(b, DEF);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, IDENTIFIER));
@@ -641,14 +641,14 @@ public class MelParser implements PsiParser, LightPsiParser {
     r = p && report_error_(b, parameterList(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
     r = p && blockExpression(b, l + 1) && r;
-    exit_section_(b, l, m, FUNCTION_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   // (IDENTIFIER '=' expression) | (fqnTypeExpression IDENTIFIER '=' expression)
   public static boolean variableAssignmentExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "variableAssignmentExpression")) return false;
-    if (!nextTokenIsFast(b, IDENTIFIER)) return false;
+    if (!nextTokenIsSmart(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = variableAssignmentExpression_0(b, l + 1);
@@ -685,9 +685,9 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 'if' '(' expression ')' expression ('else' expression)?
   public static boolean ifExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ifExpression")) return false;
-    if (!nextTokenIsFast(b, IF)) return false;
+    if (!nextTokenIsSmart(b, IF)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, IF_EXPRESSION, null);
     r = consumeTokenSmart(b, IF);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, LPARENTH));
@@ -695,7 +695,7 @@ public class MelParser implements PsiParser, LightPsiParser {
     r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
     r = p && report_error_(b, expression(b, l + 1, -1)) && r;
     r = p && ifExpression_5(b, l + 1) && r;
-    exit_section_(b, l, m, IF_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -720,7 +720,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   // ('foreach') '(' IDENTIFIER ':' expression ')' expression
   public static boolean foreachExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "foreachExpression")) return false;
-    if (!nextTokenIsFast(b, FOREACH)) return false;
+    if (!nextTokenIsSmart(b, FOREACH)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = foreachExpression_0(b, l + 1);
@@ -747,14 +747,14 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 'for' ('(' expression ';' expression ';' expression ')' | '(' IDENTIFIER ':' expression ')') expression
   public static boolean forExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "forExpression")) return false;
-    if (!nextTokenIsFast(b, FOR)) return false;
+    if (!nextTokenIsSmart(b, FOR)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, FOR_EXPRESSION, null);
     r = consumeTokenSmart(b, FOR);
     p = r; // pin = 1
     r = r && report_error_(b, forExpression_1(b, l + 1));
     r = p && expression(b, l + 1, -1) && r;
-    exit_section_(b, l, m, FOR_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -802,25 +802,25 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 'while' '(' expression ')' expression
   public static boolean whileExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "whileExpression")) return false;
-    if (!nextTokenIsFast(b, WHILE)) return false;
+    if (!nextTokenIsSmart(b, WHILE)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, WHILE_EXPRESSION, null);
     r = consumeTokenSmart(b, WHILE);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, LPARENTH));
     r = p && report_error_(b, expression(b, l + 1, -1)) && r;
     r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
     r = p && expression(b, l + 1, -1) && r;
-    exit_section_(b, l, m, WHILE_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   // 'do' blockExpression 'while' '(' expression ')'
   public static boolean doWhileExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "doWhileExpression")) return false;
-    if (!nextTokenIsFast(b, DO)) return false;
+    if (!nextTokenIsSmart(b, DO)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, DO_WHILE_EXPRESSION, null);
     r = consumeTokenSmart(b, DO);
     p = r; // pin = 1
     r = r && report_error_(b, blockExpression(b, l + 1));
@@ -828,14 +828,14 @@ public class MelParser implements PsiParser, LightPsiParser {
     r = p && report_error_(b, consumeToken(b, LPARENTH)) && r;
     r = p && report_error_(b, expression(b, l + 1, -1)) && r;
     r = p && consumeToken(b, RPARENTH) && r;
-    exit_section_(b, l, m, DO_WHILE_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   // '[' mapExpressionSequence  ']'
   public static boolean mapExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "mapExpression")) return false;
-    if (!nextTokenIsFast(b, LBRACKET)) return false;
+    if (!nextTokenIsSmart(b, LBRACKET)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, LBRACKET);
@@ -848,7 +848,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   // '[' expression (',' expression)*  ']'
   public static boolean arrayExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "arrayExpression")) return false;
-    if (!nextTokenIsFast(b, LBRACKET)) return false;
+    if (!nextTokenIsSmart(b, LBRACKET)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, LBRACKET);
@@ -884,7 +884,7 @@ public class MelParser implements PsiParser, LightPsiParser {
 
   public static boolean parenthesizedExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "parenthesizedExpression")) return false;
-    if (!nextTokenIsFast(b, LPARENTH)) return false;
+    if (!nextTokenIsSmart(b, LPARENTH)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, LPARENTH);
@@ -898,7 +898,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   // '{' expressionSemicolon* '}'
   public static boolean blockExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "blockExpression")) return false;
-    if (!nextTokenIsFast(b, LBRACE)) return false;
+    if (!nextTokenIsSmart(b, LBRACE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, LBRACE);
@@ -923,14 +923,14 @@ public class MelParser implements PsiParser, LightPsiParser {
   // "new" fqnTypeExpression constructorExpression
   public static boolean newExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "newExpression")) return false;
-    if (!nextTokenIsFast(b, NEW_KEYWORD)) return false;
+    if (!nextTokenIsSmart(b, NEW_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, NEW_EXPRESSION, null);
     r = consumeTokenSmart(b, NEW_KEYWORD);
     p = r; // pin = 1
     r = r && report_error_(b, fqnTypeExpression(b, l + 1));
     r = p && constructorExpression(b, l + 1) && r;
-    exit_section_(b, l, m, NEW_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -969,11 +969,11 @@ public class MelParser implements PsiParser, LightPsiParser {
   public static boolean prefixUnaryExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "prefixUnaryExpression")) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<prefix unary expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, PREFIX_UNARY_EXPRESSION, "<prefix unary expression>");
     r = prefixUnaryOperator(b, l + 1);
     p = r; // pin = 1
     r = r && expression(b, l + 1, -1);
-    exit_section_(b, l, m, PREFIX_UNARY_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -984,25 +984,26 @@ public class MelParser implements PsiParser, LightPsiParser {
   public static boolean literalExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "literalExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<literal expression>");
+    Marker m = enter_section_(b, l, _NONE_, LITERAL_EXPRESSION, "<literal expression>");
     r = numberLiteralExpression(b, l + 1);
     if (!r) r = textLiteralExpression(b, l + 1);
     if (!r) r = booleanLiteralExpression(b, l + 1);
     if (!r) r = consumeTokenSmart(b, NULL_KEYWORD);
-    exit_section_(b, l, m, LITERAL_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   // IDENTIFIER ('.' IDENTIFIER)*
   public static boolean fqnTypeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fqnTypeExpression")) return false;
-    if (!nextTokenIsFast(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    if (!nextTokenIsSmart(b, IDENTIFIER)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FQN_TYPE_EXPRESSION, null);
     r = consumeTokenSmart(b, IDENTIFIER);
+    p = r; // pin = 1
     r = r && fqnTypeExpression_1(b, l + 1);
-    exit_section_(b, m, FQN_TYPE_EXPRESSION, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ('.' IDENTIFIER)*
@@ -1020,12 +1021,13 @@ public class MelParser implements PsiParser, LightPsiParser {
   // '.' IDENTIFIER
   private static boolean fqnTypeExpression_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fqnTypeExpression_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = consumeTokenSmart(b, DOT);
+    p = r; // pin = 1
     r = r && consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
 }

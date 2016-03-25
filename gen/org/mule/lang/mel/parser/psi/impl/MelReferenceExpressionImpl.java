@@ -16,8 +16,12 @@ public class MelReferenceExpressionImpl extends MelExpressionImpl implements Mel
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitReferenceExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitReferenceExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

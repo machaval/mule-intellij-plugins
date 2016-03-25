@@ -8,16 +8,21 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.mule.lang.mel.parser.psi.MelTypes.*;
+import org.mule.lang.mel.parser.psi.MelFqnTypeExpressionBase;
 import org.mule.lang.mel.parser.psi.*;
 
-public class MelFqnTypeExpressionImpl extends MelExpressionImpl implements MelFqnTypeExpression {
+public class MelFqnTypeExpressionImpl extends MelFqnTypeExpressionBase implements MelFqnTypeExpression {
 
   public MelFqnTypeExpressionImpl(ASTNode node) {
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitFqnTypeExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitFqnTypeExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

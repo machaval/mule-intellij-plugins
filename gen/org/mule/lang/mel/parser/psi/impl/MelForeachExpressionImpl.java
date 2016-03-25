@@ -16,8 +16,12 @@ public class MelForeachExpressionImpl extends MelExpressionImpl implements MelFo
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitForeachExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitForeachExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

@@ -16,8 +16,12 @@ public class MelIndexedExpressionImpl extends MelExpressionImpl implements MelIn
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitIndexedExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitIndexedExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

@@ -200,4 +200,7 @@ private constructorExpression ::= '(' parameterList ')'
 newExpression ::= "new" fqnTypeExpression constructorExpression {pin=1}
 
 // common
-fqnTypeExpression ::= IDENTIFIER ('.' IDENTIFIER)*
+fqnTypeExpression ::= IDENTIFIER ('.' IDENTIFIER)*  {
+    pin(".*")=1
+    mixin="org.mule.lang.mel.parser.psi.MelFqnTypeExpressionBase"
+}
