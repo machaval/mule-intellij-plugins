@@ -16,8 +16,12 @@ public class MelPrefixUnaryExpressionImpl extends MelExpressionImpl implements M
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitPrefixUnaryExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitPrefixUnaryExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 

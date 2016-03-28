@@ -16,8 +16,12 @@ public class MelParenthesizedExpressionImpl extends MelExpressionImpl implements
     super(node);
   }
 
+  public void accept(@NotNull MelVisitor visitor) {
+    visitor.visitParenthesizedExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MelVisitor) ((MelVisitor)visitor).visitParenthesizedExpression(this);
+    if (visitor instanceof MelVisitor) accept((MelVisitor)visitor);
     else super.accept(visitor);
   }
 
