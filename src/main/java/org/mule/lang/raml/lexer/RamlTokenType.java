@@ -11,6 +11,6 @@ public class RamlTokenType extends IElementType {
     }
 
     public String toString() {
-        return "[Yaml] " + super.toString();
+        return "[RAML] " + super.toString();
     }
 }
