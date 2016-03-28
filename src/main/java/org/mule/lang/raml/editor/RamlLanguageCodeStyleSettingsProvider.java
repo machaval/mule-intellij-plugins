@@ -36,6 +36,6 @@ public class RamlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSett
 	}
 
 	public String getCodeSample(@NotNull SettingsType settingsType) {
-		return "product:\n  name: Yaml\n  version: 4\n  vendor: vermut@kid.lv\n  url: \"https://github.com/vermut/intellij-ansible/\"";
+		return "/books:\n  /{bookTitle}\n    get:\n      queryParameters:\n      author:\n      publicationYear:\n      rating:\n      isbn:\n";
 	}
 }

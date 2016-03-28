@@ -97,6 +97,8 @@
         <breadcrumbsInfoProvider implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
         <lang.psiStructureViewFactory language="RAML"
                                       implementationClass="org.mule.lang.raml.editor.RamlStructureViewFactory"/>
+        <langCodeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlCodeStyleSettingsProvider"/>
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
 

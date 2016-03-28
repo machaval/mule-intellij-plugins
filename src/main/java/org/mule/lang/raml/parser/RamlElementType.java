@@ -11,6 +11,6 @@ public class RamlElementType extends IElementType {
 	}
 
 	public String toString() {
-		return "[Raml] " + super.toString();
+		return "[RAML] " + super.toString();
 	}
 }

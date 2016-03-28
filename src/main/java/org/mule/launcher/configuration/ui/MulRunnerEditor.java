@@ -32,17 +32,21 @@ public class MulRunnerEditor extends SettingsEditor<MuleConfiguration> {
         final Project project = runnerConfiguration.getProject();
         //TODO filter for mule modules only
         this.configurationPanel.getModuleCombo().setModules(Arrays.asList(runnerConfiguration.getModules()));
-        Module selectedModule = runnerConfiguration.getModules()[0];
-        final String moduleName = runnerConfiguration.getModuleName();
-        if (StringUtils.isNotBlank(moduleName)) {
-            final Module moduleByName = ModuleManager.getInstance(project).findModuleByName(moduleName);
-            if (moduleByName != null) {
-                selectedModule = moduleByName;
+        //Fix for intermittent java.lang.ArrayIndexOutOfBoundsException
+        Module[] modules = runnerConfiguration.getModules();
+        if (modules != null && modules.length > 0) {
+            Module selectedModule = modules[0];
+            final String moduleName = runnerConfiguration.getModuleName();
+            if (StringUtils.isNotBlank(moduleName)) {
+                final Module moduleByName = ModuleManager.getInstance(project).findModuleByName(moduleName);
+                if (moduleByName != null) {
+                    selectedModule = moduleByName;
+                }
             }
+            this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
+            this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
+            this.configurationPanel.getMuleHome().setText(runnerConfiguration.getMuleHome());
         }
-        this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
-        this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
-        this.configurationPanel.getMuleHome().setText(runnerConfiguration.getMuleHome());
     }
 
     /**
