@@ -6,7 +6,7 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'maven'
 
 intellij{
-    plugins = ["maven", "groovy"]
+    plugins = ["maven", "groovy", "yaml"]
 }
 
 configurations {
