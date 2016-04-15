@@ -328,10 +328,10 @@ FilterSelectorExpression ::=Expression'[' '?' '(' ClojureWithoutParametersExpres
 BracketSelectorExpression::=Expression'[' Selector ']'
 
 
-Selector ::= ValueSelector |
+Selector ::= (ValueSelector |
          AttributeSelector |
          SchemaSelector |
-         MultiValueSelector
+         MultiValueSelector) ('!'| '?')?
 
 ValueSelector ::= (DeclaredNamespace? (StringLiteral|Identifier))
 

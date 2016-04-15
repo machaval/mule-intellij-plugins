@@ -17,8 +17,12 @@ public class WeaveMultipleKeyValuePairObjImpl extends ASTWrapperPsiElement imple
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitMultipleKeyValuePairObj(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitMultipleKeyValuePairObj(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

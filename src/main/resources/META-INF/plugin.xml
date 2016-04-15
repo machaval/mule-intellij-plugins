@@ -21,6 +21,7 @@
 
     <depends>org.jetbrains.idea.maven</depends>
     <depends>org.intellij.groovy</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
 
@@ -37,6 +38,8 @@
 
         <!--Mule Config-->
 
+        <runConfigurationProducer implementation="org.mule.actions.MuleApplicationConfigurationProducer"/>
+
         <dom.fileDescription implementation="org.mule.config.MuleDomFileDescription"/>
         <psi.referenceContributor language="XML"
                                   implementation="org.mule.config.reference.MuleConfigurationReferenceContributor"/>
@@ -52,6 +55,9 @@
         <completion.contributor language="XML"
                                 implementationClass="org.mule.config.completion.MuleElementsCompletionContributor"
                                 order="first"/>
+
+        <liveTemplateContext implementation="org.mule.templates.MuleConfigLiveTemplateContextType"/>
+        <defaultLiveTemplatesProvider implementation="org.mule.templates.MuleConfigLiveTemplatesProvider"/>
 
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
@@ -88,17 +94,15 @@
         <!-- RAML -->
 
         <fileTypeFactory implementation="org.mule.lang.raml.file.RamlFileTypeFactory"/>
-        <lang.syntaxHighlighterFactory language="RAML"
-                                       implementationClass="org.mule.lang.raml.editor.RamlSyntaxHighlighterFactory"/>
         <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
         <lang.commenter language="RAML" implementationClass="org.mule.lang.raml.RamlCommenter"/>
-        <lang.braceMatcher language="RAML" implementationClass="org.mule.lang.raml.RamlBraceMatcher"/>
-        <lang.foldingBuilder language="RAML" implementationClass="org.mule.lang.raml.editor.RamlFoldingBuilder"/>
-        <breadcrumbsInfoProvider implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
-        <lang.psiStructureViewFactory language="RAML"
-                                      implementationClass="org.mule.lang.raml.editor.RamlStructureViewFactory"/>
-        <langCodeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlLanguageCodeStyleSettingsProvider"/>
-        <codeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlCodeStyleSettingsProvider"/>
+        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
+        <lang.commenter language="RAML" implementationClass="org.jetbrains.yaml.YAMLCommenter"/>
+        <lang.braceMatcher language="RAML" implementationClass="org.jetbrains.yaml.YAMLPairedBraceMatcher"/>
+        <lang.foldingBuilder language="RAML" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
+        <editor.backspaceModeOverride language="RAML" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
+        <lang.psiStructureViewFactory language="RAML" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
+
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
 

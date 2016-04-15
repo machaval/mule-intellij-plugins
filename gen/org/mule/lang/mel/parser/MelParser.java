@@ -27,13 +27,13 @@ public class MelParser implements PsiParser, LightPsiParser {
       r = arrayExpression(b, 0);
     }
     else if (t == BINARY_EXPRESSION) {
-      r = expression(b, 0, 12);
+      r = expression(b, 0, 11);
     }
     else if (t == BLOCK_EXPRESSION) {
       r = blockExpression(b, 0);
     }
     else if (t == CONDITIONAL_EXPRESSION) {
-      r = expression(b, 0, 11);
+      r = expression(b, 0, 10);
     }
     else if (t == DO_WHILE_EXPRESSION) {
       r = doWhileExpression(b, 0);
@@ -50,8 +50,8 @@ public class MelParser implements PsiParser, LightPsiParser {
     else if (t == FQN_TYPE_EXPRESSION) {
       r = fqnTypeExpression(b, 0);
     }
-    else if (t == FUNCTION_EXPRESSION) {
-      r = functionExpression(b, 0);
+    else if (t == FUNCTION_DEFINITION_EXPRESSION) {
+      r = functionDefinitionExpression(b, 0);
     }
     else if (t == IF_EXPRESSION) {
       r = ifExpression(b, 0);
@@ -60,7 +60,7 @@ public class MelParser implements PsiParser, LightPsiParser {
       r = importExpression(b, 0);
     }
     else if (t == INDEXED_EXPRESSION) {
-      r = expression(b, 0, 15);
+      r = expression(b, 0, 14);
     }
     else if (t == LITERAL_EXPRESSION) {
       r = literalExpression(b, 0);
@@ -72,7 +72,7 @@ public class MelParser implements PsiParser, LightPsiParser {
       r = mapExpression(b, 0);
     }
     else if (t == METHOD_CALL_EXPRESSION) {
-      r = expression(b, 0, 14);
+      r = expression(b, 0, 13);
     }
     else if (t == NEW_EXPRESSION) {
       r = newExpression(b, 0);
@@ -84,13 +84,13 @@ public class MelParser implements PsiParser, LightPsiParser {
       r = parenthesizedExpression(b, 0);
     }
     else if (t == POSTFIX_UNARY_EXPRESSION) {
-      r = expression(b, 0, 17);
+      r = expression(b, 0, 16);
     }
     else if (t == PREFIX_UNARY_EXPRESSION) {
       r = prefixUnaryExpression(b, 0);
     }
     else if (t == REFERENCE_EXPRESSION) {
-      r = expression(b, 0, 16);
+      r = expression(b, 0, 15);
     }
     else if (t == VARIABLE_ASSIGNMENT_EXPRESSION) {
       r = variableAssignmentExpression(b, 0);
@@ -111,7 +111,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(ARRAY_EXPRESSION, BINARY_EXPRESSION, BLOCK_EXPRESSION, CONDITIONAL_EXPRESSION,
       DO_WHILE_EXPRESSION, EXPRESSION, FOREACH_EXPRESSION, FOR_EXPRESSION,
-      FQN_TYPE_EXPRESSION, FUNCTION_EXPRESSION, IF_EXPRESSION, IMPORT_EXPRESSION,
+      FQN_TYPE_EXPRESSION, FUNCTION_DEFINITION_EXPRESSION, IF_EXPRESSION, IMPORT_EXPRESSION,
       INDEXED_EXPRESSION, LITERAL_EXPRESSION, MAP_EXPRESSION, METHOD_CALL_EXPRESSION,
       NEW_EXPRESSION, PARENTHESIZED_EXPRESSION, POSTFIX_UNARY_EXPRESSION, PREFIX_UNARY_EXPRESSION,
       REFERENCE_EXPRESSION, VARIABLE_ASSIGNMENT_EXPRESSION, WHILE_EXPRESSION),
@@ -485,7 +485,7 @@ public class MelParser implements PsiParser, LightPsiParser {
   // Expression root: expression
   // Operator priority table:
   // 0: ATOM(importExpression)
-  // 1: ATOM(functionExpression)
+  // 1: ATOM(functionDefinitionExpression)
   // 2: ATOM(variableAssignmentExpression)
   // 3: ATOM(ifExpression)
   // 4: ATOM(foreachExpression)
@@ -494,17 +494,17 @@ public class MelParser implements PsiParser, LightPsiParser {
   // 7: ATOM(doWhileExpression)
   // 8: ATOM(mapExpression)
   // 9: ATOM(arrayExpression)
-  // 10: PREFIX(parenthesizedExpression)
-  // 11: ATOM(blockExpression)
-  // 12: BINARY(conditionalExpression)
-  // 13: BINARY(binaryExpression)
-  // 14: ATOM(newExpression)
-  // 15: POSTFIX(methodCallExpression)
-  // 16: BINARY(indexedExpression)
-  // 17: POSTFIX(referenceExpression)
-  // 18: POSTFIX(postfixUnaryExpression)
-  // 19: ATOM(prefixUnaryExpression)
-  // 20: ATOM(literalExpression)
+  // 10: ATOM(blockExpression)
+  // 11: BINARY(conditionalExpression)
+  // 12: BINARY(binaryExpression)
+  // 13: ATOM(newExpression)
+  // 14: POSTFIX(methodCallExpression)
+  // 15: BINARY(indexedExpression)
+  // 16: POSTFIX(referenceExpression)
+  // 17: POSTFIX(postfixUnaryExpression)
+  // 18: ATOM(prefixUnaryExpression)
+  // 19: ATOM(literalExpression)
+  // 20: PREFIX(parenthesizedExpression)
   // 21: ATOM(fqnTypeExpression)
   public static boolean expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expression")) return false;
@@ -512,7 +512,7 @@ public class MelParser implements PsiParser, LightPsiParser {
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, "<expression>");
     r = importExpression(b, l + 1);
-    if (!r) r = functionExpression(b, l + 1);
+    if (!r) r = functionDefinitionExpression(b, l + 1);
     if (!r) r = variableAssignmentExpression(b, l + 1);
     if (!r) r = ifExpression(b, l + 1);
     if (!r) r = foreachExpression(b, l + 1);
@@ -521,11 +521,11 @@ public class MelParser implements PsiParser, LightPsiParser {
     if (!r) r = doWhileExpression(b, l + 1);
     if (!r) r = mapExpression(b, l + 1);
     if (!r) r = arrayExpression(b, l + 1);
-    if (!r) r = parenthesizedExpression(b, l + 1);
     if (!r) r = blockExpression(b, l + 1);
     if (!r) r = newExpression(b, l + 1);
     if (!r) r = prefixUnaryExpression(b, l + 1);
     if (!r) r = literalExpression(b, l + 1);
+    if (!r) r = parenthesizedExpression(b, l + 1);
     if (!r) r = fqnTypeExpression(b, l + 1);
     p = r;
     r = r && expression_0(b, l + 1, g);
@@ -538,29 +538,29 @@ public class MelParser implements PsiParser, LightPsiParser {
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 12 && consumeTokenSmart(b, QUESTION)) {
-        r = report_error_(b, expression(b, l, 12));
+      if (g < 11 && consumeTokenSmart(b, QUESTION)) {
+        r = report_error_(b, expression(b, l, 11));
         r = conditionalExpressionTail(b, l + 1) && r;
         exit_section_(b, l, m, CONDITIONAL_EXPRESSION, r, true, null);
       }
-      else if (g < 13 && binaryOperations(b, l + 1)) {
-        r = expression(b, l, 13);
+      else if (g < 12 && binaryOperations(b, l + 1)) {
+        r = expression(b, l, 12);
         exit_section_(b, l, m, BINARY_EXPRESSION, r, true, null);
       }
-      else if (g < 15 && methodCallExpression_0(b, l + 1)) {
+      else if (g < 14 && methodCallExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, METHOD_CALL_EXPRESSION, r, true, null);
       }
-      else if (g < 16 && consumeTokenSmart(b, LBRACKET)) {
-        r = report_error_(b, expression(b, l, 16));
+      else if (g < 15 && consumeTokenSmart(b, LBRACKET)) {
+        r = report_error_(b, expression(b, l, 15));
         r = consumeToken(b, RBRACKET) && r;
         exit_section_(b, l, m, INDEXED_EXPRESSION, r, true, null);
       }
-      else if (g < 17 && referenceExpression_0(b, l + 1)) {
+      else if (g < 16 && referenceExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, REFERENCE_EXPRESSION, r, true, null);
       }
-      else if (g < 18 && postfixUnaryOperator(b, l + 1)) {
+      else if (g < 17 && postfixUnaryOperator(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, POSTFIX_UNARY_EXPRESSION, r, true, null);
       }
@@ -629,11 +629,11 @@ public class MelParser implements PsiParser, LightPsiParser {
   }
 
   // 'def' IDENTIFIER '(' parameterList ')' blockExpression
-  public static boolean functionExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "functionExpression")) return false;
+  public static boolean functionDefinitionExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "functionDefinitionExpression")) return false;
     if (!nextTokenIsSmart(b, DEF)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, FUNCTION_EXPRESSION, null);
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_DEFINITION_EXPRESSION, null);
     r = consumeTokenSmart(b, DEF);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, IDENTIFIER));
@@ -882,19 +882,6 @@ public class MelParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  public static boolean parenthesizedExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "parenthesizedExpression")) return false;
-    if (!nextTokenIsSmart(b, LPARENTH)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
-    r = consumeTokenSmart(b, LPARENTH);
-    p = r;
-    r = p && expression(b, l, 10);
-    r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
-    exit_section_(b, l, m, PARENTHESIZED_EXPRESSION, r, p, null);
-    return r || p;
-  }
-
   // '{' expressionSemicolon* '}'
   public static boolean blockExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "blockExpression")) return false;
@@ -946,7 +933,7 @@ public class MelParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '.' '?'? IDENTIFIER
+  // '.' ('?')? IDENTIFIER
   private static boolean referenceExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "referenceExpression_0")) return false;
     boolean r;
@@ -958,11 +945,21 @@ public class MelParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '?'?
+  // ('?')?
   private static boolean referenceExpression_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "referenceExpression_0_1")) return false;
-    consumeTokenSmart(b, QUESTION);
+    referenceExpression_0_1_0(b, l + 1);
     return true;
+  }
+
+  // ('?')
+  private static boolean referenceExpression_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "referenceExpression_0_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, QUESTION);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   // prefixUnaryOperator expression
@@ -993,17 +990,29 @@ public class MelParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  public static boolean parenthesizedExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "parenthesizedExpression")) return false;
+    if (!nextTokenIsSmart(b, LPARENTH)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, LPARENTH);
+    p = r;
+    r = p && expression(b, l, 20);
+    r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
+    exit_section_(b, l, m, PARENTHESIZED_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
   // IDENTIFIER ('.' IDENTIFIER)*
   public static boolean fqnTypeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fqnTypeExpression")) return false;
     if (!nextTokenIsSmart(b, IDENTIFIER)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, FQN_TYPE_EXPRESSION, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, IDENTIFIER);
-    p = r; // pin = 1
     r = r && fqnTypeExpression_1(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, m, FQN_TYPE_EXPRESSION, r);
+    return r;
   }
 
   // ('.' IDENTIFIER)*
@@ -1021,13 +1030,12 @@ public class MelParser implements PsiParser, LightPsiParser {
   // '.' IDENTIFIER
   private static boolean fqnTypeExpression_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fqnTypeExpression_1_0")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeTokenSmart(b, DOT);
-    p = r; // pin = 1
     r = r && consumeToken(b, IDENTIFIER);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, m, null, r);
+    return r;
   }
 
 }

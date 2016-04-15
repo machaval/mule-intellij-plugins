@@ -36,7 +36,6 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
 
     public void connect(@NotNull String host, @NotNull int port) {
         debuggerClient = new DebuggerClient(new DebuggerConnection(host, port));
-
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

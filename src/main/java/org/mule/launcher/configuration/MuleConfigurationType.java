@@ -1,8 +1,10 @@
 package org.mule.launcher.configuration;
 
 
+import com.intellij.execution.application.ApplicationConfigurationType;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.mule.util.MuleIcons;
 
@@ -40,6 +42,11 @@ public class MuleConfigurationType implements ConfigurationType {
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
         return new ConfigurationFactory[]{esbFactory};
+    }
+
+    @NotNull
+    public static MuleConfigurationType getInstance() {
+        return ConfigurationTypeUtil.findConfigurationType(MuleConfigurationType.class);
     }
 
 }

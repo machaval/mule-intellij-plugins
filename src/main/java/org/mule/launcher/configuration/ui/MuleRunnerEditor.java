@@ -13,12 +13,11 @@ import javax.swing.*;
 import java.util.Arrays;
 
 
-public class MulRunnerEditor extends SettingsEditor<MuleConfiguration> {
+public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration> {
 
     private MuleRunnerConfPanel configurationPanel;
-    private String mainOutputDirectory;
 
-    public MulRunnerEditor(MuleConfiguration runnerConfiguration) {
+    public MuleRunnerEditor(MuleConfiguration runnerConfiguration) {
         this.configurationPanel = new MuleRunnerConfPanel(runnerConfiguration.getProject());
         super.resetFrom(runnerConfiguration);
     }
@@ -31,10 +30,10 @@ public class MulRunnerEditor extends SettingsEditor<MuleConfiguration> {
     protected void resetEditorFrom(MuleConfiguration runnerConfiguration) {
         final Project project = runnerConfiguration.getProject();
         //TODO filter for mule modules only
-        this.configurationPanel.getModuleCombo().setModules(Arrays.asList(runnerConfiguration.getModules()));
+        this.configurationPanel.getModuleCombo().setModules(runnerConfiguration.getValidModules());
         //Fix for intermittent java.lang.ArrayIndexOutOfBoundsException
         Module[] modules = runnerConfiguration.getModules();
-        if (modules != null && modules.length > 0) {
+        if (modules.length > 0) {
             Module selectedModule = modules[0];
             final String moduleName = runnerConfiguration.getModuleName();
             if (StringUtils.isNotBlank(moduleName)) {
@@ -61,7 +60,7 @@ public class MulRunnerEditor extends SettingsEditor<MuleConfiguration> {
         runnerConfiguration.setMuleHome(this.configurationPanel.getMuleHome().getText());
         final Module selectedModule = this.configurationPanel.getModuleCombo().getSelectedModule();
         if (selectedModule != null) {
-            runnerConfiguration.setModuleName(selectedModule.getName());
+            runnerConfiguration.setModule(selectedModule);
         }
     }
 

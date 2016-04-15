@@ -32,7 +32,7 @@ SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
 
 RULE_MIME_TYPE={ALPHA}+"/"+{ALPHA}+
 
-NAMESPACE_URI=[a-z]+"://"[a-zA-Z0-9/:\.-_]+ | "urn:"[a-zA-Z0-9:-_\.]+
+NAMESPACE_URI=[a-z]+"://"[a-zA-Z0-9/:\.\-_]+ | "urn:"[a-zA-Z0-9:\-_\.]+
 
 ID={ALPHA}[:jletterdigit:]*
 

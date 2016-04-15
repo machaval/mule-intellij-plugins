@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templateSet group="Mule Config">
+    <template id="mule-log-payload" name="logp" description="Logs payload"
+              value="&lt;logger message=&quot;Payload = #[payload]&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+        </context>
+    </template>
+
+    <template id="mule-log-payload-string" name="logps" description="Logs payload as string"
+              value="&lt;logger message=&quot;String Payload = #[message.payloadAs(java.lang.String)]&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+        </context>
+    </template>
+</templateSet>

@@ -17,8 +17,12 @@ public class WeaveSingleKeyValuePairObjImpl extends ASTWrapperPsiElement impleme
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitSingleKeyValuePairObj(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitSingleKeyValuePairObj(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

@@ -90,7 +90,7 @@
 root ::=  expressionSemicolon*
 private expressionSemicolon ::= expression ';'?
 expression ::= importExpression|
-               functionExpression|
+               functionDefinitionExpression|
                variableAssignmentExpression |
                ifExpression|
                foreachExpression|
@@ -99,7 +99,6 @@ expression ::= importExpression|
                doWhileExpression|
                mapExpression |
                arrayExpression |
-               parenthesizedExpression |
                blockExpression|
                conditionalExpression |
                binaryExpression |
@@ -110,11 +109,12 @@ expression ::= importExpression|
                postfixUnaryExpression |
                prefixUnaryExpression |
                literalExpression|
+               parenthesizedExpression |
                fqnTypeExpression
 
 
 importExpression ::= 'import' IDENTIFIER ('.' IDENTIFIER)* ('.' '*')? {pin=1}
-functionExpression ::= 'def' IDENTIFIER '(' parameterList ')' blockExpression {pin=1}
+functionDefinitionExpression ::= 'def' IDENTIFIER '(' parameterList ')' blockExpression {pin=1}
 blockExpression ::= '{' expressionSemicolon* '}'
 private numberLiteralExpression ::= INTEGER_LITERAL | BIG_INTEGER_LITERAL | DOUBLE_LITERAL | BIG_DECIMAL_LITERAL
 private booleanLiteralExpression ::= "true" | "false"
@@ -135,7 +135,7 @@ whileExpression ::= 'while' '(' expression ')' expression {pin=1}
 
 doWhileExpression ::= 'do' blockExpression 'while' '(' expression ')' {pin=1}
 
-referenceExpression ::= expression '.' '?'? IDENTIFIER
+referenceExpression ::= expression '.' ('?')? IDENTIFIER
 
 
 variableAssignmentExpression ::=  (IDENTIFIER '=' expression) | (fqnTypeExpression IDENTIFIER '=' expression)
@@ -143,6 +143,7 @@ variableAssignmentExpression ::=  (IDENTIFIER '=' expression) | (fqnTypeExpressi
 parameterList ::= expression? (',' expression)*
 
 methodCallExpression ::= expression '(' parameterList ')'
+
 
 mapEntryElement ::= expression ':' expression
 
@@ -201,6 +202,6 @@ newExpression ::= "new" fqnTypeExpression constructorExpression {pin=1}
 
 // common
 fqnTypeExpression ::= IDENTIFIER ('.' IDENTIFIER)*  {
-    pin(".*")=1
     mixin="org.mule.lang.mel.parser.psi.MelFqnTypeExpressionBase"
 }
+

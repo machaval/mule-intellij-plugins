@@ -43,7 +43,7 @@ public class MelVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitFunctionExpression(@NotNull MelFunctionExpression o) {
+  public void visitFunctionDefinitionExpression(@NotNull MelFunctionDefinitionExpression o) {
     visitExpression(o);
   }
 

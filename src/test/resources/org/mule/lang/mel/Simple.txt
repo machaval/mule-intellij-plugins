@@ -9,7 +9,7 @@ FILE
     PsiElement(*)('*')
   PsiElement(BAD_CHARACTER)(';')
   PsiWhiteSpace('\n')
-  MelFunctionExpressionImpl(FUNCTION_EXPRESSION)
+  MelFunctionDefinitionExpressionImpl(FUNCTION_DEFINITION_EXPRESSION)
     PsiElement(def)('def')
     PsiWhiteSpace(' ')
     PsiElement(IDENTIFIER)('a')
@@ -44,19 +44,14 @@ FILE
           PsiWhiteSpace('\n\n    ')
           PsiElement(})('}')
       PsiWhiteSpace('\n\n    ')
-      MelConditionalExpressionImpl(CONDITIONAL_EXPRESSION)
+      MelReferenceExpressionImpl(REFERENCE_EXPRESSION)
         MelFqnTypeExpressionImpl(FQN_TYPE_EXPRESSION)
           PsiElement(IDENTIFIER)('a')
           PsiElement(.)('.')
           PsiElement(IDENTIFIER)('b')
-          PsiElement(.)('.')
-          PsiErrorElement:IDENTIFIER expected, got '?'
-            <empty list>
+        PsiElement(.)('.')
         PsiElement(?)('?')
-        MelFqnTypeExpressionImpl(FQN_TYPE_EXPRESSION)
-          PsiElement(IDENTIFIER)('c')
-      PsiErrorElement:'!=', '%', '&', '&&', '*', '+', '++', '-', '--', '/', ':', ';', <, <<, <=, <expression>, '=', '==', '>', '>=', '>>', IDENTIFIER, '^', in, instanceof, '|' or '||' expected, got 'a'
-        <empty list>
+        PsiElement(IDENTIFIER)('c')
       PsiWhiteSpace('\n\n    ')
       MelIndexedExpressionImpl(INDEXED_EXPRESSION)
         MelFqnTypeExpressionImpl(FQN_TYPE_EXPRESSION)
