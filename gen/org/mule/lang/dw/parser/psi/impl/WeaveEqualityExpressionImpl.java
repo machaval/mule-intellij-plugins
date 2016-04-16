@@ -16,8 +16,12 @@ public class WeaveEqualityExpressionImpl extends WeaveExpressionImpl implements 
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitEqualityExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitEqualityExpression(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

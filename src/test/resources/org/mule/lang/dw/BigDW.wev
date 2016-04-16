@@ -1,0 +1,194 @@
+%dw 1.0
+%output application/xml skipNullOn="everywhere"
+%namespace xsi http://www.w3.org/2001/XMLSchema-instance
+---
+{
+	marketlive @(xmlns: 'http://marketlive.com/integration/xmlbean', xsi#schemaLocation: 'http://marketlive.com/integration/xmlbean ..\..\schema\MarketLive.xsd'): {
+		import: {
+			command @(type: "createOrUpdate"): {
+				products: {
+					(payload map ((payload01 , indexOfPayload01) -> {
+						product: {
+							code: payload01.Code,
+							attributePages: {
+								(payload01.ProductAttributePages map ((attribute, indexOfAttribute) -> {
+									attributePage: {
+										name: attribute.AssignedAttributePage,
+										attributes: {
+											name: attribute.Name,
+											value: attribute.Value
+										}
+									}
+								}))
+							},
+							displayTypeId: payload01.DisplayTypeId,
+							active: payload01.Active,
+							discountable: payload01.Discountable,
+							chargeShipping: payload01.ChargeShipping,
+							taxable: payload01.Taxable,
+							siteSpecificProperties: {
+								siteSpecificProperty @(siteCode: payload01.SiteCode): {
+									onSale: payload01.OnSale,
+									wasIs: payload01.WasIs
+								}
+							},
+							descriptionPages: {
+								descriptionPage: {
+									siteDescriptions: {
+										(payload01.ProductDescriptionPages map ((siteDescription, indexOfSiteDescription) -> {
+											siteDescription @(siteCode: payload01.SiteCode): {
+												name: siteDescription.name,
+												short: siteDescription.short,
+												long: siteDescription.long as :cdata when siteDescription.long? otherwise null
+											}
+										}))
+									}
+								}
+							},
+							imageTargetPages: {
+								imageTargetPage: {
+									siteImageTargets: {
+										(payload01.ImageTargetPages map ((siteImageTarget, indexOfSiteImageTarget) -> {
+											siteImageTarget @(siteCode: payload01.SiteCode): {
+											zoom1Image: siteImageTarget.zoom1Image,
+											zoom2Image: siteImageTarget.zoom2Image,
+											zoom3Image: siteImageTarget.zoom3Image,
+											zoom4Image: siteImageTarget.zoom4Image,
+											zoom5Image: siteImageTarget.zoom5Image,
+											zoom6Image: siteImageTarget.zoom6Image,
+											zoom7Image: siteImageTarget.zoom7Image
+											}
+										}))
+									}
+								}
+							},
+							productInfoPages: {
+								productInfoPage: {
+									topics: {
+										topic: {
+										code: 'Sizing',
+										contentFile: '/content/detail/Sizing.txt',
+										contentType: 1
+										} when payload01.ProductOptionTypeLinks.*OptionTypeCode != null and (payload01.ProductOptionTypeLinks.*OptionTypeCode contains 'SIZE') otherwise null,
+										topic: {
+										code: 'Returns',
+										contentFile: '/content/detail/Returns.txt',
+										contentType: 1
+										},
+										topic: {
+										code: 'Shipping',
+										contentFile: '/content/detail/Shipping.txt',
+										contentType: 1
+										}
+									}
+								}
+							},
+							optionDataPages: {
+								optionDataPage: {
+									options: {
+										(payload01.OptionDataPages map ((option, indexOfOption) -> {
+											option: {
+												optionCode: option.OptionCode,
+												optionTypeCode: option.OptionTypeCode,
+												swatchImage: option.SwatchImage,
+												swatchDiscountMessageId: option.SwatchDiscountMessageId,
+												swatchDisplayName: option.SwatchDisplayName
+											}
+										}))
+									}
+								}
+							} when payload01.OptionDataPages.OptionCode? otherwise null,
+							siteProductLinks: {
+								siteProductLink: {
+									productCode: payload01.Code,
+									siteCode: payload01.SiteCode
+								}
+							},
+							productCategoryLinks @(siteCode: payload01.SiteCode): {
+								(payload01.ProductCategoryLinks map ((productCategoryLink , indexOfProductCategoryLink) -> {
+									productCategoryLink: {
+										productCode: productCategoryLink.ProductCode,
+										categoryCode: productCategoryLink.CategoryCode as :string
+									}
+								}))
+							},
+							productOptionTypeLinks: {
+								(payload01.ProductOptionTypeLinks map ((productOptionTypeLink , indexOfProductOptionTypeLink) -> {
+									productOptionTypeLink: {
+										productCode: productOptionTypeLink.ProductCode,
+										optionTypeCode: productOptionTypeLink.OptionTypeCode,
+										ordinal: productOptionTypeLink.Ordinal,
+										isSwatch: productOptionTypeLink.isSwatch
+									}
+								}))
+							} when (sizeOf payload01.ProductOptionTypeLinks) > 0 otherwise null,
+							skus @(overwrite: 'true'): {
+								(payload01.SKUs map ((sKUs , indexOfSKUs) -> {
+									sku: {
+										code: sKUs.SKU,
+										attributePages: {
+											(sKUs.SkuAttributePages map ((skuAttributePage , indexOfSkuAttributePage) -> {
+												attributePage: {
+													name: skuAttributePage.AssignedAttributePage,
+													attributes: {
+														name: skuAttributePage.Name,
+														value: skuAttributePage.Value
+													} when skuAttributePage.AssignedAttributePage == 'assignedAttributePage' otherwise
+													attributes: {
+														name: skuAttributePage.Name,
+														values: {
+															(sKUs.SkuAttributePages.*Value map ((value, indexOfValue) -> {
+																value: value when skuAttributePage.AssignedAttributePage == 'assignedAttributeListPage' otherwise null
+															}))
+														}
+													}
+												}
+											}))
+										},
+										skuTypeId: sKUs.SkuTypeId,
+										active: sKUs.Active,
+										taxable: 'true',
+										shippingChargeable: sKUs.ShippingIndicator,
+										weight: sKUs.weight,
+										overWeight: 'false',
+										giftWrap: sKUs.GiftWrap,
+										skuOptionLinks @(overwrite: 'true'): {
+											(sKUs.SkuOptionLinks map ((skuOptionLink , indexOfSkuOptionLink) -> {
+												skuOptionLink: {
+													optionCode: skuOptionLink.OptionCode,
+													optionTypeCode: skuOptionLink.OptionTypeCode,
+													optionName: skuOptionLink.OptionName
+												}
+											}))
+										} when sKUs.SkuOptionLinks != null otherwise null,
+										productSkuLinks: {
+											productSkuLink: {
+												productCode: sKUs.Style,
+												skuCode: sKUs.SKU
+											}
+										},
+										inventories @(overwrite: 'true'): {
+											inventory: {
+												code: sKUs.SKU,
+												stock: 10,
+												minStock: 0,
+												skuCode: sKUs.SKU,
+												inventorySetCode: payload01.SiteCode
+											}
+										},
+										prices @(overwrite: 'true'): {
+											price: {
+												regularPrice: sKUs.PermanentPrice,
+												salePrice: sKUs.NetSellingPrice
+											}
+										}
+									}
+								}))
+							}
+						}
+					}))
+				}
+			}
+		}
+	}
+}

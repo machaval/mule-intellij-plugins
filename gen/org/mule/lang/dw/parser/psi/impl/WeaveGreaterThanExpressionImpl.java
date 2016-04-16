@@ -16,8 +16,12 @@ public class WeaveGreaterThanExpressionImpl extends WeaveExpressionImpl implemen
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitGreaterThanExpression(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitGreaterThanExpression(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

@@ -16,8 +16,12 @@ public class WeaveAnyDateLiteralImpl extends WeaveExpressionImpl implements Weav
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitAnyDateLiteral(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitAnyDateLiteral(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

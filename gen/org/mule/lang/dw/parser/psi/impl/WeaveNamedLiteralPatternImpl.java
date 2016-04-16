@@ -17,8 +17,12 @@ public class WeaveNamedLiteralPatternImpl extends WeaveNamedElementImpl implemen
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitNamedLiteralPattern(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitNamedLiteralPattern(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

@@ -17,8 +17,12 @@ public class WeaveConditionalAttributeImpl extends ASTWrapperPsiElement implemen
     super(node);
   }
 
+  public void accept(@NotNull WeaveVisitor visitor) {
+    visitor.visitConditionalAttribute(this);
+  }
+
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof WeaveVisitor) ((WeaveVisitor)visitor).visitConditionalAttribute(this);
+    if (visitor instanceof WeaveVisitor) accept((WeaveVisitor)visitor);
     else super.accept(visitor);
   }
 

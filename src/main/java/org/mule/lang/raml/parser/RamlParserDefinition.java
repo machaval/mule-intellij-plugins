@@ -11,71 +11,119 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.mule.lang.raml.lexer.RamlLexer;
-import org.mule.lang.raml.lexer.RamlTokenTypes;
-import org.mule.lang.raml.psi.impl.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.yaml.YAMLTokenTypes;
+import org.jetbrains.yaml.lexer.YAMLFlexLexer;
+import org.jetbrains.yaml.parser.YAMLParser;
+import org.jetbrains.yaml.psi.impl.*;
+import org.mule.lang.raml.RamlLanguage;
+import org.mule.lang.raml.file.RamlFile;
 
-public class RamlParserDefinition implements ParserDefinition {
-	@NotNull
-	@Override
-	public Lexer createLexer(Project project) {
-		return new RamlLexer();
-	}
+import static org.jetbrains.yaml.YAMLElementTypes.*;
 
-	@Override
-	public PsiParser createParser(Project project) {
-		return new RamlParser();
-	}
+public class RamlParserDefinition implements ParserDefinition
+{
+    static IFileElementType FILE = new IFileElementType(RamlLanguage.INSTANCE);
+    private static final TokenSet myCommentTokens = TokenSet.create(YAMLTokenTypes.COMMENT);
 
-	@Override
-	public IFileElementType getFileNodeType() {
-		return RamlElementTypes.FILE;
-	}
+    @NotNull
+    public Lexer createLexer(final Project project)
+    {
+        return new YAMLFlexLexer();
+    }
 
-	@NotNull
-	@Override
-	public TokenSet getWhitespaceTokens() {
-		return RamlTokenTypes.WHITESPACES;
-	}
+    @Nullable
+    public PsiParser createParser(final Project project)
+    {
+        return new YAMLParser();
+    }
 
-	@NotNull
-	@Override
-	public TokenSet getCommentTokens() {
-		return RamlTokenTypes.COMMENTS;
-	}
+    public IFileElementType getFileNodeType()
+    {
+        return FILE;
+    }
 
-	@NotNull
-	@Override
-	public TokenSet getStringLiteralElements() {
-		return RamlTokenTypes.STRING_LITERALS;
-	}
+    @NotNull
+    public TokenSet getWhitespaceTokens()
+    {
+        return TokenSet.create(YAMLTokenTypes.WHITESPACE);
+    }
 
-	@NotNull
-	@Override
-	public PsiElement createElement(ASTNode node) {
-		IElementType type = node.getElementType();
+    @NotNull
+    public TokenSet getCommentTokens()
+    {
+        return myCommentTokens;
+    }
 
-		if (type == RamlElementTypes.KEY_VALUE_PAIR) return new YamlKeyValPairImpl(node);
-		else if (type == RamlElementTypes.KEY) return new YamlKeyImpl(node);
-		else if (type == RamlElementTypes.COMPOUND_VALUE) return new YamlArrayImpl(node);
-		else if (type == RamlElementTypes.ARRAY) return new YamlArrayImpl(node);
-		else if (type == RamlElementTypes.SEQUENCE) return new YamlSectionImpl(node);
-		else if (type == RamlElementTypes.SCALAR_VALUE) return new YamlScalarImpl(node);
-		else if (type == RamlElementTypes.ENTITY) return new YamlEntityImpl(node);
-		else if (type == RamlElementTypes.JINJA) return new YamlJinjaImpl(node);
-		else if (type == RamlElementTypes.REFERENCE) return new YamlReferenceImpl(node);
-		else if (type == RamlElementTypes.ARGS) return new YamlArrayImpl(node); // FIXME: will it work?
-		else return new YamlPsiElementImpl(node);
-	}
+    @NotNull
+    public TokenSet getStringLiteralElements()
+    {
+        return TokenSet.create(YAMLTokenTypes.SCALAR_STRING, YAMLTokenTypes.SCALAR_DSTRING, YAMLTokenTypes.TEXT);
+    }
 
-	@Override
-	public PsiFile createFile(FileViewProvider viewProvider) {
-		return new YamlFileImpl(viewProvider);
-	}
+    @NotNull
+    public PsiElement createElement(final ASTNode node)
+    {
+        final IElementType type = node.getElementType();
+        if (type == DOCUMENT)
+        {
+            return new YAMLDocumentImpl(node);
+        }
+        if (type == KEY_VALUE_PAIR)
+        {
+            return new YAMLKeyValueImpl(node);
+        }
+        if (type == COMPOUND_VALUE)
+        {
+            return new YAMLCompoundValueImpl(node);
+        }
+        if (type == SEQUENCE)
+        {
+            return new YAMLBlockSequenceImpl(node);
+        }
+        if (type == MAPPING)
+        {
+            return new YAMLBlockMappingImpl(node);
+        }
+        if (type == SEQUENCE_ITEM)
+        {
+            return new YAMLSequenceItemImpl(node);
+        }
+        if (type == HASH)
+        {
+            return new YAMLHashImpl(node);
+        }
+        if (type == ARRAY)
+        {
+            return new YAMLArrayImpl(node);
+        }
+        if (type == SCALAR_LIST_VALUE)
+        {
+            return new YAMLScalarListImpl(node);
+        }
+        if (type == SCALAR_TEXT_VALUE)
+        {
+            return new YAMLScalarTextImpl(node);
+        }
+        if (type == SCALAR_PLAIN_VALUE)
+        {
+            return new YAMLPlainTextImpl(node);
+        }
+        if (type == SCALAR_QUOTED_STRING)
+        {
+            return new YAMLQuotedTextImpl(node);
+        }
+        return new YAMLPsiElementImpl(node);
+    }
 
-	@Override
-	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode astNode, ASTNode astNode1) {
-		return SpaceRequirements.MAY;
-	}
+    public PsiFile createFile(final FileViewProvider viewProvider)
+    {
+        return new RamlFile(viewProvider);
+    }
+
+    public SpaceRequirements spaceExistanceTypeBetweenTokens(final ASTNode left, final ASTNode right)
+    {
+        return SpaceRequirements.MAY;
+    }
 }

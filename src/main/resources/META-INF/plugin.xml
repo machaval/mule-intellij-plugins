@@ -1,26 +1,54 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule Plugin For Intellij</name>
-    <version>0.1</version>
+    <version>0.2</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
-
     <description><![CDATA[
-      This plugins allows the user to :
-        <em>Debug run a mule application.<em>
-        <em>DataWeave Editor.<em>
-        <em>Mel Editor.<em>
-        <em>Navigate through flow references and test flows.<em>
+     Mule Intellij Plugin.
     ]]></description>
 
     <change-notes><![CDATA[
-
+    <![CDATA[
+      <h1>v0.2</h1>
+      <ul>
+         <p>Enhancements</p>
+          <ul>
+            <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
+            <li>Basic Mel Support with code navigation.</li>
+            <li>Create Mule Apps from right click.</li>
+            <li>New mule project wizard.</li>
+            <li>Very Basic MUnit support.</li>
+            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
+          </ul>
+        <li>
+          <p>Bug Fixes</p>
+          <ul>
+            <li>Debugger breakpoints are now fully working</li>
+            <li>Fixes on DataWeave grammar</li>
+          </ul>
+        </li>
+      </ul>
+      <h1>v0.1</h1>
+      <ul>
+        <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Xml Configuration Navigation</li>
+            <li>Xml script code injection.</li>
+            <li>Xml Outline</li>
+            <li>Data Weave editor</li>
+            <li>Run Debug Mule App.</li>
+          </ul>
+        </li>
+      </ul>
     ]]>
     </change-notes>
 
-    <idea-version since-build="140"/>
+    <idea-version since-build="145"/>
 
     <depends>org.jetbrains.idea.maven</depends>
     <depends>org.intellij.groovy</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
 
@@ -37,6 +65,8 @@
 
         <!--Mule Config-->
 
+        <runConfigurationProducer implementation="org.mule.actions.MuleApplicationConfigurationProducer"/>
+
         <dom.fileDescription implementation="org.mule.config.MuleDomFileDescription"/>
         <psi.referenceContributor language="XML"
                                   implementation="org.mule.config.reference.MuleConfigurationReferenceContributor"/>
@@ -52,6 +82,9 @@
         <completion.contributor language="XML"
                                 implementationClass="org.mule.config.completion.MuleElementsCompletionContributor"
                                 order="first"/>
+
+        <liveTemplateContext implementation="org.mule.templates.MuleConfigLiveTemplateContextType"/>
+        <defaultLiveTemplatesProvider implementation="org.mule.templates.MuleConfigLiveTemplatesProvider"/>
 
         <!--Data Weave-->
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
@@ -88,17 +121,15 @@
         <!-- RAML -->
 
         <fileTypeFactory implementation="org.mule.lang.raml.file.RamlFileTypeFactory"/>
-        <lang.syntaxHighlighterFactory language="RAML"
-                                       implementationClass="org.mule.lang.raml.editor.RamlSyntaxHighlighterFactory"/>
         <lang.parserDefinition language="RAML" implementationClass="org.mule.lang.raml.parser.RamlParserDefinition"/>
         <lang.commenter language="RAML" implementationClass="org.mule.lang.raml.RamlCommenter"/>
-        <lang.braceMatcher language="RAML" implementationClass="org.mule.lang.raml.RamlBraceMatcher"/>
-        <lang.foldingBuilder language="RAML" implementationClass="org.mule.lang.raml.editor.RamlFoldingBuilder"/>
-        <breadcrumbsInfoProvider implementation="org.mule.lang.raml.editor.RamlBreadcrumbsInfoProvider"/>
-        <lang.psiStructureViewFactory language="RAML"
-                                      implementationClass="org.mule.lang.raml.editor.RamlStructureViewFactory"/>
-        <langCodeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlLanguageCodeStyleSettingsProvider"/>
-        <codeStyleSettingsProvider implementation="org.mule.lang.raml.editor.RamlCodeStyleSettingsProvider"/>
+        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
+        <lang.commenter language="RAML" implementationClass="org.jetbrains.yaml.YAMLCommenter"/>
+        <lang.braceMatcher language="RAML" implementationClass="org.jetbrains.yaml.YAMLPairedBraceMatcher"/>
+        <lang.foldingBuilder language="RAML" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
+        <editor.backspaceModeOverride language="RAML" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
+        <lang.psiStructureViewFactory language="RAML" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
+
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.MUnitDomFileDescription"/>
 

@@ -16,14 +16,12 @@ import java.io.File;
 
 public class MuleAppManager extends AbstractProjectComponent {
 
-    Logger logger = Logger.getInstance(MuleAppManager.class);
-
     protected MuleAppManager(Project project) {
         super(project);
     }
 
     @NotNull
-    public File getMuleApp(Module module) throws ExecutionException {
+    public File getMuleApp(@NotNull Module module) throws ExecutionException {
         final MavenProjectsManager instance = MavenProjectsManager.getInstance(module.getProject());
         if (instance.hasProjects()) {
             return new MuleAppMavenHandler().getMuleApp(module);

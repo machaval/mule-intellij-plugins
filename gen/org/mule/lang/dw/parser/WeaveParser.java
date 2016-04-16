@@ -375,10 +375,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ArrayElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<array element>");
+    Marker m = enter_section_(b, l, _NONE_, ARRAY_ELEMENT, "<array element>");
     r = ConditionalArrayElement(b, l + 1);
     if (!r) r = SimpleArrayElement(b, l + 1);
-    exit_section_(b, l, m, ARRAY_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -442,11 +442,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Attribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Attribute")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<attribute>");
+    Marker m = enter_section_(b, l, _NONE_, ATTRIBUTE, "<attribute>");
     r = KeyExpression(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, ATTRIBUTE, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -457,11 +457,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean AttributeElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttributeElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<attribute element>");
+    Marker m = enter_section_(b, l, _NONE_, ATTRIBUTE_ELEMENT, "<attribute element>");
     r = ConditionalAttribute(b, l + 1);
     if (!r) r = Attribute(b, l + 1);
     if (!r) r = EnclosedExpression(b, l + 1);
-    exit_section_(b, l, m, ATTRIBUTE_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -519,11 +519,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Attributes(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Attributes")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<attributes>");
+    Marker m = enter_section_(b, l, _NONE_, ATTRIBUTES, "<attributes>");
     r = consumeToken(b, "@(");
     r = r && Attributes_1(b, l + 1);
     r = r && consumeToken(b, R_PARREN);
-    exit_section_(b, l, m, ATTRIBUTES, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -573,9 +573,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Body(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Body")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<body>");
+    Marker m = enter_section_(b, l, _NONE_, BODY, "<body>");
     r = Expression(b, l + 1, -1);
-    exit_section_(b, l, m, BODY, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -586,10 +586,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "BooleanLiteral")) return false;
     if (!nextTokenIs(b, "<boolean literal>", FALSE_LITERAL, TRUE_LITERAL)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<boolean literal>");
+    Marker m = enter_section_(b, l, _NONE_, BOOLEAN_LITERAL, "<boolean literal>");
     r = consumeToken(b, TRUE_LITERAL);
     if (!r) r = consumeToken(b, FALSE_LITERAL);
-    exit_section_(b, l, m, BOOLEAN_LITERAL, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -672,11 +672,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ClojureWithOneParametersExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ClojureWithOneParametersExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<clojure with one parameters expression>");
+    Marker m = enter_section_(b, l, _NONE_, CLOJURE_WITH_ONE_PARAMETERS_EXPRESSION, "<clojure with one parameters expression>");
     r = FunctionParameter(b, l + 1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, CLOJURE_WITH_ONE_PARAMETERS_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -685,9 +685,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ClojureWithoutParametersExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ClojureWithoutParametersExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<clojure without parameters expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, CLOJURE_WITHOUT_PARAMETERS_EXPRESSION, "<clojure without parameters expression>");
     r = Expression(b, l + 1, -1);
-    exit_section_(b, l, m, CLOJURE_WITHOUT_PARAMETERS_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -760,11 +760,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean DebugDirective(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DebugDirective")) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, "<debug directive>");
+    Marker m = enter_section_(b, l, _NONE_, DEBUG_DIRECTIVE, "<debug directive>");
     r = consumeToken(b, "%debug");
     p = r; // pin = 1
     r = r && DebugDirective_1(b, l + 1);
-    exit_section_(b, l, m, DEBUG_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -780,10 +780,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean DeclaredNamespace(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DeclaredNamespace")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<declared namespace>");
+    Marker m = enter_section_(b, l, _NONE_, DECLARED_NAMESPACE, "<declared namespace>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, HASH);
-    exit_section_(b, l, m, DECLARED_NAMESPACE, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -814,7 +814,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Directive(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Directive")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<directive>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, DIRECTIVE, "<directive>");
     r = VersionDirective(b, l + 1);
     if (!r) r = NamespaceDirective(b, l + 1);
     if (!r) r = VariableDirective(b, l + 1);
@@ -824,7 +824,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!r) r = TypeDirective(b, l + 1);
     if (!r) r = FunctionDirective(b, l + 1);
     if (!r) r = consumeToken(b, "%ast");
-    exit_section_(b, l, m, DIRECTIVE, r, false, HeaderRecover_parser_);
+    exit_section_(b, l, m, r, false, HeaderRecover_parser_);
     return r;
   }
 
@@ -833,10 +833,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Document(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Document")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<document>");
+    Marker m = enter_section_(b, l, _NONE_, DOCUMENT, "<document>");
     r = Document_0(b, l + 1);
     r = r && Body(b, l + 1);
-    exit_section_(b, l, m, DOCUMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -928,13 +928,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ExpressionPattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionPattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<expression pattern>");
+    Marker m = enter_section_(b, l, _NONE_, EXPRESSION_PATTERN, "<expression pattern>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, WHEN);
     r = r && Expression(b, l + 1, -1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, EXPRESSION_PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -943,13 +943,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean FunctionDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<function definition>");
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_DEFINITION, "<function definition>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, L_PARREN);
     r = r && FunctionDefinition_2(b, l + 1);
     r = r && consumeToken(b, R_PARREN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, FUNCTION_DEFINITION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1000,11 +1000,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "FunctionDirective")) return false;
     if (!nextTokenIs(b, FUNCTION_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_DIRECTIVE, null);
     r = consumeToken(b, FUNCTION_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && FunctionDefinition(b, l + 1);
-    exit_section_(b, l, m, FUNCTION_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -1013,10 +1013,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean FunctionParameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionParameter")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<function parameter>");
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_PARAMETER, "<function parameter>");
     r = Identifier(b, l + 1);
     r = r && FunctionParameter_1(b, l + 1);
-    exit_section_(b, l, m, FUNCTION_PARAMETER, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1043,10 +1043,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Header(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Header")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<header>");
+    Marker m = enter_section_(b, l, _NONE_, HEADER, "<header>");
     r = Header_0(b, l + 1);
     r = r && consumeToken(b, DOCUMENT_SEPARATOR);
-    exit_section_(b, l, m, HEADER, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1071,9 +1071,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   static boolean HeaderRecover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "HeaderRecover")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NOT_, null);
+    Marker m = enter_section_(b, l, _NOT_);
     r = !HeaderRecover_0(b, l + 1);
-    exit_section_(b, l, m, null, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1099,14 +1099,14 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Identifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Identifier")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<identifier>");
+    Marker m = enter_section_(b, l, _NONE_, IDENTIFIER, "<identifier>");
     r = consumeToken(b, "$$");
     if (!r) r = consumeToken(b, ID);
     if (!r) r = consumeToken(b, DOLLAR);
     if (!r) r = consumeToken(b, TRUE_LITERAL);
     if (!r) r = consumeToken(b, FALSE_LITERAL);
     if (!r) r = consumeToken(b, RULE_NULL_LITERAL);
-    exit_section_(b, l, m, IDENTIFIER, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1116,13 +1116,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "InputDirective")) return false;
     if (!nextTokenIs(b, INPUT_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, INPUT_DIRECTIVE, null);
     r = consumeToken(b, INPUT_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && report_error_(b, Identifier(b, l + 1));
     r = p && report_error_(b, DataType(b, l + 1)) && r;
     r = p && InputDirective_3(b, l + 1) && r;
-    exit_section_(b, l, m, INPUT_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -1138,10 +1138,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Key(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Key")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<key>");
+    Marker m = enter_section_(b, l, _NONE_, KEY, "<key>");
     r = KeyExpression(b, l + 1);
     r = r && Key_1(b, l + 1);
-    exit_section_(b, l, m, KEY, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1159,10 +1159,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean KeyExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "KeyExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<key expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, KEY_EXPRESSION, "<key expression>");
     r = KeyExpression_0(b, l + 1);
     r = r && KeyExpression_1(b, l + 1);
-    exit_section_(b, l, m, KEY_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1193,10 +1193,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean KeyValuePair(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "KeyValuePair")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<key value pair>");
+    Marker m = enter_section_(b, l, _NONE_, KEY_VALUE_PAIR, "<key value pair>");
     r = ConditionalKeyValuePair(b, l + 1);
     if (!r) r = SimpleKeyValuePair(b, l + 1);
-    exit_section_(b, l, m, KEY_VALUE_PAIR, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1238,9 +1238,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   private static boolean KeyValuePairWithComma_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "KeyValuePairWithComma_1_1")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _AND_, null);
+    Marker m = enter_section_(b, l, _AND_);
     r = consumeToken(b, R_CURLY);
-    exit_section_(b, l, m, null, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1313,7 +1313,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean LiteralExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LiteralExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<literal expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, LITERAL_EXPRESSION, "<literal expression>");
     r = BooleanLiteral(b, l + 1);
     if (!r) r = NullLiteral(b, l + 1);
     if (!r) r = StringLiteral(b, l + 1);
@@ -1322,7 +1322,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!r) r = AnyRegexLiteral(b, l + 1);
     if (!r) r = TypeLiteral(b, l + 1);
     if (!r) r = LambdaLiteral(b, l + 1);
-    exit_section_(b, l, m, LITERAL_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1331,11 +1331,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean LiteralPattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LiteralPattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<literal pattern>");
+    Marker m = enter_section_(b, l, _NONE_, LITERAL_PATTERN, "<literal pattern>");
     r = LiteralExpression(b, l + 1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, LITERAL_PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1412,13 +1412,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean NamedLiteralPattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NamedLiteralPattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<named literal pattern>");
+    Marker m = enter_section_(b, l, _NONE_, NAMED_LITERAL_PATTERN, "<named literal pattern>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && LiteralExpression(b, l + 1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, NAMED_LITERAL_PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1427,13 +1427,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean NamedRegexPattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NamedRegexPattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<named regex pattern>");
+    Marker m = enter_section_(b, l, _NONE_, NAMED_REGEX_PATTERN, "<named regex pattern>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && AnyRegexLiteral(b, l + 1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, NAMED_REGEX_PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1442,13 +1442,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean NamedTypePattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NamedTypePattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<named type pattern>");
+    Marker m = enter_section_(b, l, _NONE_, NAMED_TYPE_PATTERN, "<named type pattern>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, "is");
     r = r && TypeLiteral(b, l + 1);
     r = r && consumeToken(b, ARROW_TOKEN);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, NAMED_TYPE_PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1458,12 +1458,12 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "NamespaceDirective")) return false;
     if (!nextTokenIs(b, NAMESPACE_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_DIRECTIVE, null);
     r = consumeToken(b, NAMESPACE_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && report_error_(b, Identifier(b, l + 1));
     r = p && consumeToken(b, NAMESPACE_URI) && r;
-    exit_section_(b, l, m, NAMESPACE_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -1485,10 +1485,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "NumberLiteral")) return false;
     if (!nextTokenIs(b, "<number literal>", DOUBLE_LITERAL, INTEGER_LITERAL)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<number literal>");
+    Marker m = enter_section_(b, l, _NONE_, NUMBER_LITERAL, "<number literal>");
     r = consumeToken(b, DOUBLE_LITERAL);
     if (!r) r = consumeToken(b, INTEGER_LITERAL);
-    exit_section_(b, l, m, NUMBER_LITERAL, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1497,10 +1497,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ObjectExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ObjectExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<object expression>");
+    Marker m = enter_section_(b, l, _NONE_, OBJECT_EXPRESSION, "<object expression>");
     r = SingleKeyValuePairObj(b, l + 1);
     if (!r) r = MultipleKeyValuePairObj(b, l + 1);
-    exit_section_(b, l, m, OBJECT_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1509,11 +1509,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean OptionElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "OptionElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<option element>");
+    Marker m = enter_section_(b, l, _NONE_, OPTION_ELEMENT, "<option element>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
     r = r && LiteralExpression(b, l + 1);
-    exit_section_(b, l, m, OPTION_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1522,10 +1522,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Options(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Options")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<options>");
+    Marker m = enter_section_(b, l, _NONE_, OPTIONS, "<options>");
     r = OptionElement(b, l + 1);
     r = r && Options_1(b, l + 1);
-    exit_section_(b, l, m, OPTIONS, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1558,12 +1558,12 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "OutputDirective")) return false;
     if (!nextTokenIs(b, OUTPUT_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, OUTPUT_DIRECTIVE, null);
     r = consumeToken(b, OUTPUT_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && report_error_(b, DataType(b, l + 1));
     r = p && OutputDirective_2(b, l + 1) && r;
-    exit_section_(b, l, m, OUTPUT_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -1579,7 +1579,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean Pattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Pattern")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<pattern>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, PATTERN, "<pattern>");
     r = RegexPattern(b, l + 1);
     if (!r) r = NamedRegexPattern(b, l + 1);
     if (!r) r = TypePattern(b, l + 1);
@@ -1588,7 +1588,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!r) r = NamedLiteralPattern(b, l + 1);
     if (!r) r = ExpressionPattern(b, l + 1);
     if (!r) r = DefaultPattern(b, l + 1);
-    exit_section_(b, l, m, PATTERN, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1659,9 +1659,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   private static boolean PatternWithComma_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PatternWithComma_1_1")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _AND_, null);
+    Marker m = enter_section_(b, l, _AND_);
     r = consumeToken(b, R_CURLY);
-    exit_section_(b, l, m, null, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1671,10 +1671,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "RangeExpression")) return false;
     if (!nextTokenIs(b, "<range expression>", L_BRACKET, RULE_RANGE_LITERAL)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<range expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, RANGE_EXPRESSION, "<range expression>");
     r = RangeLiteral(b, l + 1);
     if (!r) r = DynamicRangeExpression(b, l + 1);
-    exit_section_(b, l, m, RANGE_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1764,11 +1764,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean SchemaElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SchemaElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<schema element>");
+    Marker m = enter_section_(b, l, _NONE_, SCHEMA_ELEMENT, "<schema element>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && LiteralExpression(b, l + 1);
-    exit_section_(b, l, m, SCHEMA_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1822,19 +1822,51 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // (ValueSelector |
+  //          AttributeSelector |
+  //          SchemaSelector |
+  //          MultiValueSelector) ('!'| '?')?
+  public static boolean Selector(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Selector")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SELECTOR, "<selector>");
+    r = Selector_0(b, l + 1);
+    r = r && Selector_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
   // ValueSelector |
   //          AttributeSelector |
   //          SchemaSelector |
   //          MultiValueSelector
-  public static boolean Selector(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Selector")) return false;
+  private static boolean Selector_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Selector_0")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<selector>");
+    Marker m = enter_section_(b);
     r = ValueSelector(b, l + 1);
     if (!r) r = AttributeSelector(b, l + 1);
     if (!r) r = SchemaSelector(b, l + 1);
     if (!r) r = MultiValueSelector(b, l + 1);
-    exit_section_(b, l, m, SELECTOR, r, false, null);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ('!'| '?')?
+  private static boolean Selector_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Selector_1")) return false;
+    Selector_1_0(b, l + 1);
+    return true;
+  }
+
+  // '!'| '?'
+  private static boolean Selector_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Selector_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ESCLAMATION);
+    if (!r) r = consumeToken(b, QUESTION);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1843,9 +1875,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean SimpleArrayElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SimpleArrayElement")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<simple array element>");
+    Marker m = enter_section_(b, l, _NONE_, SIMPLE_ARRAY_ELEMENT, "<simple array element>");
     r = Expression(b, l + 1, -1);
-    exit_section_(b, l, m, SIMPLE_ARRAY_ELEMENT, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1854,11 +1886,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean SimpleKeyValuePair(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SimpleKeyValuePair")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<simple key value pair>");
+    Marker m = enter_section_(b, l, _NONE_, SIMPLE_KEY_VALUE_PAIR, "<simple key value pair>");
     r = Key(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, SIMPLE_KEY_VALUE_PAIR, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1867,9 +1899,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean SingleKeyValuePairObj(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SingleKeyValuePairObj")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<single key value pair obj>");
+    Marker m = enter_section_(b, l, _NONE_, SINGLE_KEY_VALUE_PAIR_OBJ, "<single key value pair obj>");
     r = KeyValuePair(b, l + 1);
-    exit_section_(b, l, m, SINGLE_KEY_VALUE_PAIR_OBJ, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1880,10 +1912,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "StringLiteral")) return false;
     if (!nextTokenIs(b, "<string literal>", DOUBLE_QUOTED_STRING, SINGLE_QUOTED_STRING)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<string literal>");
+    Marker m = enter_section_(b, l, _NONE_, STRING_LITERAL, "<string literal>");
     r = consumeToken(b, DOUBLE_QUOTED_STRING);
     if (!r) r = consumeToken(b, SINGLE_QUOTED_STRING);
-    exit_section_(b, l, m, STRING_LITERAL, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1892,11 +1924,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean TypeDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TypeDefinition")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<type definition>");
+    Marker m = enter_section_(b, l, _NONE_, TYPE_DEFINITION, "<type definition>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
     r = r && TypeLiteral(b, l + 1);
-    exit_section_(b, l, m, TYPE_DEFINITION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1906,11 +1938,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "TypeDirective")) return false;
     if (!nextTokenIs(b, TYPE_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, TYPE_DIRECTIVE, null);
     r = consumeToken(b, TYPE_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && TypeDefinition(b, l + 1);
-    exit_section_(b, l, m, TYPE_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -1953,10 +1985,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ValueSelector(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueSelector")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<value selector>");
+    Marker m = enter_section_(b, l, _NONE_, VALUE_SELECTOR, "<value selector>");
     r = ValueSelector_0(b, l + 1);
     r = r && ValueSelector_1(b, l + 1);
-    exit_section_(b, l, m, VALUE_SELECTOR, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1983,11 +2015,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean VariableDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDefinition")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<Variable>");
+    Marker m = enter_section_(b, l, _NONE_, VARIABLE_DEFINITION, "<Variable>");
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, VARIABLE_DEFINITION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1997,11 +2029,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "VariableDirective")) return false;
     if (!nextTokenIs(b, VAR_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, VARIABLE_DIRECTIVE, null);
     r = consumeToken(b, VAR_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && VariableDefinition(b, l + 1);
-    exit_section_(b, l, m, VARIABLE_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -2010,9 +2042,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean VariableReferenceExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableReferenceExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, "<variable reference expression>");
+    Marker m = enter_section_(b, l, _NONE_, VARIABLE_REFERENCE_EXPRESSION, "<variable reference expression>");
     r = Identifier(b, l + 1);
-    exit_section_(b, l, m, VARIABLE_REFERENCE_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -2022,11 +2054,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "VersionDirective")) return false;
     if (!nextTokenIs(b, VERSION_DIRECTIVE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, VERSION_DIRECTIVE, null);
     r = consumeToken(b, VERSION_DIRECTIVE_KEYWORD);
     p = r; // pin = 1
     r = r && consumeToken(b, DOUBLE_LITERAL);
-    exit_section_(b, l, m, VERSION_DIRECTIVE, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -2404,9 +2436,9 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   // USING '(' VariableDefinition ( ',' VariableDefinition )* ')' Expression
   public static boolean UsingExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UsingExpression")) return false;
-    if (!nextTokenIsFast(b, USING)) return false;
+    if (!nextTokenIsSmart(b, USING)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, USING_EXPRESSION, null);
     r = consumeTokenSmart(b, USING);
     p = r; // pin = 1
     r = r && report_error_(b, consumeToken(b, L_PARREN));
@@ -2414,7 +2446,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     r = p && report_error_(b, UsingExpression_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, R_PARREN)) && r;
     r = p && Expression(b, l + 1, -1) && r;
-    exit_section_(b, l, m, USING_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -2444,13 +2476,13 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   // RULE_UNARY_OPERATOS Expression
   public static boolean UnaryExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnaryExpression")) return false;
-    if (!nextTokenIsFast(b, RULE_UNARY_OPERATOS)) return false;
+    if (!nextTokenIsSmart(b, RULE_UNARY_OPERATOS)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    Marker m = enter_section_(b, l, _NONE_, UNARY_EXPRESSION, null);
     r = consumeTokenSmart(b, RULE_UNARY_OPERATOS);
     p = r; // pin = 1
     r = r && Expression(b, l + 1, -1);
-    exit_section_(b, l, m, UNARY_EXPRESSION, r, p, null);
+    exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
@@ -2463,14 +2495,14 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   public static boolean ValueExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ValueExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, "<value expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, VALUE_EXPRESSION, "<value expression>");
     r = ObjectExpression(b, l + 1);
     if (!r) r = LiteralExpression(b, l + 1);
     if (!r) r = RangeExpression(b, l + 1);
     if (!r) r = ArrayExpression(b, l + 1);
     if (!r) r = VariableReferenceExpression(b, l + 1);
     if (!r) r = EnclosedExpression(b, l + 1);
-    exit_section_(b, l, m, VALUE_EXPRESSION, r, false, null);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

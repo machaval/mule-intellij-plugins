@@ -10,32 +10,54 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FilenameFilter;
 
-public class MuleAppMavenHandler implements MuleAppHandler {
+public class MuleAppMavenHandler implements MuleAppHandler
+{
 
     @NotNull
     @Override
-    public File getMuleApp(final Module module) throws ExecutionException {
+    public File getMuleApp(final Module module) throws ExecutionException
+    {
         final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
-        if (compilerModuleExtension != null) {
-            final VirtualFile compilerOutputPath = compilerModuleExtension.getCompilerOutputPath();
-            //Throws NPE when runs for the first time - why?
-            final File outputDir = new File(compilerOutputPath.getParent().getCanonicalPath());
-            File applicationZip = null;
-            final File[] zips = outputDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith("zip");
+        final VirtualFile moduleFile = module.getModuleFile();
+        if (compilerModuleExtension != null && moduleFile != null)
+        {
+            //Refresh file system
+            module.getModuleFile().refresh(false, true);
+            VirtualFile compilerOutputPath = compilerModuleExtension.getCompilerOutputPath();
+            if (compilerOutputPath == null)
+            {
+                compilerOutputPath = moduleFile.findChild("target");
+            }
+            if (compilerOutputPath != null && compilerOutputPath.getParent() != null)
+            {
+                final File outputDir = new File(compilerOutputPath.getParent().getCanonicalPath());
+                File applicationZip = null;
+                final File[] zips = outputDir.listFiles(new FilenameFilter()
+                {
+                    @Override
+                    public boolean accept(File dir, String name)
+                    {
+                        return name.endsWith("zip");
+                    }
+                });
+                if (zips.length > 0)
+                {
+                    applicationZip = zips[0];
                 }
-            });
-            if (zips.length > 0) {
-                applicationZip = zips[0];
+                if (applicationZip == null)
+                {
+                    throw new ExecutionException("Unable to create application. Application was not found at " + compilerOutputPath.getParent().getCanonicalPath());
+                }
+                return applicationZip;
             }
-            if (applicationZip == null) {
-                throw new ExecutionException("Unable to create application");
+            else
+            {
+                throw new ExecutionException("Unable to create application. No output path was found.");
             }
-            return applicationZip;
-        } else {
-            throw new ExecutionException("Unable to create application");
+        }
+        else
+        {
+            throw new ExecutionException("Unable to create application. No module found.");
         }
     }
 

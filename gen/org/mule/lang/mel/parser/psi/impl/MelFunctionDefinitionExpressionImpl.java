@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.mule.lang.mel.parser.psi.MelTypes.*;
 import org.mule.lang.mel.parser.psi.*;
 
-public class MelFunctionExpressionImpl extends MelExpressionImpl implements MelFunctionExpression {
+public class MelFunctionDefinitionExpressionImpl extends MelExpressionImpl implements MelFunctionDefinitionExpression {
 
-  public MelFunctionExpressionImpl(ASTNode node) {
+  public MelFunctionDefinitionExpressionImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull MelVisitor visitor) {
-    visitor.visitFunctionExpression(this);
+    visitor.visitFunctionDefinitionExpression(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {

@@ -19,7 +19,7 @@ public interface MelTypes {
   IElementType FOREACH_EXPRESSION = new MelElementType("FOREACH_EXPRESSION");
   IElementType FOR_EXPRESSION = new MelElementType("FOR_EXPRESSION");
   IElementType FQN_TYPE_EXPRESSION = new MelElementType("FQN_TYPE_EXPRESSION");
-  IElementType FUNCTION_EXPRESSION = new MelElementType("FUNCTION_EXPRESSION");
+  IElementType FUNCTION_DEFINITION_EXPRESSION = new MelElementType("FUNCTION_DEFINITION_EXPRESSION");
   IElementType IF_EXPRESSION = new MelElementType("IF_EXPRESSION");
   IElementType IMPORT_EXPRESSION = new MelElementType("IMPORT_EXPRESSION");
   IElementType INDEXED_EXPRESSION = new MelElementType("INDEXED_EXPRESSION");
@@ -129,8 +129,8 @@ public interface MelTypes {
       else if (type == FQN_TYPE_EXPRESSION) {
         return new MelFqnTypeExpressionImpl(node);
       }
-      else if (type == FUNCTION_EXPRESSION) {
-        return new MelFunctionExpressionImpl(node);
+      else if (type == FUNCTION_DEFINITION_EXPRESSION) {
+        return new MelFunctionDefinitionExpressionImpl(node);
       }
       else if (type == IF_EXPRESSION) {
         return new MelIfExpressionImpl(node);

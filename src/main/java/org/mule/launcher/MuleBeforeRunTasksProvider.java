@@ -28,94 +28,146 @@ import org.mule.util.MuleIcons;
 
 import javax.swing.*;
 import java.util.Collections;
+import java.util.List;
 
-public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBeforeRunTask> {
-
+public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBeforeRunTask>
+{
     public static final Key<MavenBeforeRunTask> ID = Key.create("Mule.BeforeRunTask");
 
     @Override
-    public Key getId() {
+    public Key getId()
+    {
         return ID;
     }
 
     @Override
-    public Icon getIcon() {
+    public Icon getIcon()
+    {
         return MuleIcons.MuleIcon;
     }
 
     @Override
-    public String getName() {
-        return "Mule App Archiver";
+    public String getName()
+    {
+        return "MuleApp Builder";
     }
 
     @Override
-    public String getDescription(MuleBeforeRunTask beforeRunTask) {
-        return "Mule App Archiver";
+    public String getDescription(MuleBeforeRunTask beforeRunTask)
+    {
+        return "Builds the mule application.";
     }
 
     @Override
-    public boolean isConfigurable() {
+    public boolean isConfigurable()
+    {
         return false;
     }
 
     @Nullable
     @Override
-    public MuleBeforeRunTask createTask(RunConfiguration runConfiguration) {
-        return new MuleBeforeRunTask(getId());
+    public MuleBeforeRunTask createTask(RunConfiguration runConfiguration)
+    {
+        final MuleBeforeRunTask muleBeforeRunTask = new MuleBeforeRunTask(getId());
+        muleBeforeRunTask.setEnabled(runConfiguration instanceof MuleConfiguration);
+        return muleBeforeRunTask;
     }
 
     @Override
-    public boolean configureTask(RunConfiguration runConfiguration, MuleBeforeRunTask beforeRunTask) {
-        return false;
-    }
-
-    @Override
-    public boolean canExecuteTask(RunConfiguration runConfiguration, MuleBeforeRunTask beforeRunTask) {
+    public boolean configureTask(RunConfiguration runConfiguration, MuleBeforeRunTask beforeRunTask)
+    {
         return runConfiguration instanceof MuleConfiguration;
     }
 
     @Override
-    public boolean executeTask(DataContext dataContext, RunConfiguration runConfiguration, ExecutionEnvironment executionEnvironment, MuleBeforeRunTask muleBeforeRunTask) {
-        final Semaphore targetDone = new Semaphore();
-        final boolean[] result = new boolean[]{true};
-        final Project project = executionEnvironment.getProject();
-        final MavenProjectsManager instance = MavenProjectsManager.getInstance(project);
-        final MavenProject mavenProject = instance.getProjects().get(0);
+    public boolean canExecuteTask(RunConfiguration runConfiguration, MuleBeforeRunTask beforeRunTask)
+    {
+        return runConfiguration instanceof MuleConfiguration;
+    }
 
-        try {
-            ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-                public void run() {
-                    if (!project.isDisposed() && mavenProject != null) {
+    @Override
+    public boolean executeTask(DataContext dataContext, RunConfiguration runConfiguration, ExecutionEnvironment executionEnvironment, MuleBeforeRunTask muleBeforeRunTask)
+    {
+        final Semaphore targetDone = new Semaphore();
+        final boolean[] result = new boolean[] {true};
+        final Project project = executionEnvironment.getProject();
+        final MavenProject mavenProject = getMavenProject(runConfiguration, project);
+        try
+        {
+            ApplicationManager.getApplication().invokeAndWait(new Runnable()
+            {
+                public void run()
+                {
+                    if (!project.isDisposed() && mavenProject != null)
+                    {
                         FileDocumentManager.getInstance().saveAllDocuments();
                         final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
                         final MavenRunner mavenRunner = MavenRunner.getInstance(project);
                         targetDone.down();
-                        (new Task.Backgroundable(project, TasksBundle.message("maven.tasks.executing"), true) {
-                            public void run(@NotNull ProgressIndicator indicator) {
-                                try {
-                                    MavenRunnerParameters params = new MavenRunnerParameters(true, mavenProject.getDirectory(), ParametersListUtil.parse("package"), explicitProfiles.getEnabledProfiles(), explicitProfiles.getDisabledProfiles());
+                        (new Task.Backgroundable(project, TasksBundle.message("maven.tasks.executing"), true)
+                        {
+                            public void run(@NotNull ProgressIndicator indicator)
+                            {
+                                try
+                                {
+                                    MavenRunnerParameters params =
+                                            new MavenRunnerParameters(true, mavenProject.getDirectory(), ParametersListUtil.parse("package"), explicitProfiles.getEnabledProfiles(),
+                                                    explicitProfiles.getDisabledProfiles());
                                     result[0] = mavenRunner.runBatch(Collections.singletonList(params), null, null, TasksBundle.message("maven.tasks.executing"), indicator);
-                                } finally {
+                                }
+                                finally
+                                {
                                     targetDone.up();
                                 }
                             }
 
-                            public boolean shouldStartInBackground() {
+                            public boolean shouldStartInBackground()
+                            {
                                 return MavenRunner.getInstance(project).getSettings().isRunMavenInBackground();
                             }
 
-                            public void processSentToBackground() {
+                            public void processSentToBackground()
+                            {
                                 MavenRunner.getInstance(project).getSettings().setRunMavenInBackground(true);
                             }
                         }).queue();
                     }
                 }
             }, ModalityState.NON_MODAL);
-        } catch (Exception exeception) {
+        }
+        catch (Exception exeception)
+        {
             return false;
         }
         targetDone.waitFor();
         return result[0];
+    }
+
+    private MavenProject getMavenProject(RunConfiguration runConfiguration, Project project)
+    {
+        final MavenProjectsManager instance = MavenProjectsManager.getInstance(project);
+        final List<MavenProject> projects = instance.getProjects();
+        MavenProject muleMavenProject = null;
+
+        if (runConfiguration instanceof MuleConfiguration)
+        {
+            final String moduleName = ((MuleConfiguration) runConfiguration).getModuleName();
+            if (moduleName != null)
+            {
+                for (MavenProject mavenProj : projects)
+                {
+                    if (moduleName.equals(mavenProj.getName()))
+                    {
+                        muleMavenProject = mavenProj;
+                    }
+                }
+            }
+        }
+        if (muleMavenProject == null)
+        {
+            muleMavenProject = instance.getRootProjects().get(0);
+        }
+        return muleMavenProject;
     }
 
 
