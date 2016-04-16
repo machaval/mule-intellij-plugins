@@ -107,9 +107,9 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
             throw new RuntimeConfigurationException("Mule home does not exists : " + muleHome);
         }
 
-        if (MuleSdk.isValidMuleHome(getMuleHome()))
+        if (!MuleSdk.isValidMuleHome(getMuleHome()))
         {
-            throw new RuntimeConfigurationException(muleHome + " path is not a valid mule home ");
+            throw new RuntimeConfigurationException(muleHome + " path is not a valid Mule home ");
         }
 
         if (getModule() == null)
