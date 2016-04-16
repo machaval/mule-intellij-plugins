@@ -1,14 +1,31 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule Plugin For Intellij</name>
-    <version>0.2</version>
+    <version>0.3</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule Intellij Plugin.
     ]]></description>
 
     <change-notes><![CDATA[
-    <![CDATA[
+    <h1>v0.3</h1>
+      <ul>
+         <p>Enhancements</p>
+          <ul>
+            <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
+            <li>Basic Mel Support with code navigation.</li>
+            <li>Create Mule Apps from right click.</li>
+            <li>New mule project wizard.</li>
+            <li>Very Basic MUnit support.</li>
+            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
+          </ul>
+        <li>
+          <p>Bug Fixes</p>
+          <ul>
+            <li>Mule Configuration was checking wrong the launch</li>
+          </ul>
+        </li>
+      </ul>
       <h1>v0.2</h1>
       <ul>
          <p>Enhancements</p>

@@ -5,6 +5,7 @@ import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebugProcess;
@@ -21,9 +22,11 @@ import org.mule.debugger.actions.ExceptionBreakpointSwitchAction;
 import org.mule.debugger.breakpoint.MuleBreakpointHandler;
 import org.mule.debugger.session.MessageReceivedListener;
 import org.mule.debugger.session.MuleDebuggerSession;
+import org.mule.launcher.configuration.MuleConfiguration;
 import org.mule.util.MuleConfigUtils;
 
-public class MuleDebugProcess extends XDebugProcess {
+public class MuleDebugProcess extends XDebugProcess
+{
 
     private MuleBreakpointHandler muleBreakpointHandler;
     private MuleDebuggerSession muleDebuggerSession;
@@ -31,97 +34,123 @@ public class MuleDebugProcess extends XDebugProcess {
     private final ProcessHandler processHandler;
     private final ExecutionConsole executionConsole;
 
-    public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull final MuleDebuggerSession muleDebuggerSession, ExecutionResult result) {
+    public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull final MuleDebuggerSession muleDebuggerSession, ExecutionResult result)
+    {
         super(session);
         this.muleDebuggerSession = muleDebuggerSession;
-        this.muleBreakpointHandler = new MuleBreakpointHandler(session.getProject(), muleDebuggerSession);
+        this.muleBreakpointHandler = new MuleBreakpointHandler(getModule(), muleDebuggerSession);
         this.editorProperties = new MuleDebuggerEditorProperties();
         this.processHandler = result.getProcessHandler();
         this.executionConsole = result.getExecutionConsole();
         init();
     }
 
-    public void init() {
-        muleDebuggerSession.addMessageReceivedListener(new MessageReceivedListener() {
+    private Module getModule()
+    {
+        return ((MuleConfiguration) getSession().getRunProfile()).getModule();
+    }
+
+    public void init()
+    {
+        muleDebuggerSession.addMessageReceivedListener(new MessageReceivedListener()
+        {
             @Override
-            public void onNewMessageReceived(MuleMessageInfo muleMessageInfo) {
+            public void onNewMessageReceived(MuleMessageInfo muleMessageInfo)
+            {
+                System.out.println("MuleDebugProcess.onNewMessageReceived");
                 getSession().positionReached(new MuleSuspendContext(new MuleStackFrame(getSession().getProject(), muleDebuggerSession, muleMessageInfo)));
             }
 
             @Override
-            public void onExceptionThrown(MuleMessageInfo muleMessageInfo, ObjectFieldDefinition exceptionThrown) {
+            public void onExceptionThrown(MuleMessageInfo muleMessageInfo, ObjectFieldDefinition exceptionThrown)
+            {
+                System.out.println("MuleDebugProcess.onExceptionThrown");
                 getSession().positionReached(new MuleSuspendContext(new MuleStackFrame(getSession().getProject(), muleDebuggerSession, muleMessageInfo, exceptionThrown)));
             }
+
         });
     }
 
-    protected Project getProject() {
+    protected Project getProject()
+    {
         return getSession().getProject();
     }
 
     @Override
-    public void startStepOver() {
+    public void startStepOver()
+    {
         muleDebuggerSession.nextStep();
     }
 
     @NotNull
     @Override
-    public ExecutionConsole createConsole() {
+    public ExecutionConsole createConsole()
+    {
         return executionConsole;
     }
 
     @Override
-    protected ProcessHandler doGetProcessHandler() {
+    protected ProcessHandler doGetProcessHandler()
+    {
         return processHandler;
     }
 
     @Override
-    public void startStepInto() {
+    public void startStepInto()
+    {
         muleDebuggerSession.nextStep();
     }
 
     @Override
-    public void startStepOut() {
+    public void startStepOut()
+    {
         muleDebuggerSession.nextStep();
     }
 
     @Override
-    public void resume() {
+    public void resume()
+    {
         muleDebuggerSession.resume();
     }
 
     @Override
-    public void registerAdditionalActions(@NotNull DefaultActionGroup leftToolbar, @NotNull DefaultActionGroup topToolbar, @NotNull DefaultActionGroup settings) {
+    public void registerAdditionalActions(@NotNull DefaultActionGroup leftToolbar, @NotNull DefaultActionGroup topToolbar, @NotNull DefaultActionGroup settings)
+    {
         super.registerAdditionalActions(leftToolbar, topToolbar, settings);
         leftToolbar.add(new ExceptionBreakpointSwitchAction(muleDebuggerSession));
     }
 
     @Nullable
     @Override
-    public XDebuggerEvaluator getEvaluator() {
+    public XDebuggerEvaluator getEvaluator()
+    {
         return new MuleScriptEvaluator(muleDebuggerSession);
     }
 
     @Override
-    public void runToPosition(@NotNull XSourcePosition xSourcePosition) {
-        muleDebuggerSession.runToCursor(MuleConfigUtils.getMulePath(getProject(), xSourcePosition));
+    public void runToPosition(@NotNull XSourcePosition xSourcePosition)
+    {
+        muleDebuggerSession.runToCursor(MuleConfigUtils.getMulePath(getModule().getProject(), xSourcePosition));
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
         muleDebuggerSession.disconnect();
     }
 
     @NotNull
     @Override
-    public XBreakpointHandler<?>[] getBreakpointHandlers() {
+    public XBreakpointHandler<?>[] getBreakpointHandlers()
+    {
         final XBreakpointHandler<?>[] breakpointHandlers = super.getBreakpointHandlers();
         return ArrayUtil.append(breakpointHandlers, muleBreakpointHandler);
     }
 
     @NotNull
     @Override
-    public XDebuggerEditorsProvider getEditorsProvider() {
+    public XDebuggerEditorsProvider getEditorsProvider()
+    {
         return editorProperties;
     }
 

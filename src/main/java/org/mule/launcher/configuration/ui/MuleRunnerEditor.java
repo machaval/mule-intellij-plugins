@@ -11,13 +11,16 @@ import org.mule.launcher.configuration.MuleConfiguration;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Collection;
 
 
-public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration> {
+public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
+{
 
     private MuleRunnerConfPanel configurationPanel;
 
-    public MuleRunnerEditor(MuleConfiguration runnerConfiguration) {
+    public MuleRunnerEditor(MuleConfiguration runnerConfiguration)
+    {
         this.configurationPanel = new MuleRunnerConfPanel(runnerConfiguration.getProject());
         super.resetFrom(runnerConfiguration);
     }
@@ -27,25 +30,26 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration> {
      * The values may be stored in disk, if not, set some defaults
      */
     @Override
-    protected void resetEditorFrom(MuleConfiguration runnerConfiguration) {
-        final Project project = runnerConfiguration.getProject();
-        //TODO filter for mule modules only
+    protected void resetEditorFrom(MuleConfiguration runnerConfiguration)
+    {
         this.configurationPanel.getModuleCombo().setModules(runnerConfiguration.getValidModules());
-        //Fix for intermittent java.lang.ArrayIndexOutOfBoundsException
-        Module[] modules = runnerConfiguration.getModules();
-        if (modules.length > 0) {
-            Module selectedModule = modules[0];
-            final String moduleName = runnerConfiguration.getModuleName();
-            if (StringUtils.isNotBlank(moduleName)) {
-                final Module moduleByName = ModuleManager.getInstance(project).findModuleByName(moduleName);
-                if (moduleByName != null) {
-                    selectedModule = moduleByName;
-                }
+        Module selectedModule = runnerConfiguration.getModule();
+        if (selectedModule == null)
+        {
+            Collection<Module> modules = runnerConfiguration.getValidModules();
+            if (modules.size() > 0)
+            {
+                selectedModule = modules.iterator().next();
             }
-            this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
-            this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
-            this.configurationPanel.getMuleHome().setText(runnerConfiguration.getMuleHome());
         }
+        this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
+        this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
+        String muleHome = runnerConfiguration.getMuleHome();
+        if (StringUtils.isBlank(muleHome))
+        {
+            muleHome = System.getenv("MULE_HOME");
+        }
+        this.configurationPanel.getMuleHome().setText(muleHome);
     }
 
     /**
@@ -55,25 +59,29 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration> {
      * @throws ConfigurationException ex
      */
     @Override
-    protected void applyEditorTo(MuleConfiguration runnerConfiguration) throws ConfigurationException {
+    protected void applyEditorTo(MuleConfiguration runnerConfiguration) throws ConfigurationException
+    {
         runnerConfiguration.setVmArgs(this.configurationPanel.getVmArgsField().getText());
         runnerConfiguration.setMuleHome(this.configurationPanel.getMuleHome().getText());
         final Module selectedModule = this.configurationPanel.getModuleCombo().getSelectedModule();
-        if (selectedModule != null) {
+        if (selectedModule != null)
+        {
             runnerConfiguration.setModule(selectedModule);
         }
     }
 
     @NotNull
     @Override
-    protected JComponent createEditor() {
+    protected JComponent createEditor()
+    {
         return this.configurationPanel.getMainPanel();
     }
 
     // Helpers
 
 
-    public void setConfigurationPanel(MuleRunnerConfPanel configurationPanel) {
+    public void setConfigurationPanel(MuleRunnerConfPanel configurationPanel)
+    {
         this.configurationPanel = configurationPanel;
     }
 }

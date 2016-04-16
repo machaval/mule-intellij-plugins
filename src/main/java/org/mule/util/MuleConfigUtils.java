@@ -405,11 +405,11 @@ public class MuleConfigUtils {
     }
 
     @NotNull
-    public static Breakpoint toMuleBreakpoint(Project project, XLineBreakpoint<XBreakpointProperties> lineBreakpoint) {
+    public static Breakpoint toMuleBreakpoint(Module module, XLineBreakpoint<XBreakpointProperties> lineBreakpoint) {
         final XSourcePosition sourcePosition = lineBreakpoint.getSourcePosition();
         final XExpression conditionExpression = lineBreakpoint.getConditionExpression();
         final String conditionScript = conditionExpression != null ? asMelScript(conditionExpression.getExpression()) : null;
-        return new Breakpoint(getMulePath(project, sourcePosition), conditionScript, project.getName());
+        return new Breakpoint(getMulePath(module.getProject(), sourcePosition), conditionScript, module.getName());
     }
 
     @NotNull

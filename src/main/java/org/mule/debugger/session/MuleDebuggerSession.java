@@ -69,6 +69,7 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     public void disconnect() {
         if (isConnected) {
             try {
+                System.out.println("MuleDebuggerSession.disconnect");
                 getDebuggerClient().disconnect();
             } catch (Exception e) {
                 //ignore
@@ -192,6 +193,7 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
 
     @Override
     public void onConnected() {
+        System.out.println("MuleDebuggerSession.onConnected");
         isConnected = true;
         //Lets add the breakpoints that where added before it is connected
         for (Breakpoint breakpoint : breakpoints) {
@@ -204,6 +206,7 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     @Override
     public void onExit() {
         isConnected = false;
+        System.out.println("MuleDebuggerSession.onExit");
         getDebuggerClient().disconnect();
     }
 

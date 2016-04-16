@@ -3,6 +3,7 @@ package org.mule.actions;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.junit.JavaRunConfigurationProducerBase;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +38,7 @@ public class MuleApplicationConfigurationProducer extends JavaRunConfigurationPr
     @Override
     public boolean isConfigurationFromContext(MuleConfiguration muleConfiguration, ConfigurationContext configurationContext)
     {
-        return configurationContext.getModule().equals(muleConfiguration.getModule());
+        final Module module = configurationContext.getModule();
+        return module != null && module.equals(muleConfiguration.getModule());
     }
 }

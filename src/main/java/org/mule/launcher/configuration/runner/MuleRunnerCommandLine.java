@@ -4,14 +4,13 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.process.*;
+import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.mulesoft.mule.debugger.server.MuleDebuggerProperties;
 import org.codehaus.plexus.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mule.launcher.configuration.MuleConfiguration;
@@ -20,7 +19,7 @@ import org.mule.sdk.MuleClassPath;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleRunner {
 
@@ -76,8 +75,8 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
         javaParams.getVMParametersList().add("-Dmule.forceConsoleLog=true");
 
         if (isDebug) {
-            javaParams.getVMParametersList().add("-D" + MuleDebuggerProperties.MULE_DEBUG_ENABLE + "=true");
-            javaParams.getVMParametersList().add("-D" + MuleDebuggerProperties.MULE_DEBUG_SUSPEND + "=true");
+            javaParams.getVMParametersList().add("-Dmule.debug.enable=true");
+            javaParams.getVMParametersList().add("-Dmule.debug.suspend=true");
         }
 
         javaParams.getVMParametersList().add("-Xms1024m");
