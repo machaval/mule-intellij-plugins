@@ -46,6 +46,7 @@ public class MuleSdk {
     public static final String UNDEFINED_VERSION = "0.0.0";
 
     public static List<String> MULE_JARS_FOLDERS = Arrays.asList(BOOT_DIR, ENDORSED_DIR, PATCH_DIR, MULE_DIR, USER_DIR, OPT_DIR);
+    public static List<String> MULE_REQUIRED_FOLDERS = Arrays.asList(BOOT_DIR, MULE_DIR, USER_DIR, OPT_DIR);
     protected static final String BIN_DIR = "/bin";
     private static final Logger LOG = Logger.getInstance("#com.intellij.appengine.sdk.impl.MuleSdk");
 
@@ -61,7 +62,7 @@ public class MuleSdk {
 
     public static boolean isValidMuleHome(String dir) {
         final File muleHome = new File(dir);
-        for (String muleJarsFolder : MULE_JARS_FOLDERS) {
+        for (String muleJarsFolder : MULE_REQUIRED_FOLDERS) {
             if (!new File(muleHome, muleJarsFolder).exists()) {
                 return false;
             }

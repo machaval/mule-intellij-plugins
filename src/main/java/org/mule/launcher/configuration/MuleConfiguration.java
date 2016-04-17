@@ -5,10 +5,12 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
@@ -31,12 +33,10 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     public static final String PREFIX = "MuleESBConfig-";
     public static final String VM_ARGS_FIELD = PREFIX + "VmArgs";
     public static final String MULE_HOME_FIELD = PREFIX + "MuleHome";
-    public static final String MULE_MODULE_FIELD = PREFIX + "Module";
+
     private String vmArgs;
     private String muleHome;
-
     private Project project;
-
 
     protected MuleConfiguration(String name, @NotNull ConfigurationFactory factory, Project project)
     {
@@ -64,17 +64,8 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     {
         super.readExternal(element);
         this.vmArgs = JDOMExternalizerUtil.readField(element, VM_ARGS_FIELD);
-        //Use system env mule home by default
-        final String mule_home = System.getenv("MULE_HOME");
-        if (mule_home != null)
-        {
-            this.muleHome = JDOMExternalizerUtil.readField(element, MULE_HOME_FIELD, mule_home);
-        }
-        else
-        {
-            this.muleHome = JDOMExternalizerUtil.readField(element, MULE_HOME_FIELD);
-        }
-
+        this.muleHome = JDOMExternalizerUtil.readField(element, MULE_HOME_FIELD);
+        getConfigurationModule().readExternal(element);
     }
 
     @Override
@@ -84,6 +75,7 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         // Stores the values of this class into the parent
         JDOMExternalizerUtil.writeField(element, VM_ARGS_FIELD, this.getVmArgs());
         JDOMExternalizerUtil.writeField(element, MULE_HOME_FIELD, this.getMuleHome());
+        getConfigurationModule().writeExternal(element);
     }
 
     @Override
@@ -109,7 +101,7 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
 
         if (!MuleSdk.isValidMuleHome(getMuleHome()))
         {
-            throw new RuntimeConfigurationException(muleHome + " path is not a valid Mule home ");
+            throw new RuntimeConfigurationException(muleHome + " path is not a valid Mule home.");
         }
 
         if (getModule() == null)
