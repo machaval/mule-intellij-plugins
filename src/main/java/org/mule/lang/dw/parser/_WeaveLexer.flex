@@ -82,7 +82,6 @@ RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "valuesOf" | "keysOf" |
   "<<"                        { return SHIFT_LEFT; }
   ">>"                        { return SHIFT_RIGHT; }
   ">>>"                       { return SHIFT_RIGHT_LOGICAL; }
-  "not"                       { return NOT_KEYWORD; }
   "!="                        { return NOT_EQUAL; }
   "~="                        { return SIMILAR; }
   "=="                        { return EQUAL; }

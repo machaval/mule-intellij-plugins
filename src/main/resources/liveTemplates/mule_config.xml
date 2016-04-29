@@ -15,4 +15,13 @@
             <option name="MULE_CONFIG" value="true"/>
         </context>
     </template>
+
+    <template id="mule-log-payload-string" name="flr" description="Flow Reference"
+              value="&lt;flow-ref name=&quot;&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+        </context>
+    </template>
+
 </templateSet>

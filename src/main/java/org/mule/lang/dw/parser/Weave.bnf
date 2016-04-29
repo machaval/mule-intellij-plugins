@@ -33,7 +33,6 @@
         SHIFT_RIGHT=">>"
         SHIFT_RIGHT_LOGICAL=">>>"
 
-        NEGATE="not"
         NOT_EQUAL="!="
         SIMILAR="~="
         EQUAL="=="
@@ -59,7 +58,6 @@
         OR_OR="||"
         AND_KEYWORD="and"
         OR_KEYWORD="or"
-        NOT_KEYWORD="not"
 
         ARROW_TOKEN="->"
 
