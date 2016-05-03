@@ -10,19 +10,11 @@
     <change-notes><![CDATA[
     <h1>v0.3</h1>
       <ul>
-         <p>Enhancements</p>
-          <ul>
-            <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
-            <li>Basic Mel Support with code navigation.</li>
-            <li>Create Mule Apps from right click.</li>
-            <li>New mule project wizard.</li>
-            <li>Very Basic MUnit support.</li>
-            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
-          </ul>
         <li>
           <p>Bug Fixes</p>
           <ul>
             <li>Mule Configuration was checking wrong the launch</li>
+            <li>Breakpoints were not working with project name different than module name.</li>
           </ul>
         </li>
       </ul>

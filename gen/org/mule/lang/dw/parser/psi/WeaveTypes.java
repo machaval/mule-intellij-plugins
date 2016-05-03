@@ -146,7 +146,6 @@ public interface WeaveTypes {
   IElementType NAMESPACE_DIRECTIVE_KEYWORD = new WeaveTokenType("%namespace");
   IElementType NAMESPACE_URI = new WeaveTokenType("NAMESPACE_URI");
   IElementType NOT_EQUAL = new WeaveTokenType("!=");
-  IElementType NOT_KEYWORD = new WeaveTokenType("not");
   IElementType OR = new WeaveTokenType("|");
   IElementType OR_KEYWORD = new WeaveTokenType("or");
   IElementType OR_OR = new WeaveTokenType("||");
