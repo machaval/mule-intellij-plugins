@@ -8,8 +8,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import org.mule.lang.raml.file.RamlFileType;
 import org.mule.tools.apikit.ScaffolderAPI;
+import org.mule.lang.raml.file.RamlFileType;
+
 import org.mule.util.MuleIcons;
 
 import java.io.File;
@@ -31,13 +32,13 @@ public class APIKitScaffoldingAction extends AnAction {
         Project project = anActionEvent.getProject();
         VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
         String appPath = moduleContentRoot.getPath() + "/src/main/app";
-        //logger.warn("*** APP PATH IS " + appPath);
+        logger.debug("*** APP PATH IS " + appPath);
         File appDir = new File(appPath);
         List<File> ramlFiles = new ArrayList<File>();
         ramlFiles.add(new File(file.getPath()));
-        //new ScaffolderAPI().run(ramlFiles, appDir);
+        logger.debug("*** RAML FILES : " + ramlFiles);
         new ScaffolderAPI().execute(ramlFiles, appDir, null, null);
-        //logger.warn("*** ScaffolderAPI ran successfully");
+        logger.debug("*** ScaffolderAPI ran successfully");
     }
 
     @Override
@@ -51,4 +52,6 @@ public class APIKitScaffoldingAction extends AnAction {
             logger.warn("Unable to perform update action: " + e.getMessage());
         }
     }
+
+
 }
