@@ -63,14 +63,14 @@
 
         <!-- Mule Runner/Debugger -->
         <configurationType implementation="org.mule.launcher.configuration.MuleConfigurationType"/>
-        <programRunner id="Debug" implementation="org.mule.launcher.configuration.runner.MuleProgramDebugger"
-                       order="last"/>
+        <programRunner id="Debug" implementation="org.mule.launcher.configuration.runner.MuleProgramDebugger" order="last"/>
         <stepsBeforeRunProvider implementation="org.mule.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.debugger.breakpoint.MuleBreakpointType"/>
-        <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
 
-        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider"
-                                      order="first"/>
+        <!--Mule Stand alone framework -->
+
+        <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
+        <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider" order="first"/>
 
         <!--Mule Config-->
 
@@ -96,6 +96,10 @@
         <defaultLiveTemplatesProvider implementation="org.mule.templates.MuleConfigLiveTemplatesProvider"/>
 
         <!--Data Weave-->
+
+        <configurationType implementation="org.mule.lang.dw.launcher.configuration.WeaveConfigurationType"/>
+        <runConfigurationProducer implementation="org.mule.lang.dw.launcher.configuration.WeaveConfigurationProducer"/>
+
         <fileTypeFactory implementation="org.mule.lang.dw.WeaveFileTypeFactory"/>
         <lang.parserDefinition language="Weave" implementationClass="org.mule.lang.dw.parser.WeaveParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Weave"
