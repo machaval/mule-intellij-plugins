@@ -43,14 +43,16 @@ public class APIKitScaffoldingAction extends AnAction {
 
     @Override
     public void update(AnActionEvent anActionEvent) {
-        try {
-            final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
-            final boolean isRAML = RamlFileType.getInstance().getDefaultExtension().equalsIgnoreCase(file.getExtension());
+
+        final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
+        final boolean isRAML;
+        if (file != null)
+        {
+            isRAML = RamlFileType.getInstance().getDefaultExtension().equalsIgnoreCase(file.getExtension());
             anActionEvent.getPresentation().setEnabled(isRAML);
             anActionEvent.getPresentation().setVisible(isRAML);
-        } catch (Exception e) {
-            logger.warn("Unable to perform update action: " + e.getMessage());
         }
+
     }
 
 
