@@ -1,6 +1,7 @@
 package org.mule.util;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.StdFileTypes;
@@ -50,6 +51,8 @@ public class MuleConfigUtils {
     public static final String MUNIT_TEST_LOCAL_NAME = "test";
     public static final String MUNIT_NAMESPACE = "munit";
 
+    final static Logger logger = Logger.getInstance(MuleConfigUtils.class);
+
     public static boolean isMuleFile(PsiFile psiFile) {
         if (!(psiFile instanceof XmlFile)) {
             return false;
@@ -79,7 +82,13 @@ public class MuleConfigUtils {
     }
 
     private static boolean isMuleConfig(XmlTag rootTag) {
-        return rootTag.getLocalName().equalsIgnoreCase(MULE_LOCAL_NAME);
+        boolean isMuleConfig = false;
+
+        if (rootTag != null) {
+            isMuleConfig = MULE_LOCAL_NAME.equalsIgnoreCase(rootTag.getLocalName());
+        }
+
+        return isMuleConfig;
     }
 
     public static QName getQName(XmlTag xmlTag) {
