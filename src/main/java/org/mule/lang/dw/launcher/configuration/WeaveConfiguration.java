@@ -46,6 +46,7 @@ public class WeaveConfiguration extends ModuleBasedConfiguration implements Modu
     {
         super(name, new JavaRunConfigurationModule(project, true), factory);
         this.project = project;
+        this.weaveInputs = new ArrayList<>();
     }
 
 
@@ -181,7 +182,7 @@ public class WeaveConfiguration extends ModuleBasedConfiguration implements Modu
         return weaveInputs;
     }
 
-    public void setWeaveInputs(List<WeaveInput> weaveInputs)
+    public void setWeaveInputs(@NotNull List<WeaveInput> weaveInputs)
     {
         this.weaveInputs = weaveInputs;
     }
