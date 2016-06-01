@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class ConsoleFlowStackFilter implements Filter
 {
 
-    private final Pattern ELEMENT_REGEX = Pattern.compile("^(Element[ ]*:[ ]*)([\\/A-z0-9-_#$%^]+)[ ]*@[ ]*([A-z0-9-_#$%^]+):([A-z0-9-_#$%^.]+):([0-9]+)");
+    private final Pattern ELEMENT_REGEX = Pattern.compile("^(Element[ ]*:[ ]*)([\\\\\\/:A-z0-9-_#$%^]+)[ ]*@[ ]*([A-z0-9-_#$%:^]+):([A-z0-9-_#$%:^.]+):([0-9]+)");
     private final Project myProject;
 
     static final Logger logger = Logger.getInstance(ConsoleFlowStackFilter.class);
