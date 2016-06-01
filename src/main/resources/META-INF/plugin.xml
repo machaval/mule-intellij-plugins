@@ -61,6 +61,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <!--Console-->
+        <consoleFilterProvider implementation="org.mule.console.ConsoleFlowStackFilterProvider" order="first"  />
+
         <!-- Mule Runner/Debugger -->
         <configurationType implementation="org.mule.launcher.configuration.MuleConfigurationType"/>
         <programRunner id="Debug" implementation="org.mule.launcher.configuration.runner.MuleProgramDebugger" order="last"/>
