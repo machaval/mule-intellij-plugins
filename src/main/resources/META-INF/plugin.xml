@@ -156,6 +156,9 @@
         <internalFileTemplate name="Mule Deploy Properties"/>
         <internalFileTemplate name="RAML File"/>
 
+        <!-- Misc -->
+        <consoleFilterProvider implementation="org.mule.launcher.console.ConsoleFlowStackFilterProvider" order="first"  />
+
     </extensions>
 
     <application-components>
