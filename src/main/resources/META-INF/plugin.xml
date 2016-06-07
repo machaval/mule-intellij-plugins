@@ -125,6 +125,10 @@
         <completion.contributor language="Weave"
                                 implementationClass="org.mule.lang.dw.completion.WeaveCompletionContributor"/>
 
+        <xdebugger.breakpointType implementation="org.mule.lang.dw.debug.breakpoint.WeaveBreakpointType"/>
+
+        <programRunner id="WeaveDebug" implementation="org.mule.lang.dw.debug.WeaveDebuggerRunner" order="last"/>
+
         <!--MEL Support-->
         <fileTypeFactory implementation="org.mule.lang.mel.MelFileTypeFactory"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.lang.mel.parser.MelParserDefinition"/>
