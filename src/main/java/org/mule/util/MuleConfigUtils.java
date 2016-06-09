@@ -10,7 +10,13 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NonNavigatable;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.SmartPointerManager;
+import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -30,13 +36,18 @@ import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.impl.schema.ComplexTypeDescriptor;
 import com.intellij.xml.impl.schema.TypeDescriptor;
 import com.intellij.xml.impl.schema.XmlElementDescriptorImpl;
-import com.mulesoft.mule.debugger.commons.*;
+import com.mulesoft.mule.debugger.commons.Breakpoint;
+import com.mulesoft.mule.debugger.commons.MessageProcessorPath;
+import com.mulesoft.mule.debugger.commons.MessageProcessorPathNode;
+import com.mulesoft.mule.debugger.commons.MessageProcessorPathTokenizer;
+import com.mulesoft.mule.debugger.commons.MessageProcessorPathType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.config.MuleConfigConstants;
 import org.mule.config.model.Flow;
 import org.mule.config.model.Mule;
 import org.mule.config.model.SubFlow;
+import org.mule.lang.dw.parser.psi.WeavePsiUtils;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -505,17 +516,68 @@ public class MuleConfigUtils
     {
         final XSourcePosition sourcePosition = lineBreakpoint.getSourcePosition();
         final XExpression conditionExpression = lineBreakpoint.getConditionExpression();
+        return toMuleBreakpoint(module, sourcePosition, conditionExpression);
+    }
+
+    @NotNull
+    public static Breakpoint toMuleBreakpoint(Module module, XSourcePosition sourcePosition, XExpression conditionExpression)
+    {
         final String conditionScript = conditionExpression != null ? asMelScript(conditionExpression.getExpression()) : null;
-        return new Breakpoint(getMulePath(module.getProject(), sourcePosition), conditionScript, module.getName());
+        final XmlTag tag = getXmlTagAt(module.getProject(), sourcePosition);
+        if (tag != null)
+        {
+            return new Breakpoint(getMulePath(tag), conditionScript, module.getName());
+        }
+        else
+        {
+            final int line = sourcePosition.getLine();
+            final Document document = FileDocumentManager.getInstance().getDocument(sourcePosition.getFile());
+            final PsiElement xmlElement = WeavePsiUtils.getFirstWeaveElement(module.getProject(), document, line);
+            if (xmlElement != null)
+            {
+                PsiLanguageInjectionHost parent = PsiTreeUtil.getParentOfType(xmlElement, PsiLanguageInjectionHost.class);
+                if (parent != null)
+                {
+                    final XmlTag weavePart = PsiTreeUtil.getParentOfType(xmlElement, XmlTag.class);
+                    final XmlTag weaveTag = PsiTreeUtil.getParentOfType(weavePart, XmlTag.class);
+                    int lineNumber = line + 1 - XSourcePositionImpl.createByElement(xmlElement).getLine();
+                    final String mulePath = getMulePath(weaveTag);
+                    return new Breakpoint(mulePath, getPrefix(weavePart) + "/" + (lineNumber + 1), conditionScript, module.getName());
+                }
+            }
+        }
+        return new Breakpoint("", conditionScript, module.getName());
     }
     
     @NotNull
-    public static String getMulePath(Project project, XSourcePosition sourcePosition)
+    private static String getPrefix(XmlTag weavePart)
     {
-        final XmlTag tag = getXmlTagAt(project, sourcePosition);
-        return getMulePath(tag);
+        final String localName = weavePart.getLocalName();
+        if (localName.equals("set-payload"))
+        {
+            return "payload:";
+        }
+        else if (localName.equals("set-variable"))
+        {
+            return "flowVar:" + weavePart.getAttributeValue("variableName");
+        }
+        else if (localName.equals("set-property"))
+        {
+            return "property:" + weavePart.getAttributeValue("propertyName");
+        }
+        else if (localName.equals("set-session-variable"))
+        {
+            return "sessionVar:" + weavePart.getAttributeValue("variableName");
+        }
+
+        return "payload:";
     }
+<<<<<<< HEAD
     
+=======
+
+
+>>>>>>> machaval/master
     @Nullable
     public static XmlTag getXmlTagAt(Project project, XSourcePosition sourcePosition)
     {

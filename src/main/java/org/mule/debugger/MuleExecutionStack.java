@@ -6,33 +6,37 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MuleExecutionStack extends XExecutionStack {
+public class MuleExecutionStack extends XExecutionStack
+{
+    private List<XStackFrame> frames;
 
-    private XStackFrame frame;
-
-    protected MuleExecutionStack(XStackFrame frame, @NotNull String displayName) {
+    protected MuleExecutionStack(@NotNull String displayName, XStackFrame... frame)
+    {
         super(displayName, AllIcons.Debugger.ThreadSuspended);
-        this.frame = frame;
+        this.frames = Arrays.asList(frame);
     }
 
     @Nullable
     @Override
-    public XStackFrame getTopFrame() {
-        return frame;
+    public XStackFrame getTopFrame()
+    {
+        return frames.get(0);
     }
 
     @Override
-    public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container) {
-        final List<XStackFrame> frames = new ArrayList<XStackFrame>();
-        frames.add(frame);
-        if (firstFrameIndex <= frames.size()) {
+    public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
+    {
+        if (firstFrameIndex <= frames.size())
+        {
             container.addStackFrames(frames.subList(firstFrameIndex, frames.size()), true);
-        } else {
+        }
+        else
+        {
             container.addStackFrames(Collections.<XStackFrame>emptyList(), true);
         }
     }

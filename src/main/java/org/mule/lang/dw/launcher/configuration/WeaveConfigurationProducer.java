@@ -30,36 +30,44 @@ public class WeaveConfigurationProducer extends JavaRunConfigurationProducerBase
         if (location != null)
         {
             final PsiFile containingFile = location.getPsiElement().getContainingFile();
+<<<<<<< HEAD
 
             final boolean weaveFile = (containingFile != null ? (containingFile.getFileType() == WeaveFileType.getInstance()) : false);
             if (weaveFile)
+=======
+            if(containingFile != null)
+>>>>>>> machaval/master
             {
-                final List<WeaveInput> weaveInputs = new ArrayList<>();
-                WeaveDocument document = WeavePsiUtils.getDocument(location.getPsiElement());
-                if (document != null)
+                final boolean weaveFile = containingFile.getFileType() == WeaveFileType.getInstance();
+                if (weaveFile)
                 {
-                    final WeaveHeader header = document.getHeader();
-                    if (header != null)
+                    final List<WeaveInput> weaveInputs = new ArrayList<>();
+                    WeaveDocument document = WeavePsiUtils.getDocument(location.getPsiElement());
+                    if (document != null)
                     {
-                        final List<WeaveDirective> directiveList = header.getDirectiveList();
-                        for (WeaveDirective weaveDirective : directiveList)
+                        final WeaveHeader header = document.getHeader();
+                        if (header != null)
                         {
-                            if (weaveDirective instanceof WeaveInputDirective)
+                            final List<WeaveDirective> directiveList = header.getDirectiveList();
+                            for (WeaveDirective weaveDirective : directiveList)
                             {
-                                final WeaveIdentifier identifier = ((WeaveInputDirective) weaveDirective).getIdentifier();
-                                if (identifier != null)
+                                if (weaveDirective instanceof WeaveInputDirective)
                                 {
-                                    weaveInputs.add(new WeaveInput(identifier.getName(), ""));
+                                    final WeaveIdentifier identifier = ((WeaveInputDirective) weaveDirective).getIdentifier();
+                                    if (identifier != null)
+                                    {
+                                        weaveInputs.add(new WeaveInput(identifier.getName(), ""));
+                                    }
                                 }
                             }
                         }
                     }
+                    weaveConfiguration.setWeaveInputs(weaveInputs);
+                    weaveConfiguration.setWeaveFile(containingFile.getVirtualFile().getCanonicalPath());
+                    weaveConfiguration.setModule(configurationContext.getModule());
+                    weaveConfiguration.setName(StringUtils.capitalize(containingFile.getVirtualFile().getName()));
+                    return true;
                 }
-                weaveConfiguration.setWeaveInputs(weaveInputs);
-                weaveConfiguration.setWeaveFile(containingFile.getVirtualFile().getCanonicalPath());
-                weaveConfiguration.setModule(configurationContext.getModule());
-                weaveConfiguration.setName(StringUtils.capitalize(containingFile.getVirtualFile().getName()));
-                return true;
             }
         }
         return false;

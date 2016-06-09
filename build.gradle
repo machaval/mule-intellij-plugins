@@ -40,6 +40,8 @@ repositories {
 
 dependencies {
 	compile files('lib/mule-plugin-debugger-3.8.0.jar')
+	compile files('lib/weave/core_2.11-1.1.0.jar')
+	compile files('lib/weave/scala-library-2.11.7.jar')
 
 	compile ('org.mule.tools:apikit-scaffolder:1.7.3') {
 		exclude module: 'xml-apis'

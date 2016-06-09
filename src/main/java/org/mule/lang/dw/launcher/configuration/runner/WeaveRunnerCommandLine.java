@@ -81,6 +81,7 @@ public class WeaveRunnerCommandLine extends JavaCommandLineState
 
         if (isDebug)
         {
+            javaParams.getVMParametersList().add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
             javaParams.getProgramParametersList().add("-debug");
         }
 
@@ -93,5 +94,10 @@ public class WeaveRunnerCommandLine extends JavaCommandLineState
 
         // All done, run it
         return javaParams;
+    }
+
+    public WeaveConfiguration getModel()
+    {
+        return model;
     }
 }

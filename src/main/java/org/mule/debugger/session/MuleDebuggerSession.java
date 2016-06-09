@@ -10,6 +10,7 @@ import com.mulesoft.mule.debugger.commons.Breakpoint;
 import com.mulesoft.mule.debugger.exception.RemoteDebugException;
 import com.mulesoft.mule.debugger.response.MuleMessageInfo;
 import com.mulesoft.mule.debugger.response.ObjectFieldDefinition;
+import com.mulesoft.mule.debugger.response.OnExecutionStoppedEvent;
 import com.mulesoft.mule.debugger.response.ScriptResultInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
+public class MuleDebuggerSession extends DefaultDebuggerResponseCallback
+{
 
     private static final int MAX_RETRIES = 30;
     private DebuggerClient debuggerClient;
@@ -30,147 +32,200 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     private boolean exceptionBreakpoint = true;
     private Project project;
 
-    public MuleDebuggerSession(Project project) {
+    public MuleDebuggerSession(Project project)
+    {
         this.project = project;
     }
 
-    public void connect(@NotNull String host, @NotNull int port) {
+    public void connect(@NotNull String host, @NotNull int port)
+    {
         debuggerClient = new DebuggerClient(new DebuggerConnection(host, port));
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 connect(debuggerClient, 0);
             }
         });
     }
 
-    private DebuggerClient getDebuggerClient() {
+    private DebuggerClient getDebuggerClient()
+    {
         return debuggerClient;
     }
 
-    private boolean connect(DebuggerClient debuggerClient, int retries) {
-        try {
+    private boolean connect(DebuggerClient debuggerClient, int retries)
+    {
+        try
+        {
             debuggerClient.start(this);
-        } catch (IOException e) {
-            if (retries < MAX_RETRIES) {
-                try {
+        }
+        catch (IOException e)
+        {
+            if (retries < MAX_RETRIES)
+            {
+                try
+                {
                     Thread.sleep(1000L * 2);
                     connect(debuggerClient, retries + 1);
-                } catch (InterruptedException e1) {
+                }
+                catch (InterruptedException e1)
+                {
                     return false;
                 }
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public void disconnect() {
-        if (isConnected) {
-            try {
+    public void disconnect()
+    {
+        if (isConnected)
+        {
+            try
+            {
                 System.out.println("MuleDebuggerSession.disconnect");
                 getDebuggerClient().disconnect();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 //ignore
             }
         }
     }
 
-    public Project getProject() {
+    public Project getProject()
+    {
         return project;
     }
 
-    public boolean isExceptionBreakpoint() {
+    public boolean isExceptionBreakpoint()
+    {
         return exceptionBreakpoint;
     }
 
-    public boolean isConnected() {
+    public boolean isConnected()
+    {
         return isConnected;
     }
 
-    public void nextStep() {
-        if (isConnected) {
+    public void nextStep()
+    {
+        if (isConnected)
+        {
             getDebuggerClient().nextStep();
         }
     }
 
-    public void resume() {
-        if (isConnected) {
+    public void resume()
+    {
+        if (isConnected)
+        {
             getDebuggerClient().resume();
         }
     }
 
-    public void runToCursor(String path) {
-        if (isConnected) {
+    public void runToCursor(String path)
+    {
+        if (isConnected)
+        {
             getDebuggerClient().runToProcessor(path);
         }
     }
 
-    public void enableExceptionBreakpoint() {
-        if (isConnected) {
+    public void enableExceptionBreakpoint()
+    {
+        if (isConnected)
+        {
             getDebuggerClient().enableExceptionBreakpoint(true);
         }
         exceptionBreakpoint = true;
     }
 
-    public void disableExceptionBreakpoint() {
-        if (isConnected) {
+    public void disableExceptionBreakpoint()
+    {
+        if (isConnected)
+        {
             getDebuggerClient().enableExceptionBreakpoint(false);
         }
         exceptionBreakpoint = false;
     }
 
-    public void addBreakpoint(Breakpoint muleBreakpoint) {
-        if (isConnected) {
+    public void addBreakpoint(Breakpoint muleBreakpoint)
+    {
+        if (isConnected)
+        {
             getDebuggerClient().addBreakpoints(muleBreakpoint);
-        } else {
+        }
+        else
+        {
             breakpoints.add(muleBreakpoint);
         }
     }
 
     @Override
-    public void onError(String error) {
+    public void onError(String error)
+    {
         System.out.println("MuleDebuggerSession.onError " + error);
     }
 
-    public void removeBreakpoint(Breakpoint muleBreakpoint) {
-        if (isConnected) {
+    public void removeBreakpoint(Breakpoint muleBreakpoint)
+    {
+        if (isConnected)
+        {
             getDebuggerClient().removeBreakpoints(muleBreakpoint);
-        } else {
+        }
+        else
+        {
             breakpoints.remove(muleBreakpoint);
         }
     }
 
-    public List<ObjectFieldDefinition> loadInnerFields(ObjectFieldDefinition fieldDefinition) {
+    public List<ObjectFieldDefinition> loadInnerFields(ObjectFieldDefinition fieldDefinition)
+    {
         final List<ObjectFieldDefinition> result = new ArrayList<>();
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        getDebuggerClient().loadInnerFields(fieldDefinition.getPath(), new DefaultDebuggerResponseCallback() {
+        getDebuggerClient().loadInnerFields(fieldDefinition.getPath(), new DefaultDebuggerResponseCallback()
+        {
             @Override
-            public void onInnerFieldsLoaded(ObjectFieldDefinition innerFields) {
+            public void onInnerFieldsLoaded(ObjectFieldDefinition innerFields)
+            {
                 result.addAll(innerFields.getInnerElements());
                 countDownLatch.countDown();
             }
         });
 
-        try {
+        try
+        {
             countDownLatch.await(3, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e)
+        {
 
         }
         return result;
     }
 
-    public void addMessageReceivedListener(MessageReceivedListener listener) {
+    public void addMessageReceivedListener(MessageReceivedListener listener)
+    {
         messageReceivedListeners.add(listener);
     }
 
     @Override
-    public void onMuleMessageArrived(final MuleMessageInfo muleMessageInfo) {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
+    public void onMuleMessageArrived(final MuleMessageInfo muleMessageInfo)
+    {
+        ApplicationManager.getApplication().runReadAction(new Runnable()
+        {
             @Override
-            public void run() {
-                for (MessageReceivedListener listener : messageReceivedListeners) {
+            public void run()
+            {
+                for (MessageReceivedListener listener : messageReceivedListeners)
+                {
                     listener.onNewMessageReceived(muleMessageInfo);
                 }
             }
@@ -179,11 +234,15 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     }
 
     @Override
-    public void onExceptionThrown(final MuleMessageInfo muleMessageInfo, final ObjectFieldDefinition exceptionThrown) {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
+    public void onExceptionThrown(final MuleMessageInfo muleMessageInfo, final ObjectFieldDefinition exceptionThrown)
+    {
+        ApplicationManager.getApplication().runReadAction(new Runnable()
+        {
             @Override
-            public void run() {
-                for (MessageReceivedListener listener : messageReceivedListeners) {
+            public void run()
+            {
+                for (MessageReceivedListener listener : messageReceivedListeners)
+                {
                     listener.onExceptionThrown(muleMessageInfo, exceptionThrown);
                 }
             }
@@ -192,11 +251,12 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
 
 
     @Override
-    public void onConnected() {
-        System.out.println("MuleDebuggerSession.onConnected");
+    public void onConnected()
+    {
         isConnected = true;
         //Lets add the breakpoints that where added before it is connected
-        for (Breakpoint breakpoint : breakpoints) {
+        for (Breakpoint breakpoint : breakpoints)
+        {
             addBreakpoint(breakpoint);
         }
         getDebuggerClient().enableExceptionBreakpoint(exceptionBreakpoint);
@@ -204,22 +264,44 @@ public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
     }
 
     @Override
-    public void onExit() {
+    public void onExecutionStopped(final OnExecutionStoppedEvent stoppedEvent)
+    {
+        ApplicationManager.getApplication().runReadAction(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                final List<MessageReceivedListener> listeners = messageReceivedListeners;
+                for (MessageReceivedListener listener : listeners)
+                {
+                    listener.onExecutionStopped(stoppedEvent.getMuleMessageInfo(), stoppedEvent.getFrame(), stoppedEvent.getPath(), stoppedEvent.getInternalPosition());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onExit()
+    {
         isConnected = false;
-        System.out.println("MuleDebuggerSession.onExit");
         getDebuggerClient().disconnect();
     }
 
-    public void eval(String script, final ScriptEvaluationCallback callback) {
-        if (isConnected) {
-            getDebuggerClient().executeScript(script, new DefaultDebuggerResponseCallback() {
+    public void eval(String script, final ScriptEvaluationCallback callback)
+    {
+        if (isConnected)
+        {
+            getDebuggerClient().executeScript(script, new DefaultDebuggerResponseCallback()
+            {
                 @Override
-                public void onScriptEvaluationException(RemoteDebugException exception) {
+                public void onScriptEvaluationException(RemoteDebugException exception)
+                {
                     callback.onScriptEvaluationException(exception);
                 }
 
                 @Override
-                public void onScriptEvaluation(ScriptResultInfo info) {
+                public void onScriptEvaluation(ScriptResultInfo info)
+                {
                     callback.onScriptEvaluation(info);
                 }
             });
