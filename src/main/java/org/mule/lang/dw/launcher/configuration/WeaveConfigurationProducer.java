@@ -3,7 +3,6 @@ package org.mule.lang.dw.launcher.configuration;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.junit.JavaRunConfigurationProducerBase;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
@@ -30,13 +29,7 @@ public class WeaveConfigurationProducer extends JavaRunConfigurationProducerBase
         if (location != null)
         {
             final PsiFile containingFile = location.getPsiElement().getContainingFile();
-<<<<<<< HEAD
-
-            final boolean weaveFile = (containingFile != null ? (containingFile.getFileType() == WeaveFileType.getInstance()) : false);
-            if (weaveFile)
-=======
             if(containingFile != null)
->>>>>>> machaval/master
             {
                 final boolean weaveFile = containingFile.getFileType() == WeaveFileType.getInstance();
                 if (weaveFile)

@@ -57,6 +57,7 @@ import java.util.List;
 
 public class MuleConfigUtils
 {
+
     public static final String MULE_LOCAL_NAME = "mule";
     public static final String MUNIT_TEST_LOCAL_NAME = "test";
     public static final String MUNIT_NAMESPACE = "munit";
@@ -101,20 +102,19 @@ public class MuleConfigUtils
         return rootTag.getLocalName().equalsIgnoreCase(MULE_LOCAL_NAME);
     }
 
-
     public static QName getQName(XmlTag xmlTag)
     {
         return new QName(xmlTag.getNamespace(), xmlTag.getLocalName());
     }
-    
+
     @Nullable
     public static XmlTag findFlow(Project project, String flowName)
     {
         final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
         return findFlowInScope(project, flowName, searchScope);
     }
-    
-    
+
+
     @Nullable
     public static XmlTag findGlobalElement(PsiElement element, String elementName)
     {
@@ -132,7 +132,7 @@ public class MuleConfigUtils
         final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
         return findGlobalElementInScope(project, elementName, searchScope);
     }
-    
+
     @Nullable
     public static XmlTag findFlow(PsiElement element, String flowName)
     {
@@ -150,8 +150,8 @@ public class MuleConfigUtils
         final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
         return findFlowInScope(project, flowName, searchScope);
     }
-    
-    
+
+
     @Nullable
     public static XmlTag findFlow(Module module, String flowName)
     {
@@ -170,7 +170,7 @@ public class MuleConfigUtils
         final GlobalSearchScope searchScope = GlobalSearchScope.projectScope(project);
         return getFlowsInScope(project, searchScope);
     }
-    
+
     @NotNull
     private static List<DomElement> getFlowsInScope(Project project, GlobalSearchScope searchScope)
     {
@@ -193,7 +193,7 @@ public class MuleConfigUtils
         }
         return result;
     }
-    
+
     @Nullable
     private static XmlTag findGlobalElementInScope(Project project, String elementName, GlobalSearchScope searchScope)
     {
@@ -208,7 +208,7 @@ public class MuleConfigUtils
         }
         return null;
     }
-    
+
     @Nullable
     private static XmlTag findFlowInScope(Project project, String flowName, GlobalSearchScope searchScope)
     {
@@ -223,8 +223,8 @@ public class MuleConfigUtils
         }
         return null;
     }
-    
-    
+
+
     @Nullable
     private static XmlTag findGlobalElementInFile(Project project, String elementName, VirtualFile file)
     {
@@ -251,7 +251,7 @@ public class MuleConfigUtils
         }
         return null;
     }
-    
+
     @Nullable
     private static XmlTag findFlowInFile(Project project, String flowName, VirtualFile file)
     {
@@ -319,7 +319,7 @@ public class MuleConfigUtils
                 type = MessageProcessorPathType.unknown;
             }
         }
-        
+
         return new MessageProcessorPath(flowName, type, elements);
     }
 
@@ -335,7 +335,7 @@ public class MuleConfigUtils
             return false;
         }
     }
-    
+
     @Nullable
     public static XmlTag getTagAt(Project project, String path)
     {
@@ -355,7 +355,6 @@ public class MuleConfigUtils
                     final Mule rootElement = fileElement.getRootElement();
                     switch (type)
                     {
-
                     case processors:
                         final List<Flow> flows = rootElement.getFlows();
                         for (Flow flow : flows)
@@ -430,14 +429,13 @@ public class MuleConfigUtils
         }
         return xmlTag;
     }
-    
-    
+
+
     @Nullable
     public static XSourcePosition createPositionByElement(PsiElement element)
     {
         if (element == null)
             return null;
-
 
         PsiFile psiFile = element.getContainingFile();
         if (psiFile == null)
@@ -459,7 +457,6 @@ public class MuleConfigUtils
                 if (myDelegate == null)
                 {
                     myDelegate = ApplicationManager.getApplication().runReadAction(new Computable<XSourcePosition>()
-
                     {
                         @Override
                         public XSourcePosition compute()
@@ -468,30 +465,29 @@ public class MuleConfigUtils
                             return XSourcePositionImpl.createByOffset(pointer.getVirtualFile(), elem != null ? elem.getTextOffset() : -1);
                         }
                     });
-
                 }
                 return myDelegate;
             }
-            
+
             @Override
             public int getLine()
             {
                 return getDelegate().getLine();
             }
-            
+
             @Override
             public int getOffset()
             {
                 return getDelegate().getOffset();
             }
-            
+
             @NotNull
             @Override
             public VirtualFile getFile()
             {
                 return file;
             }
-            
+
             @NotNull
             @Override
             public Navigatable createNavigatable(@NotNull Project project)
@@ -510,7 +506,7 @@ public class MuleConfigUtils
             }
         };
     }
-    
+
     @NotNull
     public static Breakpoint toMuleBreakpoint(Module module, XLineBreakpoint<XBreakpointProperties> lineBreakpoint)
     {
@@ -548,7 +544,7 @@ public class MuleConfigUtils
         }
         return new Breakpoint("", conditionScript, module.getName());
     }
-    
+
     @NotNull
     private static String getPrefix(XmlTag weavePart)
     {
@@ -572,12 +568,8 @@ public class MuleConfigUtils
 
         return "payload:";
     }
-<<<<<<< HEAD
-    
-=======
 
 
->>>>>>> machaval/master
     @Nullable
     public static XmlTag getXmlTagAt(Project project, XSourcePosition sourcePosition)
     {
@@ -586,7 +578,6 @@ public class MuleConfigUtils
         final XmlTag rootTag = xmlFile.getRootTag();
         return findXmlTag(sourcePosition, rootTag);
     }
-
 
     private static XmlTag findXmlTag(XSourcePosition sourcePosition, XmlTag rootTag)
     {
@@ -636,7 +627,6 @@ public class MuleConfigUtils
             final XmlTag element = elements.get(i);
             switch (i)
             {
-
             case 0:
             {
                 final XmlAttribute name = element.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE);
@@ -660,7 +650,6 @@ public class MuleConfigUtils
                     if (muleElementType == MuleElementType.MESSAGE_PROCESSOR)
                     {
                         index = index + 1;
-
                     }
                 }
                 path = path + "/" + index;
@@ -670,7 +659,7 @@ public class MuleConfigUtils
         System.out.println("path = " + path);
         return path;
     }
-    
+
     @Nullable
     public static MuleElementType getMuleElementTypeFromXmlElement(XmlTag xmlTag)
     {
@@ -691,14 +680,13 @@ public class MuleConfigUtils
         }
         return null;
     }
-    
-    
+
+
     @NotNull
     private static String getGlobalElementCategory(XmlTag element)
     {
         switch (element.getLocalName())
         {
-
         case "flow":
             return "/processors";
         case "sub-flow":
@@ -707,23 +695,21 @@ public class MuleConfigUtils
             return "/tests";
         default:
             return "/es";
-
         }
-        
+
     }
-    
+
     @NotNull
     public static String asMelScript(@NotNull String script)
     {
         return !script.startsWith("#[") ? "#[" + script + "]" : script;
     }
 
-
     public static List<XmlTag> getGlobalElements(Project project)
     {
         return getGlobalElementsInScope(project, GlobalSearchScope.allScope(project));
     }
-    
+
     @NotNull
     private static List<XmlTag> getGlobalElementsInScope(Project project, GlobalSearchScope searchScope)
     {
@@ -753,10 +739,9 @@ public class MuleConfigUtils
         return result;
     }
 
-
     private static boolean isGlobalElement(XmlTag subTag)
     {
         return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow") || subTag.getLocalName().equals("test"));
     }
-    
+
 }
