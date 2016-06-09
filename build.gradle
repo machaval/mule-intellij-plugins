@@ -12,6 +12,8 @@ intellij{
 configurations {
 	compile.exclude module: 'xml-apis'
 	all*.exclude group: 'xml-apis', module: 'xml-apis'
+    all*.exclude module: 'commons-logging'
+
 }
 
 sourceSets {
@@ -43,6 +45,7 @@ dependencies {
 
 	compile ('org.mule.tools:apikit-scaffolder:1.7.3') {
 		exclude module: 'xml-apis'
+		exclude module: 'commons-logging'
 	}
 	compile 'com.github.fge:btf:1.2'
 	compile 'commons-beanutils:commons-beanutils:1.7.0'
