@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mule.debugger.session.MuleDebuggerSession;
 import org.mule.util.MuleConfigUtils;
 
-public class MuleStackFrame extends XStackFrame {
+public class MuleStackFrame extends XStackFrame
+{
     private final XSourcePosition position;
     private MuleDebuggerSession session;
     private MuleMessageInfo muleMessageInfo;
@@ -27,12 +28,13 @@ public class MuleStackFrame extends XStackFrame {
     private ObjectFieldDefinition exceptionThrown;
     private final XmlTag tag;
 
-    public MuleStackFrame(@NotNull Project project, @NotNull MuleDebuggerSession session, MuleMessageInfo muleMessageInfo) {
+    public MuleStackFrame(@NotNull Project project, @NotNull MuleDebuggerSession session, MuleMessageInfo muleMessageInfo)
+    {
         this(project, session, muleMessageInfo, null);
     }
 
-    public MuleStackFrame(@NotNull Project project, MuleDebuggerSession session, MuleMessageInfo muleMessageInfo, @Nullable ObjectFieldDefinition exceptionThrown) {
-        super();
+    public MuleStackFrame(@NotNull Project project, MuleDebuggerSession session, MuleMessageInfo muleMessageInfo, @Nullable ObjectFieldDefinition exceptionThrown)
+    {
         this.session = session;
         this.muleMessageInfo = muleMessageInfo;
         this.exceptionThrown = exceptionThrown;
@@ -42,32 +44,38 @@ public class MuleStackFrame extends XStackFrame {
 
     @Nullable
     @Override
-    public XSourcePosition getSourcePosition() {
+    public XSourcePosition getSourcePosition()
+    {
         return position;
     }
 
-    public void customizePresentation(@NotNull ColoredTextContainer component) {
+    public void customizePresentation(@NotNull ColoredTextContainer component)
+    {
         final String mp = StringUtils.isNotBlank(tag.getNamespacePrefix()) ? tag.getNamespacePrefix() + ":" + tag.getLocalName() : tag.getLocalName();
         component.append(mp, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
     @Nullable
     @Override
-    public XDebuggerEvaluator getEvaluator() {
+    public XDebuggerEvaluator getEvaluator()
+    {
         return new MuleScriptEvaluator(session);
     }
 
     @Override
-    public Object getEqualityObject() {
+    public Object getEqualityObject()
+    {
         return MuleStackFrame.class;
     }
 
     @Override
-    public void computeChildren(@NotNull XCompositeNode node) {
+    public void computeChildren(@NotNull XCompositeNode node)
+    {
         final XValueChildrenList children = new XValueChildrenList();
         children.add("Message Processor", new MessageProcessorInfoValue(this.session, this.muleMessageInfo.getMessageProcessorInfo()));
         children.add("Payload", new ObjectFieldDefinitionValue(this.session, this.muleMessageInfo.getPayloadDefinition(), AllIcons.Debugger.Value));
-        if (exceptionThrown != null) {
+        if (exceptionThrown != null)
+        {
             children.add("Exception", new ObjectFieldDefinitionValue(this.session, exceptionThrown, AllIcons.General.Error));
         }
         children.add("Flow Vars", new MapOfObjectFieldDefinitionValue(this.session, this.muleMessageInfo.getInvocationProperties(), AllIcons.Nodes.Parameter));

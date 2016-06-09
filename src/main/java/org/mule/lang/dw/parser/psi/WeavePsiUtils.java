@@ -3,9 +3,16 @@ package org.mule.lang.dw.parser.psi;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.Processor;
+import com.intellij.xdebugger.XDebuggerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.lang.dw.WeaveFile;
@@ -40,6 +47,28 @@ public class WeavePsiUtils
             }
         }
         return text;
+    }
+
+
+    @Nullable
+    public static PsiElement getFirstWeaveElement(Project project, Document document, int line)
+    {
+        final Ref<PsiElement> result = Ref.create();
+        XDebuggerUtil.getInstance().iterateLine(project, document, line, new Processor<PsiElement>()
+        {
+
+            @Override
+            public boolean process(PsiElement element)
+            {
+                if (!(element instanceof PsiWhiteSpace))
+                {
+                    result.set(element);
+                    return false;
+                }
+                return true;
+            }
+        });
+        return result.get();
     }
 
     public static boolean isEscapedChar(@NotNull String text, int position)

@@ -16,6 +16,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.lang.dw.WeaveFileType;
+import org.mule.lang.dw.parser.psi.WeavePsiUtils;
 
 public class WeaveBreakpointType extends XLineBreakpointType<XBreakpointProperties>
 {
@@ -29,28 +30,34 @@ public class WeaveBreakpointType extends XLineBreakpointType<XBreakpointProperti
     public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project)
     {
         final Document document = FileDocumentManager.getInstance().getDocument(file);
-        if (document == null)
-            return false;
-
-        final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-        if (psiFile == null)
+        if (document != null)
         {
-            return false;
+            final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+            if (psiFile != null)
+            {
+                final FileType fileType = psiFile.getFileType();
+                if (fileType.equals(WeaveFileType.getInstance()))
+                {
+                    return WeavePsiUtils.getFirstWeaveElement(project, document, line) != null;
+                }
+            }
         }
-        final FileType fileType = psiFile.getFileType();
-        return fileType.equals(WeaveFileType.getInstance());
+        return false;
     }
 
 
     @Override
-    public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, @NotNull Project project) {
+    public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, @NotNull Project project)
+    {
         final XSourcePosition position = breakpoint.getSourcePosition();
-        if (position == null) {
+        if (position == null)
+        {
             return null;
         }
 
         final PsiFile file = PsiManager.getInstance(project).findFile(position.getFile());
-        if (file == null) {
+        if (file == null)
+        {
             return null;
         }
 

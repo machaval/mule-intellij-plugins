@@ -7,6 +7,7 @@ import com.mulesoft.weave.engine.debugger.client.DebuggerClientListener;
 import com.mulesoft.weave.engine.debugger.server.event.BreakpointAddedEvent;
 import com.mulesoft.weave.engine.debugger.server.event.BreakpointRemovedEvent;
 import com.mulesoft.weave.engine.debugger.server.event.OnFrameEvent;
+import com.mulesoft.weave.engine.debugger.server.event.ScriptResultEvent;
 
 public class WeaveDebuggerClientListener implements DebuggerClientListener
 {
@@ -27,17 +28,26 @@ public class WeaveDebuggerClientListener implements DebuggerClientListener
     }
 
 
-    @Override public void onBreakpointAdded(BreakpointAddedEvent bae)
+    @Override
+    public void onBreakpointAdded(BreakpointAddedEvent bae)
     {
 
     }
 
-    @Override public void onBreakpointCleaned()
+    @Override
+    public void onBreakpointCleaned()
     {
 
     }
 
-    @Override public void onBreakpointRemoved(BreakpointRemovedEvent bre)
+    @Override
+    public void onBreakpointRemoved(BreakpointRemovedEvent bre)
+    {
+
+    }
+
+    @Override
+    public void onScriptEvaluated(DebuggerClient client, ScriptResultEvent sr)
     {
 
     }

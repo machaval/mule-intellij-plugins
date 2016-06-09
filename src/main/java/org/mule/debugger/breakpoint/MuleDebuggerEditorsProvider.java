@@ -15,19 +15,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MuleDebuggerEditorsProvider extends XDebuggerEditorsProvider {
+public class MuleDebuggerEditorsProvider extends XDebuggerEditorsProvider
+{
     @NotNull
     @Override
-    public FileType getFileType() {
+    public FileType getFileType()
+    {
         return PlainTextFileType.INSTANCE;
     }
 
     @NotNull
     @Override
-    public Document createDocument(@NotNull Project project, @NotNull String text, @Nullable XSourcePosition xSourcePosition, @NotNull EvaluationMode evaluationMode) {
+    public Document createDocument(@NotNull Project project, @NotNull String text, @Nullable XSourcePosition xSourcePosition, @NotNull EvaluationMode evaluationMode)
+    {
 
         final PsiFile psiFile = PsiFileFactory.getInstance(project)
-                .createFileFromText("muleExpr." + getFileType().getDefaultExtension(), getFileType(), text, LocalTimeCounter.currentTime(), true);
+                                              .createFileFromText("muleExpr." + getFileType().getDefaultExtension(), getFileType(), text, LocalTimeCounter.currentTime(), true);
         return PsiDocumentManager.getInstance(project).getDocument(psiFile);
     }
 }

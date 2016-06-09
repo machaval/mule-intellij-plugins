@@ -9,8 +9,8 @@ public class MuleSuspendContext extends XSuspendContext {
 
     private MuleExecutionStack muleExecutionStack;
 
-    public MuleSuspendContext(XStackFrame frame) {
-        muleExecutionStack = new MuleExecutionStack(frame, "Mule Execution");
+    public MuleSuspendContext(XStackFrame... frame) {
+        muleExecutionStack = new MuleExecutionStack("Mule Execution", frame);
     }
 
     @Override

@@ -23,7 +23,11 @@ import org.mule.debugger.breakpoint.MuleBreakpointHandler;
 import org.mule.debugger.session.MessageReceivedListener;
 import org.mule.debugger.session.MuleDebuggerSession;
 import org.mule.launcher.configuration.MuleConfiguration;
-import org.mule.util.MuleConfigUtils;
+
+import java.util.List;
+
+import static org.mule.util.MuleConfigUtils.getMulePath;
+import static org.mule.util.MuleConfigUtils.getXmlTagAt;
 
 public class MuleDebugProcess extends XDebugProcess
 {
@@ -57,15 +61,24 @@ public class MuleDebugProcess extends XDebugProcess
             @Override
             public void onNewMessageReceived(MuleMessageInfo muleMessageInfo)
             {
-                System.out.println("MuleDebugProcess.onNewMessageReceived");
+
                 getSession().positionReached(new MuleSuspendContext(new MuleStackFrame(getSession().getProject(), muleDebuggerSession, muleMessageInfo)));
             }
 
             @Override
             public void onExceptionThrown(MuleMessageInfo muleMessageInfo, ObjectFieldDefinition exceptionThrown)
             {
-                System.out.println("MuleDebugProcess.onExceptionThrown");
+
                 getSession().positionReached(new MuleSuspendContext(new MuleStackFrame(getSession().getProject(), muleDebuggerSession, muleMessageInfo, exceptionThrown)));
+            }
+
+            @Override
+            public void onExecutionStopped(MuleMessageInfo muleMessageInfo, List<ObjectFieldDefinition> frame, String path, String internalPosition)
+            {
+                System.out.println("MuleDebugProcess.onExecutionStopped : " + path + "#" + internalPosition);
+                final WeaveIntegrationStackFrame weaveStackFrame = new WeaveIntegrationStackFrame(getSession().getProject(), muleDebuggerSession, path, internalPosition, frame);
+                final MuleStackFrame muleStackFrame = new MuleStackFrame(getSession().getProject(), muleDebuggerSession, muleMessageInfo, null);
+                getSession().positionReached(new MuleSuspendContext(weaveStackFrame, muleStackFrame));
             }
 
         });
@@ -130,7 +143,7 @@ public class MuleDebugProcess extends XDebugProcess
     @Override
     public void runToPosition(@NotNull XSourcePosition xSourcePosition)
     {
-        muleDebuggerSession.runToCursor(MuleConfigUtils.getMulePath(getModule().getProject(), xSourcePosition));
+        muleDebuggerSession.runToCursor(getMulePath(getXmlTagAt(getModule().getProject(), xSourcePosition)));
     }
 
     @Override
