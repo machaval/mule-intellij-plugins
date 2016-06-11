@@ -55,7 +55,7 @@ RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
 
 RULE_BINARY_CLOJURE_OPERATORS="mapObject" | "map" | "pluck" | "filter" | "reduce" | "groupBy" | "orderBy" | "find" | "scan" | "distinctBy"
 RULE_BINARY_OPERATORS="startsWith" | "endsWith" | "matches" | "contains"| "splitBy"|"joinBy" | "zip" | "++" | "--"
-RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "valuesOf" | "keysOf" | "trim" | "sum" | "avg" | "upper" | "lower" | "capitalize" | "camelize" | "dasherize" | "ordinalize" | "pluralize" | "singularize" | "underscore" | "typeOf" | "max" | "min" | "unzip"
+RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" | "upper" | "lower" | "capitalize" | "camelize" | "dasherize" | "ordinalize" | "pluralize" | "singularize" | "underscore" | "typeOf" | "max" | "min" | "unzip"
 
 %%
 <YYINITIAL> {

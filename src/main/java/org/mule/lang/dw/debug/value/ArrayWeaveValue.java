@@ -23,7 +23,7 @@ public class ArrayWeaveValue extends XValue
     @Override
     public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
     {
-        xValueNode.setPresentation(PlatformIcons.VARIABLE_ICON, "Array", "length " + debuggerValue.values().length + "'", true);
+        xValueNode.setPresentation(PlatformIcons.VARIABLE_ICON, "Array", "length : " + debuggerValue.values().length, true);
     }
 
     @Override

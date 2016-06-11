@@ -23,13 +23,7 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     boolean r;
     b = adapt_builder_(t, b, this, EXTENDS_SETS_);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    if (t == ADDITION_SUBTRACTION_EXPRESSION) {
-      r = Expression(b, 0, 11);
-    }
-    else if (t == AND_EXPRESSION) {
-      r = Expression(b, 0, 7);
-    }
-    else if (t == ANY_DATE_LITERAL) {
+    if (t == ANY_DATE_LITERAL) {
       r = AnyDateLiteral(b, 0);
     }
     else if (t == ANY_REGEX_LITERAL) {
@@ -40,9 +34,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     }
     else if (t == ARRAY_EXPRESSION) {
       r = ArrayExpression(b, 0);
-    }
-    else if (t == AS_EXPRESSION) {
-      r = Expression(b, 0, 4);
     }
     else if (t == ATTRIBUTE) {
       r = Attribute(b, 0);
@@ -56,20 +47,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == ATTRIBUTES) {
       r = Attributes(b, 0);
     }
-    else if (t == BINARY_CLOJURE_EXPRESSION) {
-      r = Expression(b, 0, 0);
-    }
-    else if (t == BINARY_EXPRESSION) {
-      r = Expression(b, 0, 3);
-    }
     else if (t == BODY) {
       r = Body(b, 0);
     }
     else if (t == BOOLEAN_LITERAL) {
       r = BooleanLiteral(b, 0);
-    }
-    else if (t == BRACKET_SELECTOR_EXPRESSION) {
-      r = Expression(b, 0, 16);
     }
     else if (t == CLOJURE_LITERAL_EXPRESSION) {
       r = ClojureLiteralExpression(b, 0);
@@ -86,9 +68,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == CONDITIONAL_ATTRIBUTE) {
       r = ConditionalAttribute(b, 0);
     }
-    else if (t == CONDITIONAL_EXPRESSION) {
-      r = Expression(b, 0, -1);
-    }
     else if (t == CONDITIONAL_KEY_VALUE_PAIR) {
       r = ConditionalKeyValuePair(b, 0);
     }
@@ -104,17 +83,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == DEFAULT_PATTERN) {
       r = DefaultPattern(b, 0);
     }
-    else if (t == DEFAULT_VALUE_EXPRESSION) {
-      r = Expression(b, 0, 5);
-    }
     else if (t == DIRECTIVE) {
       r = Directive(b, 0);
     }
     else if (t == DOCUMENT) {
       r = Document(b, 0);
-    }
-    else if (t == DOT_SELECTOR_EXPRESSION) {
-      r = Expression(b, 0, 15);
     }
     else if (t == DYNAMIC_KEY_VALUE_PAIR) {
       r = DynamicKeyValuePair(b, 0);
@@ -122,26 +95,14 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == DYNAMIC_RANGE_EXPRESSION) {
       r = DynamicRangeExpression(b, 0);
     }
-    else if (t == DYNAMIC_SELECTOR_EXPRESSION) {
-      r = Expression(b, 0, 17);
-    }
     else if (t == ENCLOSED_EXPRESSION) {
       r = EnclosedExpression(b, 0);
-    }
-    else if (t == EQUALITY_EXPRESSION) {
-      r = Expression(b, 0, 8);
     }
     else if (t == EXPRESSION) {
       r = Expression(b, 0, -1);
     }
     else if (t == EXPRESSION_PATTERN) {
       r = ExpressionPattern(b, 0);
-    }
-    else if (t == FILTER_SELECTOR_EXPRESSION) {
-      r = Expression(b, 0, 19);
-    }
-    else if (t == FUNCTION_CALL_EXPRESSION) {
-      r = Expression(b, 0, 14);
     }
     else if (t == FUNCTION_DEFINITION) {
       r = FunctionDefinition(b, 0);
@@ -152,9 +113,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == FUNCTION_PARAMETER) {
       r = FunctionParameter(b, 0);
     }
-    else if (t == GREATER_THAN_EXPRESSION) {
-      r = Expression(b, 0, 10);
-    }
     else if (t == HEADER) {
       r = Header(b, 0);
     }
@@ -163,9 +121,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     }
     else if (t == INPUT_DIRECTIVE) {
       r = InputDirective(b, 0);
-    }
-    else if (t == IS_EXPRESSION) {
-      r = Expression(b, 0, 9);
     }
     else if (t == KEY) {
       r = Key(b, 0);
@@ -185,17 +140,11 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == LITERAL_PATTERN) {
       r = LiteralPattern(b, 0);
     }
-    else if (t == MATCH_EXPRESSION) {
-      r = Expression(b, 0, 2);
-    }
     else if (t == MULTI_VALUE_SELECTOR) {
       r = MultiValueSelector(b, 0);
     }
     else if (t == MULTIPLE_KEY_VALUE_PAIR_OBJ) {
       r = MultipleKeyValuePairObj(b, 0);
-    }
-    else if (t == MULTIPLICATION_DIVISION_EXPRESSION) {
-      r = Expression(b, 0, 13);
     }
     else if (t == NAMED_LITERAL_PATTERN) {
       r = NamedLiteralPattern(b, 0);
@@ -224,9 +173,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == OPTIONS) {
       r = Options(b, 0);
     }
-    else if (t == OR_EXPRESSION) {
-      r = Expression(b, 0, 6);
-    }
     else if (t == OUTPUT_DIRECTIVE) {
       r = OutputDirective(b, 0);
     }
@@ -242,14 +188,8 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == RANGE_LITERAL) {
       r = RangeLiteral(b, 0);
     }
-    else if (t == RANGE_SELECTOR_EXPRESSION) {
-      r = Expression(b, 0, 18);
-    }
     else if (t == REGEX_PATTERN) {
       r = RegexPattern(b, 0);
-    }
-    else if (t == RIGHT_LEFT_EXPRESSION) {
-      r = Expression(b, 0, 12);
     }
     else if (t == SCHEMA) {
       r = Schema(b, 0);
@@ -275,9 +215,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     else if (t == STRING_LITERAL) {
       r = StringLiteral(b, 0);
     }
-    else if (t == TERNARY_EXPRESSION) {
-      r = Expression(b, 0, 1);
-    }
     else if (t == TYPE_DEFINITION) {
       r = TypeDefinition(b, 0);
     }
@@ -289,15 +226,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     }
     else if (t == TYPE_PATTERN) {
       r = TypePattern(b, 0);
-    }
-    else if (t == UNARY_EXPRESSION) {
-      r = UnaryExpression(b, 0);
-    }
-    else if (t == USING_EXPRESSION) {
-      r = UsingExpression(b, 0);
-    }
-    else if (t == VALUE_EXPRESSION) {
-      r = ValueExpression(b, 0);
     }
     else if (t == VALUE_SELECTOR) {
       r = ValueSelector(b, 0);

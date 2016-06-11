@@ -20,7 +20,9 @@ public class SimpleWeaveValue extends XValue
     @Override
     public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
     {
-        xValueNode.setPresentation(PlatformIcons.FUNCTION_ICON, debuggerValue.typeName(), debuggerValue.value(), false);
+        //Lets make sure if it is null to be a string
+        final String presentationValue = String.valueOf(debuggerValue.value());
+        xValueNode.setPresentation(PlatformIcons.VARIABLE_ICON, debuggerValue.typeName(), presentationValue, false);
     }
 
 }

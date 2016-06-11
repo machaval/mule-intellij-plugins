@@ -24,7 +24,7 @@ public class FieldWeaveValue extends XValue
     @Override
     public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
     {
-        xValueNode.setPresentation(PlatformIcons.PROPERTY_ICON, "", "", true);
+        xValueNode.setPresentation(PlatformIcons.VARIABLE_ICON, "", "", true);
     }
 
     @Override
