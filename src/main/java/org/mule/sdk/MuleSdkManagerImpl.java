@@ -15,33 +15,114 @@
  */
 package org.mule.sdk;
 
-import com.intellij.openapi.util.text.StringUtil;
-import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
+import com.intellij.util.xmlb.XmlSerializationException;
+import com.intellij.util.xmlb.XmlSerializer;
+import org.jdom.Element;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-/**
- * @author nik
- */
-public class MuleSdkManagerImpl extends MuleSdkManager {
-  private final Map<String, MuleSdk> myPath2Sdk = new THashMap<String, MuleSdk>();
+@State(
+        name = "MuleSdk",
+        storages = {@Storage(value = "mule.xml")}
+)
+public class MuleSdkManagerImpl extends MuleSdkManager implements PersistentStateComponent<Element>
+{
+    private static final Logger LOG = Logger.getInstance("#org.mule.sdk.MuleSdkManagerImpl");
 
-  @NotNull
-  @Override
-  public org.mule.sdk.MuleSdk findSdk(@NotNull String sdkPath) {
-    sdkPath = StringUtil.trimEnd(sdkPath, "/");
-    if (!myPath2Sdk.containsKey(sdkPath)) {
-      myPath2Sdk.put(sdkPath, new MuleSdk(sdkPath));
+
+    private Set<MuleSdk> sdks = new HashSet<>();
+
+    @Nullable
+    @Override
+    public Element getState()
+    {
+        Element element = new Element("mule-sdks");
+        try
+        {
+            for (MuleSdk sdk : sdks)
+            {
+                final Element sdkElement = new Element("mule-sdk");
+                XmlSerializer.serializeInto(sdk, sdkElement, new SkipDefaultValuesSerializationFilters());
+                element.addContent(sdkElement);
+            }
+        }
+        catch (XmlSerializationException e)
+        {
+            LOG.error(e);
+        }
+        return element;
     }
-    return myPath2Sdk.get(sdkPath);
-  }
 
-  @NotNull
-  @Override
-  public List<? extends org.mule.sdk.MuleSdk> getValidSdks() {
-    return Collections.emptyList();
-  }
+    @Override
+    public void loadState(Element state)
+    {
+        final List<Element> children = state.getChildren();
+        for (Element child : children)
+        {
+            try
+            {
+                final MuleSdk deserialize = XmlSerializer.deserialize(child, MuleSdk.class);
+                if (deserialize != null && deserialize.getMuleHome() != null)
+                {
+                    sdks.add(deserialize);
+                }
+            }
+            catch (XmlSerializationException e)
+            {
+                LOG.error(e);
+            }
+        }
+    }
+
+    @Override
+    public MuleSdk findSdk(String sdkHomePath)
+    {
+        for (MuleSdk muleSdk : sdks)
+        {
+            if (sdkHomePath.equals(muleSdk.getMuleHome()))
+            {
+                return muleSdk;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Set<MuleSdk> getSdks()
+    {
+        return sdks;
+    }
+
+    @Override
+    public void addSdk(MuleSdk muleSdk)
+    {
+        this.sdks.add(muleSdk);
+    }
+
+    @Override
+    public MuleSdk findFromVersion(String muleVersion)
+    {
+        for (MuleSdk sdk : sdks)
+        {
+            if (sdk.getVersion().equals(muleVersion))
+            {
+                return sdk;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void removeSdk(MuleSdk selectedObject)
+    {
+        sdks.remove(selectedObject);
+    }
 }

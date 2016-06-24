@@ -3,36 +3,56 @@ package org.mule.framework;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.util.Comparing;
 import org.jetbrains.annotations.Nullable;
+import org.mule.sdk.MuleSdk;
 
-public class MuleLibraryProperties extends LibraryProperties<MuleLibraryProperties> {
-    private final String myVersion;
+public class MuleLibraryProperties extends LibraryProperties<MuleSdk>
+{
+    private MuleSdk muleSdk;
 
-    public MuleLibraryProperties(String version) {
-        myVersion = version;
+    public MuleLibraryProperties(MuleSdk version)
+    {
+        muleSdk = version;
+    }
+
+    public MuleLibraryProperties()
+    {
     }
 
     @Nullable
-    public String getVersion() {
-        return myVersion;
+    public String getVersion()
+    {
+        return muleSdk.getVersion();
     }
 
     @Override
-    public MuleLibraryProperties getState() {
-        return null;
+    public MuleSdk getState()
+    {
+        return muleSdk;
     }
 
     @Override
-    public void loadState(MuleLibraryProperties state) {
+    public void loadState(MuleSdk state)
+    {
+        this.muleSdk = state;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof MuleLibraryProperties && Comparing.equal(myVersion, ((MuleLibraryProperties) obj).myVersion);
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        MuleLibraryProperties that = (MuleLibraryProperties) o;
+
+        return muleSdk != null ? muleSdk.equals(that.muleSdk) : that.muleSdk == null;
+
     }
 
     @Override
-    public int hashCode() {
-        return myVersion != null ? myVersion.hashCode() : 0;
+    public int hashCode()
+    {
+        return muleSdk != null ? muleSdk.hashCode() : 0;
     }
-
 }

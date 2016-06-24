@@ -10,16 +10,19 @@ import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mule.sdk.MuleSdk;
 
-public class MuleFrameworkSupportProvider extends FrameworkSupportInModuleProvider {
+public class MuleFrameworkSupportProvider extends FrameworkSupportInModuleProvider
+{
     @NotNull
     @Override
-    public FrameworkTypeEx getFrameworkType() {
+    public FrameworkTypeEx getFrameworkType()
+    {
         return FrameworkTypeEx.EP_NAME.findExtension(MuleFrameworkType.class);
     }
 
     @NotNull
     @Override
-    public FrameworkSupportInModuleConfigurable createConfigurable(@NotNull FrameworkSupportModel frameworkSupportModel) {
+    public FrameworkSupportInModuleConfigurable createConfigurable(@NotNull FrameworkSupportModel frameworkSupportModel)
+    {
         return new MuleFrameworkConfigurable();
     }
 
@@ -29,7 +32,8 @@ public class MuleFrameworkSupportProvider extends FrameworkSupportInModuleProvid
     }
 
     @Override
-    public boolean isEnabledForModuleType(@NotNull ModuleType moduleType) {
+    public boolean isEnabledForModuleType(@NotNull ModuleType moduleType)
+    {
         return MuleFrameworkUtil.isAcceptableModuleType(moduleType);
     }
 }

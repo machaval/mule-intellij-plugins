@@ -16,21 +16,25 @@
 package org.mule.sdk;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Set;
 
 
-public abstract class MuleSdkManager {
+public abstract class MuleSdkManager
+{
 
-  public static MuleSdkManager getInstance() {
-    return ServiceManager.getService(MuleSdkManager.class);
-  }
+    public static MuleSdkManager getInstance()
+    {
+        return ServiceManager.getService(MuleSdkManager.class);
+    }
 
-  @NotNull
-  public abstract MuleSdk findSdk(@NotNull String sdkPath);
+    public abstract MuleSdk findSdk(String sdkHomePath);
 
-  @NotNull
-  public abstract List<? extends MuleSdk> getValidSdks();
+    public abstract Set<MuleSdk> getSdks();
 
+    public abstract void addSdk(MuleSdk muleSdk);
+
+    public abstract MuleSdk findFromVersion(String muleVersion);
+
+    public abstract void removeSdk(MuleSdk selectedObject);
 }

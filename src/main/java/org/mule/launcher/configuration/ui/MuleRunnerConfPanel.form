@@ -55,7 +55,7 @@
               <forms/>
             </constraints>
             <properties>
-              <text value="Mule Home"/>
+              <text value="Mule "/>
             </properties>
           </component>
           <component id="94f05" class="javax.swing.JLabel">
@@ -74,13 +74,12 @@
             </constraints>
             <properties/>
           </component>
-          <component id="42043" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="muleHome">
+          <nested-form id="22f21" form-file="org/mule/sdk/ui/MuleSdkComboSelection.form" binding="muleSdkSelector">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
-            <properties/>
-          </component>
+          </nested-form>
         </children>
       </grid>
     </children>

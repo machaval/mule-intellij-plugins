@@ -11,11 +11,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="d33f1" layout-manager="FormLayout">
-        <rowspec value="center:max(d;4px):noGrow"/>
-        <colspec value="fill:d:noGrow"/>
-        <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:d:grow"/>
+      <grid id="d33f1" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
@@ -26,25 +22,14 @@
         <border type="none"/>
         <children>
           <component id="a4aff" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
+            <constraints border-constraint="West"/>
             <properties>
               <text value="Mule Version:"/>
             </properties>
           </component>
-          <component id="40a52" class="javax.swing.JTextField" binding="versionField">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <toolTipText value="E.g: -Xms256m -Xmx1g -XX:MaxPermSize=128m [Optional]"/>
-            </properties>
-          </component>
+          <nested-form id="7d6a4" form-file="org/mule/sdk/ui/MuleSdkComboSelection.form" binding="muleSdkCombo">
+            <constraints border-constraint="Center"/>
+          </nested-form>
         </children>
       </grid>
     </children>

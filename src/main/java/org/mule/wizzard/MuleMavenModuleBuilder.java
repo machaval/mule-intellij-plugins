@@ -24,7 +24,8 @@ import java.io.File;
 
 public class MuleMavenModuleBuilder extends MavenModuleBuilder implements SourcePathsBuilder {
 
-    private String muleVersion = "3.8.0-SNAPSHOT";
+    public static final String DEFAULT_MULE_VERSION = "3.8.0";
+    private String muleVersion = DEFAULT_MULE_VERSION;
 
     public MuleMavenModuleBuilder() {
         setProjectId(new MavenId("org.mule.app", "my-app", "1.0.0-SNAPSHOT"));
@@ -36,14 +37,7 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
-        MavenUtil.runWhenInitialized(project, new DumbAwareRunnable() {
-            public void run() {
-
-                new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root);
-            }
-        });
-
-
+        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root));
     }
 
     private VirtualFile createAndGetContentEntry() {

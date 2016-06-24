@@ -30,5 +30,6 @@ public class MuleFrameworkConfigurable extends FrameworkSupportInModuleConfigura
 
     @Override
     public void addSupport(@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel, @NotNull ModifiableModelsProvider modifiableModelsProvider) {
+
     }
 }

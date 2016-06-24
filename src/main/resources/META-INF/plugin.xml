@@ -62,7 +62,7 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <!--Console-->
-        <consoleFilterProvider implementation="org.mule.console.ConsoleFlowStackFilterProvider" order="first"  />
+        <consoleFilterProvider implementation="org.mule.console.ConsoleFlowStackFilterProvider" order="first"/>
 
         <!-- Mule Runner/Debugger -->
         <configurationType implementation="org.mule.launcher.configuration.MuleConfigurationType"/>
@@ -72,10 +72,17 @@
 
         <!--Mule Stand alone framework -->
 
-        <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
         <library.presentationProvider implementation="org.mule.framework.MuleLibraryPresentationProvider" order="first"/>
+        <framework.type implementation="org.mule.framework.MuleFrameworkType"/>
+        <!--<facetType implementation="org.mule.framework.MuleFacetType"/>-->
+        <!--<project.converterProvider implementation="com.intellij.appengine.converter.AppEngineFacetConverterProvider"/>-->
+        <framework.detector implementation="org.mule.framework.MuleFrameworkDetector"/>
+        <library.type implementation="org.mule.framework.MuleLibraryType"/>
 
         <!--Mule Config-->
+
+        <applicationService serviceInterface="org.mule.sdk.MuleSdkManager"
+                            serviceImplementation="org.mule.sdk.MuleSdkManagerImpl"/>
 
         <runConfigurationProducer implementation="org.mule.actions.MuleApplicationConfigurationProducer"/>
 
@@ -97,6 +104,7 @@
 
         <liveTemplateContext implementation="org.mule.templates.MuleConfigLiveTemplateContextType"/>
         <defaultLiveTemplatesProvider implementation="org.mule.templates.MuleConfigLiveTemplatesProvider"/>
+
 
         <!--Data Weave-->
 

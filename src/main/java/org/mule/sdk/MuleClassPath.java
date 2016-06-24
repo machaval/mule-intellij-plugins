@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * Constructs a default set of JAR Urls located under Mule home folder.
  */
-public class MuleClassPath {
+public class MuleClassPath
+{
 
     private List<File> urls = new ArrayList<>();
 
@@ -20,29 +21,38 @@ public class MuleClassPath {
      *
      * @param muleHome Mule home directory
      */
-    public MuleClassPath(File muleHome) {
-        for (String muleFolder : MuleSdk.MULE_JARS_FOLDERS) {
+    public MuleClassPath(File muleHome)
+    {
+        for (String muleFolder : MuleSdk.MULE_JARS_FOLDERS)
+        {
             final File userDir = new File(muleHome, muleFolder);
-            this.addFile(userDir);
-            this.addFiles(this.listJars(userDir));
+            if (userDir.exists())
+            {
+                this.addFile(userDir);
+                this.addFiles(this.listJars(userDir));
+            }
         }
     }
 
     /**
      * @return A copy of 'urls'.
      */
-    public List<File> getJars() {
+    public List<File> getJars()
+    {
         return new ArrayList<>(this.urls);
     }
 
 
-    public void addFiles(List<File> files) {
-        for (File file : files) {
+    public void addFiles(List<File> files)
+    {
+        for (File file : files)
+        {
             this.addFile(file);
         }
     }
 
-    public void addFile(File jar) {
+    public void addFile(File jar)
+    {
         this.urls.add(jar);
 
     }
@@ -52,22 +62,26 @@ public class MuleClassPath {
      *
      * @return a list of {@link File}s
      */
-    protected List<File> listJars(File path) {
-        File[] jars = path.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                try {
-                    //Filter mmc
-                    return !pathname.getName().startsWith("mmc") && pathname.getCanonicalPath().endsWith(".jar");
-                } catch (IOException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
+    protected List<File> listJars(File path)
+    {
+        File[] jars = path.listFiles(pathname -> {
+            try
+            {
+                //Filter mmc
+                return !pathname.getName().startsWith("mmc") && pathname.getCanonicalPath().endsWith(".jar");
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e.getMessage());
             }
         });
 
-        if (jars == null) {
+        if (jars == null)
+        {
             return Collections.emptyList();
-        } else {
+        }
+        else
+        {
             return Arrays.<File>asList(jars);
         }
     }
