@@ -72,7 +72,7 @@ public class MuleLibraryDescription extends CustomLibraryDescription
         @Override
         public void addRoots(@NotNull LibraryEditor editor)
         {
-            final List<File> libs = muleSdk.getLibs();
+            final List<File> libs = muleSdk.getLibraryEntries();
             for (File file : libs)
             {
                 editor.addRoot(VfsUtil.getUrlForLibraryRoot(file), OrderRootType.CLASSES);

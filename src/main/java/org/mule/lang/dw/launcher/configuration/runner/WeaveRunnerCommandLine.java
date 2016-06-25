@@ -51,11 +51,15 @@ public class WeaveRunnerCommandLine extends JavaCommandLineState
                 javaParams.configureByModule(module, JavaParameters.JDK_AND_CLASSES);
             }
         }
+
         final String weaveHome = model.getWeaveHome();
-        final List<File> urLs = WeaveSdk.getJars(weaveHome);
-        for (File jar : urLs)
+        if (StringUtils.isNotBlank(weaveHome))
         {
-            javaParams.getClassPath().add(jar);
+            final List<File> urLs = WeaveSdk.getJars(weaveHome);
+            for (File jar : urLs)
+            {
+                javaParams.getClassPath().add(jar);
+            }
         }
         //Mule main class
         javaParams.setMainClass(MAIN_CLASS);

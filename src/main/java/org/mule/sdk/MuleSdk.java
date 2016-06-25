@@ -30,6 +30,7 @@ import org.mule.framework.MuleLibraryKind;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -92,9 +93,40 @@ public class MuleSdk
     }
 
     @NotNull
-    public List<File> getLibs()
+    public List<File> getLibraryEntries()
     {
-        return new MuleClassPath(new File(muleHome)).getJars();
+        final File muleHome = new File(this.muleHome);
+        final List<File> muleClassPath = new MuleClassPath(muleHome).getJars();
+        List<File> result = new ArrayList<>();
+        for (File file : muleClassPath)
+        {
+            //No directory
+            if (file.isFile())
+            {
+                result.add(file);
+            }
+        }
+
+        //We add the plugins lib
+        final File pluginsFolder = new File(muleHome, "plugins");
+        final File[] files = pluginsFolder.listFiles();
+        for (File plugin : files)
+        {
+            //Exclude debugger
+            if (!plugin.getName().contains("debugger"))
+            {
+                final File lib = new File(plugin, "lib");
+                if (lib.exists())
+                {
+                    final File[] libJars = lib.listFiles();
+                    for (File jar : libJars)
+                    {
+                        result.add(jar);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     @Override

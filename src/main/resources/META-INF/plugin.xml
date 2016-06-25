@@ -10,6 +10,13 @@
     <change-notes><![CDATA[
     <h1>v0.3</h1>
       <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>DataWeave Debugging</li>
+            <li>Use Mule Framework for setting up project and mule runtime.</li>
+          </ul>
+        </li>
         <li>
           <p>Bug Fixes</p>
           <ul>
@@ -20,6 +27,7 @@
       </ul>
       <h1>v0.2</h1>
       <ul>
+        <li>
          <p>Enhancements</p>
           <ul>
             <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
@@ -29,6 +37,7 @@
             <li>Very Basic MUnit support.</li>
             <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
           </ul>
+         </li>
         <li>
           <p>Bug Fixes</p>
           <ul>

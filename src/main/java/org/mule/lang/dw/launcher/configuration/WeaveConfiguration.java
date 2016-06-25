@@ -106,18 +106,17 @@ public class WeaveConfiguration extends ModuleBasedConfiguration implements Modu
     public void checkConfiguration() throws RuntimeConfigurationException
     {
         final String muleHome = getWeaveHome();
-        if (StringUtils.isBlank(muleHome))
+        if (!StringUtils.isBlank(muleHome))
         {
-            throw new RuntimeConfigurationException("Weave home can not be empty.");
-        }
-        if (!new File(muleHome).exists())
-        {
-            throw new RuntimeConfigurationException("Weave home does not exists : " + muleHome);
-        }
+            if (!new File(muleHome).exists())
+            {
+                throw new RuntimeConfigurationException("Weave home does not exists : " + muleHome);
+            }
 
-        if (!WeaveSdk.isValidWeaveHome(getWeaveHome()))
-        {
-            throw new RuntimeConfigurationException(muleHome + " path is not a valid Weave home.");
+            if (!WeaveSdk.isValidWeaveHome(getWeaveHome()))
+            {
+                throw new RuntimeConfigurationException(muleHome + " path is not a valid Weave home.");
+            }
         }
 
         if (StringUtils.isBlank(getWeaveFile()))
@@ -138,14 +137,6 @@ public class WeaveConfiguration extends ModuleBasedConfiguration implements Modu
     {
         return weaveHome;
     }
-
-    @Nullable
-    public String getModuleName()
-    {
-        final Module module = getModule();
-        return module != null ? module.getName() : null;
-    }
-
 
     public String getWeaveFile()
     {

@@ -48,22 +48,8 @@ public class WeaveRunnerConfPanel
                                        .setAddAction(new AddWeaveInputAction(myModel))
                                        .setRemoveAction(new RemoveWeaveInputAction(myModel))
                                        .setEditAction(new EditWeaveInputAction(myModel))
-                                       .setRemoveActionUpdater(new AnActionButtonUpdater()
-                                       {
-                                           @Override
-                                           public boolean isEnabled(AnActionEvent e)
-                                           {
-                                               return myInputsTable.getSelectedRowCount() >= 1;
-                                           }
-                                       })
-                                       .setEditActionUpdater(new AnActionButtonUpdater()
-                                       {
-                                           @Override
-                                           public boolean isEnabled(AnActionEvent e)
-                                           {
-                                               return myInputsTable.getSelectedRowCount() >= 1 && myInputsTable.getSelectedObject() != null;
-                                           }
-                                       })
+                                       .setRemoveActionUpdater(e -> myInputsTable.getSelectedRowCount() >= 1)
+                                       .setEditActionUpdater(e -> myInputsTable.getSelectedRowCount() >= 1 && myInputsTable.getSelectedObject() != null)
                                        .createPanel(), BorderLayout.CENTER);
     }
 
@@ -120,13 +106,7 @@ public class WeaveRunnerConfPanel
 
         public Comparator<WeaveInput> getComparator()
         {
-            return new Comparator<WeaveInput>()
-            {
-                public int compare(WeaveInput o, WeaveInput o1)
-                {
-                    return o.getPath().compareTo(o1.getPath());
-                }
-            };
+            return (o, o1) -> o.getPath().compareTo(o1.getPath());
         }
     };
 
@@ -139,13 +119,7 @@ public class WeaveRunnerConfPanel
 
         public Comparator<WeaveInput> getComparator()
         {
-            return new Comparator<WeaveInput>()
-            {
-                public int compare(WeaveInput o, WeaveInput o1)
-                {
-                    return o.getName().compareTo(o1.getName());
-                }
-            };
+            return (o, o1) -> o.getName().compareTo(o1.getName());
         }
     };
 
