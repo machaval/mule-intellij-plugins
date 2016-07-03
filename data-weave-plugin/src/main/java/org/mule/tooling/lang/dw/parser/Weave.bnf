@@ -1,0 +1,420 @@
+{
+  parserClass="org.mule.tooling.lang.dw.parser.WeaveParser"
+  parserUtilClass="org.mule.tooling.lang.dw.parser.WeaveParserUtil"
+  psiImplUtilClass = 'org.mule.tooling.lang.dw.parser.psi.WeavePsiImplUtils'
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  psiClassPrefix="Weave"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.mule.tooling.lang.dw.parser.psi"
+  psiImplPackage="org.mule.tooling.lang.dw.parser.psi.impl"
+  elementTypeHolderClass="org.mule.tooling.lang.dw.parser.psi.WeaveTypes"
+  elementTypeClass="org.mule.tooling.lang.dw.parser.WeaveElementType"
+  tokenTypeClass="org.mule.tooling.lang.dw.parser.WeaveTokenType"
+
+  tokens = [
+        L_PARREN='('
+        R_PARREN=')'
+        L_CURLY='{'
+        R_CURLY='}'
+        L_BRACKET='['
+        R_BRACKET=']'
+        COMMA=','
+        COLON=':'
+
+        LINE_COMMENT="regexp://([^\r\n])*?"
+
+        DOUBLE_QUOTED_STRING="regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?"
+        SINGLE_QUOTED_STRING="regexp:'([^\\\'\r\n]|\\[^\r\n])*'?"
+
+        //
+        DOCUMENT_SEPARATOR="---"
+
+        SHIFT_LEFT="<<"
+        SHIFT_RIGHT=">>"
+        SHIFT_RIGHT_LOGICAL=">>>"
+
+        NOT_EQUAL="!="
+        SIMILAR="~="
+        EQUAL="=="
+        EQ="="
+        LESS="<"
+        LESS_EQUAL="<="
+        GREATER=">"
+        GREATER_EQUAL=">="
+
+        PLUS="+"
+        MINUS="-"
+        MULTIPLY="*"
+        DIVISION="/"
+        MODULO="%"
+
+        AT="@"
+        QUESTION="?"
+        ESCLAMATION="!"
+        DOLLAR="$"
+        HASH="#"
+
+        AND_AND="&&"
+        OR_OR="||"
+        AND_KEYWORD="and"
+        OR_KEYWORD="or"
+
+        ARROW_TOKEN="->"
+
+        WHEN="when"
+
+        TRUE_LITERAL="true"
+        FALSE_LITERAL="false"
+        RULE_NULL_LITERAL="null"
+
+        VERSION_DIRECTIVE_KEYWORD="%dw"
+        INPUT_DIRECTIVE_KEYWORD="%input"
+        OUTPUT_DIRECTIVE_KEYWORD="%output"
+        VAR_DIRECTIVE_KEYWORD="%var"
+        FUNCTION_DIRECTIVE_KEYWORD="%function"
+        NAMESPACE_DIRECTIVE_KEYWORD="%namespace"
+        TYPE_DIRECTIVE_KEYWORD="%type"
+
+
+        OR="|"
+        XOR="^"
+        AND="&"
+  ]
+
+    extends(".*(Directive)")=Directive
+    extends(".*(Expression|Literal)")=Expression
+    extends(".*(Pattern)")=Pattern
+    pin(".*Directive") =1
+
+}
+
+root ::= Document
+
+Document ::= Header? Body {
+    implements="com.intellij.psi.NavigatablePsiElement"
+    methods=[getPresentation]
+}
+
+Header::= Directive+ '---' {pin=2}
+
+Directive
+         ::= VersionDirective
+           | NamespaceDirective
+           | VariableDirective
+           | OutputDirective
+           | InputDirective
+           | DebugDirective
+           | TypeDirective
+           | FunctionDirective
+           | '%ast' {recoverWhile=HeaderRecover}
+
+private HeaderRecover::= !('---'|'%output'|'%type'|'%function'|'%namespace'|'%var'|'%dw'|'%input')
+
+VersionDirective::= '%dw'  DOUBLE_LITERAL
+
+NamespaceDirective::= '%namespace' Identifier NAMESPACE_URI
+
+VariableDirective::= '%var' VariableDefinition
+
+OutputDirective::= '%output' DataType Options?
+
+TypeDirective::= '%type' TypeDefinition
+
+TypeDefinition::=Identifier '=' TypeLiteral
+
+FunctionDirective::= '%function' FunctionDefinition
+
+FunctionDefinition::=Identifier L_PARREN ( FunctionParameter ( ',' FunctionParameter )* )? R_PARREN Expression {
+     methods = [getName setName getNameIdentifier]
+     implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+     mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+}
+
+Schema::= '{' ( SchemaElement ( ',' SchemaElement )* )? '}'
+
+SchemaElement::= Identifier ':' LiteralExpression
+
+InputDirective::= '%input' Identifier DataType Options?
+
+DebugDirective::= '%debug' Options?
+
+Options::= OptionElement ( ',' OptionElement )*
+
+OptionElement::= Identifier '=' LiteralExpression
+
+Body ::= Expression
+
+ObjectExpression ::= SingleKeyValuePairObj | MultipleKeyValuePairObj {
+    implements="com.intellij.psi.NavigatablePsiElement"
+    methods=[getPresentation]
+}
+
+SingleKeyValuePairObj ::= KeyValuePair
+
+MultipleKeyValuePairObj::= '{' KeyValuePairWithComma* '}'
+
+private KeyValuePairWithComma ::= (KeyValuePair | DynamicKeyValuePair) (',' | &'}')
+
+KeyValuePair::= ConditionalKeyValuePair
+           | SimpleKeyValuePair
+
+DynamicKeyValuePair ::= EnclosedExpression
+
+SimpleKeyValuePair ::= Key ':' Expression
+{
+    implements="com.intellij.psi.NavigatablePsiElement"
+    methods=[getPresentation]
+}
+ConditionalKeyValuePair ::= '(' Key ':' Expression ')' 'when' Expression
+
+Key::=  KeyExpression Attributes?
+
+KeyExpression::= DeclaredNamespace? (Identifier
+           | StringLiteral
+           | EnclosedExpression)
+
+DeclaredNamespace::= Identifier '#'
+
+Attributes::= '@(' ( AttributeElement ( ',' AttributeElement )* )? ')'
+
+AttributeElement::= ConditionalAttribute
+           | Attribute
+           | EnclosedExpression
+
+Attribute::= KeyExpression ':' Expression
+
+ConditionalAttribute::= '(' KeyExpression ':' Expression ')' 'when' Expression
+
+Expression::= ConditionalExpression|
+            BinaryClojureExpression|
+            TernaryExpression|
+            MatchExpression|
+            BinaryExpression|
+            AsExpression|
+            DefaultValueExpression|
+            OrExpression|
+            AndExpression|
+            EqualityExpression|
+            IsExpression|
+            GreaterThanExpression|
+            AdditionSubtractionExpression|
+            RightLeftExpression|
+            MultiplicationDivisionExpression|
+            FunctionCallExpression|
+            DotSelectorExpression|
+            BracketSelectorExpression|
+            DynamicSelectorExpression|
+            RangeSelectorExpression|
+            FilterSelectorExpression|
+            UsingExpression|
+            UnaryExpression|
+            ValueExpression
+
+MatchExpression ::= Expression RULE_MATCH_LITERAL (PatternMatcherExpression | Expression)
+
+PatternMatcherExpression ::= '{' PatternWithComma+ '}'
+
+private PatternWithComma ::= (Pattern) (',' | &'}')
+
+Pattern ::= RegexPattern | NamedRegexPattern | TypePattern | NamedTypePattern | LiteralPattern | NamedLiteralPattern | ExpressionPattern | DefaultPattern
+
+LiteralPattern ::= LiteralExpression '->' Expression
+
+ExpressionPattern ::= Identifier 'when' Expression '->' Expression {
+     methods = [getName setName getNameIdentifier]
+     implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+     mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+}
+
+NamedLiteralPattern ::= Identifier ':' LiteralExpression '->' Expression {
+     methods = [getName setName getNameIdentifier]
+     implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+     mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+}
+
+TypePattern ::= TypeLiteral '->' Expression
+
+NamedTypePattern ::= Identifier "is" TypeLiteral '->' Expression {
+    methods = [getName setName getNameIdentifier]
+    implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+    mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+}
+
+RegexPattern ::= RULE_ANY_REGEX '->' Expression
+
+NamedRegexPattern ::= Identifier ":" AnyRegexLiteral '->' Expression {
+    methods = [getName setName getNameIdentifier]
+    implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+    mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+}
+
+DefaultPattern ::= DEFAULT '->' Expression
+
+ValueExpression::= ObjectExpression
+                  |LiteralExpression
+                  |RangeExpression
+                  |ArrayExpression
+                  |VariableReferenceExpression
+                  |EnclosedExpression
+
+ConditionalExpression
+         ::= Expression  ( WHEN | UNLESS ) Expression OTHERWISE Expression {pin=2}
+
+BinaryClojureExpression
+         ::= Expression RULE_BINARY_CLOJURE_OPERATORS ClojureExpression
+          {
+             pin=2
+             methods=[ getLeft  getRight]
+         }
+
+BinaryExpression ::= Expression RULE_BINARY_OPERATORS Expression
+    {
+        pin=2
+        methods=[ getLeft  getRight]
+    }
+
+TernaryExpression
+         ::= Expression REPLACE Expression WITH ClojureExpression {pin=2}
+
+AsExpression
+         ::= Expression  AS TypeLiteral {pin=2}
+
+DefaultValueExpression
+         ::= Expression DEFAULT Expression {pin=2}
+
+OrExpression
+         ::= Expression  'or' Expression {pin=2}
+
+AndExpression
+         ::= Expression  'and' Expression {pin=2}
+
+EqualityExpression
+         ::= Expression ( '==' | '!=' | '~=' ) Expression {pin=2}
+
+IsExpression
+         ::= Expression IS TypeLiteral {pin=2}
+
+GreaterThanExpression
+         ::= Expression  ( '>' | '>=' | '<' | '<=' ) Expression {pin=2}
+
+AdditionSubtractionExpression
+         ::= Expression  ( '+' | '-' ) Expression {pin=2}
+
+RightLeftExpression
+         ::= Expression '>>' Expression {pin=2}
+
+MultiplicationDivisionExpression ::= Expression  ( '*' | '/' ) Expression {pin=2}
+
+FunctionCallExpression ::= Expression '(' ( Expression ( ',' Expression )* )? ')'
+
+
+UsingExpression ::=USING '(' VariableDefinition ( ',' VariableDefinition )* ')' Expression {pin=1}
+
+UnaryExpression ::= RULE_UNARY_OPERATOS Expression {pin=1}
+
+EnclosedExpression ::= '(' Expression ')'
+
+//Selectors
+DotSelectorExpression ::=Expression ( '..' | '.' ) Selector {pin=2}
+
+RangeSelectorExpression ::=Expression RULE_RANGE_LITERAL
+
+DynamicSelectorExpression ::=Expression'[' Expression ']'
+
+FilterSelectorExpression ::=Expression'[' '?' '(' ClojureWithoutParametersExpression ')' ']'
+
+BracketSelectorExpression::=Expression'[' Selector ']'
+
+
+Selector ::= (ValueSelector |
+         AttributeSelector |
+         SchemaSelector |
+         MultiValueSelector) ('!'| '?')?
+
+ValueSelector ::= (DeclaredNamespace? (StringLiteral|Identifier))
+
+AttributeSelector ::='@'(DeclaredNamespace? (StringLiteral|Identifier))?
+
+SchemaSelector ::='^'(DeclaredNamespace? (StringLiteral|Identifier))?
+
+MultiValueSelector ::= '*'(DeclaredNamespace? (StringLiteral|Identifier))
+
+private ClojureExpression ::= ClojureLiteralExpression
+           | ClojureWithOneParametersExpression
+           | ClojureWithoutParametersExpression
+
+ClojureWithoutParametersExpression ::= Expression
+ClojureWithOneParametersExpression ::= FunctionParameter '->' Expression
+ClojureLiteralExpression ::= '(' '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression ')'
+
+VariableReferenceExpression ::= Identifier {
+        methods = [getVariableName getReference getName setName getNameIdentifier]
+        implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+        mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+   }
+
+VariableDefinition ::= Identifier '='  Expression  {
+            methods=[getVariableName getVariableValue getName setName getNameIdentifier]
+            mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
+            implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
+            name="Variable"
+        }
+
+//Literal Values
+LiteralExpression
+         ::= BooleanLiteral
+           | NullLiteral
+           | StringLiteral
+           | NumberLiteral
+           | AnyDateLiteral
+           | AnyRegexLiteral
+           | TypeLiteral
+           | LambdaLiteral
+
+LambdaLiteral ::= '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression
+
+FunctionParameter ::= Identifier ( '=' Expression )? {
+        methods=[getVariableName getVariableValue getName setName getNameIdentifier]
+        mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
+        implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
+
+     }
+
+NullLiteral ::= RULE_NULL_LITERAL
+
+BooleanLiteral ::= TRUE_LITERAL
+                        | FALSE_LITERAL
+
+StringLiteral ::= DOUBLE_QUOTED_STRING
+                      | SINGLE_QUOTED_STRING { methods = [getValue] }
+
+AnyDateLiteral::= RULE_ANY_DATE
+
+AnyRegexLiteral::= RULE_ANY_REGEX
+
+RangeLiteral::= RULE_RANGE_LITERAL
+
+DynamicRangeExpression::= '[' Expression RULE_WS+ '..' RULE_WS+ Expression ']'
+
+RangeExpression::= RangeLiteral|DynamicRangeExpression
+
+ArrayExpression::= '[' ( ArrayElement ( ',' ArrayElement )* )? ']'
+{
+    implements="com.intellij.psi.NavigatablePsiElement"
+    methods=[getPresentation]
+}
+
+ArrayElement::= ConditionalArrayElement
+                | SimpleArrayElement
+
+SimpleArrayElement::=Expression
+
+ConditionalArrayElement ::= '(' Expression ')' 'when' Expression
+
+TypeLiteral ::= RULE_TYPE_ID Schema?
+
+DataType ::= RULE_MIME_TYPE
+
+NumberLiteral ::= DOUBLE_LITERAL|INTEGER_LITERAL
+
+Identifier ::= '$$'| ID | '$' | "true" | "false" | "null"  {methods = [getName] }

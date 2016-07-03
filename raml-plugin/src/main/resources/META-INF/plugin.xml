@@ -1,0 +1,57 @@
+<idea-plugin version="2">
+    <id>org.mule.tooling.intellij.raml</id>
+    <name>Raml Plugin For Intellij</name>
+    <version>0.3</version>
+    <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
+    <description><![CDATA[
+     Mule Intellij Plugin.
+    ]]></description>
+
+    <idea-version since-build="145"/>
+
+    <depends>org.jetbrains.idea.maven</depends>
+    <depends>org.intellij.groovy</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- RAML -->
+
+        <fileTypeFactory implementation="org.mule.tooling.lang.raml.file.RamlFileTypeFactory"/>
+        <lang.parserDefinition language="RAML" implementationClass="org.mule.tooling.lang.raml.parser.RamlParserDefinition"/>
+        <lang.commenter language="RAML" implementationClass="org.mule.tooling.lang.raml.RamlCommenter"/>
+        <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
+        <lang.commenter language="RAML" implementationClass="org.jetbrains.yaml.YAMLCommenter"/>
+        <lang.braceMatcher language="RAML" implementationClass="org.jetbrains.yaml.YAMLPairedBraceMatcher"/>
+        <lang.foldingBuilder language="RAML" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
+        <editor.backspaceModeOverride language="RAML" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
+        <lang.psiStructureViewFactory language="RAML" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
+
+        <!-- MUnit -->
+
+
+        <!--Templates-->
+
+        <internalFileTemplate name="RAML File"/>
+
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+
+    <actions>
+        <!--
+            Creates an item on the context menu to allow the user
+            to create a new Camel related file
+        -->
+
+        <action id="Mule.GenerateFlowsFromRAML"
+                class="org.mule.tooling.lang.raml.actions.APIKitScaffoldingAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="NewGroup1"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+
+</idea-plugin>

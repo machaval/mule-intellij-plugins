@@ -1,0 +1,174 @@
+<idea-plugin version="2">
+    <id>org.mule.tooling.intellij.esb</id>
+    <name>Mule ESB Plugin For Intellij</name>
+    <version>0.3</version>
+    <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
+    <description><![CDATA[
+     Mule Intellij Plugin.
+    ]]></description>
+
+    <change-notes><![CDATA[
+    <h1>v0.3</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>DataWeave Debugging</li>
+            <li>Use Mule Framework for setting up project and mule runtime.</li>
+          </ul>
+        </li>
+        <li>
+          <p>Bug Fixes</p>
+          <ul>
+            <li>Mule Configuration was checking wrong the launch</li>
+            <li>Breakpoints were not working with project name different than module name.</li>
+          </ul>
+        </li>
+      </ul>
+      <h1>v0.2</h1>
+      <ul>
+        <li>
+         <p>Enhancements</p>
+          <ul>
+            <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
+            <li>Basic Mel Support with code navigation.</li>
+            <li>Create Mule Apps from right click.</li>
+            <li>New mule project wizard.</li>
+            <li>Very Basic MUnit support.</li>
+            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
+          </ul>
+         </li>
+        <li>
+          <p>Bug Fixes</p>
+          <ul>
+            <li>Debugger breakpoints are now fully working</li>
+            <li>Fixes on DataWeave grammar</li>
+          </ul>
+        </li>
+      </ul>
+      <h1>v0.1</h1>
+      <ul>
+        <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Xml Configuration Navigation</li>
+            <li>Xml script code injection.</li>
+            <li>Xml Outline</li>
+            <li>Data Weave editor</li>
+            <li>Run Debug Mule App.</li>
+          </ul>
+        </li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="145"/>
+
+    <depends>org.jetbrains.idea.maven</depends>
+    <depends>org.mule.tooling.intellij.dataweave</depends>
+    <depends>org.mule.tooling.intellij.raml</depends>
+    <depends>org.intellij.groovy</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!--Console-->
+        <consoleFilterProvider implementation="org.mule.tooling.esb.console.ConsoleFlowStackFilterProvider" order="first"/>
+
+        <!-- Mule Runner/Debugger -->
+        <configurationType implementation="org.mule.tooling.esb.launcher.configuration.MuleConfigurationType"/>
+        <programRunner id="Debug" implementation="org.mule.tooling.esb.launcher.configuration.runner.MuleProgramDebugger" order="last"/>
+        <stepsBeforeRunProvider implementation="org.mule.tooling.esb.launcher.MuleBeforeRunTasksProvider"/>
+        <xdebugger.breakpointType implementation="org.mule.tooling.esb.debugger.breakpoint.MuleBreakpointType"/>
+
+        <!--Mule Stand alone framework -->
+
+        <library.presentationProvider implementation="org.mule.tooling.esb.framework.MuleLibraryPresentationProvider" order="first"/>
+        <framework.type implementation="org.mule.tooling.esb.framework.MuleFrameworkType"/>
+        <!--<facetType implementation="org.mule.framework.MuleFacetType"/>-->
+        <!--<project.converterProvider implementation="com.intellij.appengine.converter.AppEngineFacetConverterProvider"/>-->
+        <framework.detector implementation="org.mule.tooling.esb.framework.MuleFrameworkDetector"/>
+        <library.type implementation="org.mule.tooling.esb.framework.MuleLibraryType"/>
+
+        <!--Mule Config-->
+
+        <applicationService serviceInterface="org.mule.tooling.esb.sdk.MuleSdkManager"
+                            serviceImplementation="org.mule.tooling.esb.sdk.MuleSdkManagerImpl"/>
+
+        <runConfigurationProducer implementation="org.mule.tooling.esb.actions.MuleApplicationConfigurationProducer"/>
+
+        <dom.fileDescription implementation="org.mule.tooling.esb.config.MuleDomFileDescription"/>
+        <psi.referenceContributor language="XML"
+                                  implementation="org.mule.tooling.esb.config.reference.MuleConfigurationReferenceContributor"/>
+
+        <psi.referenceContributor language="JAVA"
+                                  implementation="org.mule.tooling.esb.config.reference.FlowConstructReferenceContributor"/>
+
+        <languageInjector implementation="org.mule.tooling.esb.config.MuleLanguageInjector"/>
+        <gotoSymbolContributor implementation="org.mule.tooling.esb.config.FlowGoToSymbol"/>
+
+        <moduleBuilder builderClass="org.mule.tooling.esb.wizzard.MuleMavenModuleBuilder" id="DEMO_STEP" order="first"/>
+
+        <completion.contributor language="XML"
+                                implementationClass="org.mule.tooling.esb.config.completion.MuleElementsCompletionContributor"
+                                order="first"/>
+
+        <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplateContextType"/>
+        <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
+
+
+
+        <!-- MUnit -->
+        <dom.fileDescription implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>
+
+        <!--Templates-->
+        <internalFileTemplate name="Data Weave"/>
+        <internalFileTemplate name="Mule Config"/>
+        <internalFileTemplate name="MUnit Config"/>
+        <internalFileTemplate name="Mel File"/>
+        <internalFileTemplate name="Mule Maven Project"/>
+        <internalFileTemplate name="log4j2"/>
+        <internalFileTemplate name="Mule Deploy Properties"/>
+        <internalFileTemplate name="RAML File"/>
+
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>org.mule.tooling.esb.launcher.configuration.archive.MuleAppManager</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+        <component>
+            <implementation-class>org.mule.tooling.esb.launcher.configuration.project.MuleProjectManager</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.mule.tooling.esb.config.MuleElementDefinitionService</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+    </project-components>
+
+    <actions>
+        <!--
+            Creates an item on the context menu to allow the user
+            to create a new Camel related file
+        -->
+        <action id="Mule.CreateMuleComponent"
+                class="org.mule.tooling.esb.actions.CreateMuleComponentFile">
+            <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+
+        </action>
+
+        <!-- TODO: Shound MUnit config be a separate action or CreateMuleComponent action with MUnit kind? -->
+        <!--          
+        <action id="Mule.CreateMUnitTest"
+                class="org.mule.actions.CreateMUnitTestFile">
+            <add-to-group group-id="NewGroup1" anchor="after" relative-to-action="Mule.CreateMuleComponent"/>
+        </action>
+          -->
+    </actions>
+
+</idea-plugin>

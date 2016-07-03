@@ -1,0 +1,207 @@
+{
+
+    parserClass="org.mule.tooling.lang.mel.parser.MelParser"
+    parserUtilClass="org.mule.tooling.esb.lang.mel.parser.MelParserUtil"
+    psiImplUtilClass = 'org.mule.tooling.esb.lang.mel.parser.psi.MelPsiImplUtils'
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+    psiClassPrefix="Mel"
+    psiImplClassSuffix="Impl"
+    psiPackage="org.mule.tooling.lang.mel.parser.psi"
+    psiImplPackage="org.mule.tooling.lang.mel.parser.psi.impl"
+    elementTypeHolderClass="org.mule.tooling.lang.mel.parser.psi.MelTypes"
+    elementTypeClass="org.mule.tooling.esb.lang.mel.parser.MelElementType"
+    tokenTypeClass="org.mule.tooling.esb.lang.mel.parser.MelTokenType"
+    extends(".*(Expression|Literal)")="expression"
+
+  tokens = [
+    DOT="."
+    COMMA=","
+    COLON=":"
+
+    LINE_COMMENT="//"
+
+    LPARENTH="("
+    RPARENTH=")"
+    LBRACKET="["
+    RBRACKET="]"
+    LBRACE="{"
+    RBRACE="}"
+
+    AT="@"
+    QUESTION="?"
+    DOLLAR="$"
+    HASH="#"
+
+    PLUS="+"
+    MINUS="-"
+    MULTIPLY="*"
+    DIVISION="/"
+    MODULO="%"
+
+    NEGATE="!"
+    NOT_EQUAL="!="
+    EQUAL="=="
+    EQ="="
+    LESS="<"
+    LESS_EQUAL="<="
+    GREATER=">"
+    GREATER_EQUAL=">="
+
+
+    AND_AND="&&"
+    OR_OR="||"
+    AND_KEYWORD="and"
+    OR_KEYWORD="or"
+    NOT_KEYWORD="not"
+
+    OR="|"
+    XOR="^"
+    AND="&"
+    NOT="~"
+
+    PLUS_PLUS="++"
+    MINUS_MINUS="--"
+
+    NEW_KEYWORD="new"
+    TRUE_KEYWORD="true"
+    FALSE_KEYWORD="false"
+    NULL_KEYWORD="null"
+
+    INSTANCEOF_KEYWORD="instanceof"
+
+
+    SHIFT_LEFT="<<"
+    SHIFT_RIGHT=">>"
+    IMPORT="import"
+    DEF="def"
+    IF="if"
+    ELSE='else'
+    FOREACH='foreach'
+    FOR='for'
+    WHILE='while'
+    DO='do'
+    IN="in"
+    RETURN="return"
+
+
+  ]
+}
+
+root ::=  expressionSemicolon*
+private expressionSemicolon ::= expression ';'?
+expression ::= importExpression|
+               functionDefinitionExpression|
+               variableAssignmentExpression |
+               ifExpression|
+               foreachExpression|
+               forExpression|
+               whileExpression|
+               doWhileExpression|
+               mapExpression |
+               arrayExpression |
+               blockExpression|
+               conditionalExpression |
+               binaryExpression |
+               newExpression |
+               methodCallExpression |
+               indexedExpression |
+               referenceExpression |
+               postfixUnaryExpression |
+               prefixUnaryExpression |
+               literalExpression|
+               parenthesizedExpression |
+               fqnTypeExpression
+
+
+importExpression ::= 'import' IDENTIFIER ('.' IDENTIFIER)* ('.' '*')? {pin=1}
+functionDefinitionExpression ::= 'def' IDENTIFIER '(' parameterList ')' blockExpression {pin=1}
+blockExpression ::= '{' expressionSemicolon* '}'
+private numberLiteralExpression ::= INTEGER_LITERAL | BIG_INTEGER_LITERAL | DOUBLE_LITERAL | BIG_DECIMAL_LITERAL
+private booleanLiteralExpression ::= "true" | "false"
+private textLiteralExpression ::= STRING_LITERAL | CHARACTER_LITERAL  // TODO detect missing closing quote/tick
+literalExpression ::= numberLiteralExpression |
+                      textLiteralExpression |
+                      booleanLiteralExpression |
+                      "null"
+
+
+ifExpression ::= 'if' '(' expression ')' expression ('else' expression)? {pin=1}
+
+foreachExpression ::= ('foreach') '(' IDENTIFIER ':' expression ')' expression 
+
+forExpression ::= 'for' ('(' expression ';' expression ';' expression ')' | '(' IDENTIFIER ':' expression ')') expression {pin=1}
+
+whileExpression ::= 'while' '(' expression ')' expression {pin=1}
+
+doWhileExpression ::= 'do' blockExpression 'while' '(' expression ')' {pin=1}
+
+referenceExpression ::= expression '.' ('?')? IDENTIFIER
+
+
+variableAssignmentExpression ::=  (IDENTIFIER '=' expression) | (fqnTypeExpression IDENTIFIER '=' expression)
+
+parameterList ::= expression? (',' expression)*
+
+methodCallExpression ::= expression '(' parameterList ')'
+
+
+mapEntryElement ::= expression ':' expression
+
+private mapExpressionSequence ::= mapEntryElement (',' mapEntryElement)*
+mapExpression ::= '[' mapExpressionSequence  ']'
+arrayExpression ::= '[' expression (',' expression)*  ']'
+
+
+indexedExpression ::= expression '[' expression ']' {
+  methods=[
+    expression=""
+    referenceQualifier="expression[0]"
+    indexExpression="expression[1]"
+  ]
+}
+
+parenthesizedExpression ::= '(' expression ')' 
+
+// binary ----------------------------------------------------------------
+private plusMinusOperations ::= '+' | '-'
+private divideMultiplyOperations ::=  '*' | '/' | '%'
+private booleanOperations ::= "&&" | "||"
+private bitwiseBooleanOperations ::=  "|" | "^" | "&"
+private equalityOperations ::= "==" | "!="
+private relationalOperations ::= '<'  | "<="  | '>'  | ">="
+private shiftOperations ::= "<<" | ">>"
+private instanceOfOperation ::= 'instanceof'
+private setOperations ::=  'in'
+private binaryOperations ::=
+                           plusMinusOperations |
+                           divideMultiplyOperations |
+                           bitwiseBooleanOperations |
+                           instanceOfOperation |
+                           shiftOperations |
+                           booleanOperations |
+                           equalityOperations |
+                           relationalOperations |
+                           setOperations
+                           { name="operator" }
+binaryExpression ::= expression binaryOperations expression {pin=2}
+
+
+private bitwiseOperations ::= '!' | "~"
+private prefixUnaryOperator ::= bitwiseOperations |
+                          '--'| '++' |'+' | '-'  | "return" | "!"
+prefixUnaryExpression ::= prefixUnaryOperator expression {pin=1}
+
+private postfixUnaryOperator ::= '--'| '++'
+postfixUnaryExpression ::= expression postfixUnaryOperator
+
+private conditionalExpressionTail ::= ':' expression 
+conditionalExpression ::= expression '?' expression conditionalExpressionTail
+
+private constructorExpression ::= '(' parameterList ')' 
+newExpression ::= "new" fqnTypeExpression constructorExpression {pin=1}
+
+// common
+fqnTypeExpression ::= IDENTIFIER ('.' IDENTIFIER)*  {
+    mixin="org.mule.tooling.esb.lang.mel.parser.psi.MelFqnTypeExpressionBase"
+}
+

@@ -1,0 +1,26 @@
+configurations {
+    gen
+}
+
+dependencies {
+    compile files('lib/mule-plugin-debugger-3.8.0.jar')
+    compile project(':data-weave-plugin')
+//    gen files('../lib/jflex-1.7.0-SNAPSHOT.jar')
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/gen'
+        }
+    }
+}
+
+intellij {
+    plugins = ["maven", "groovy", 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
+    pluginName = 'mule-esb-plugin'
+    publish {
+        pluginId '8212'
+    }
+}

@@ -1,76 +1,88 @@
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.43'
+    }
+}
+
 plugins {
-  id "org.jetbrains.intellij" version "0.0.43"
+    id 'net.researchgate.release' version '2.3.4'
 }
 
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'maven'
-
-intellij{
-    plugins = ["maven", "groovy", "yaml"]
-}
-
-configurations {
-	compile.exclude module: 'xml-apis'
-	all*.exclude group: 'xml-apis', module: 'xml-apis'
-	all*.exclude module: 'commons-logging'
-}
-
-sourceSets {
-	main{
-	    java{
-	        srcDir 'gen'
+subprojects {
+    repositories {
+        mavenLocal()
+	    mavenCentral()
+	    maven {
+		    url "http://central.maven.org/maven2/"
 	    }
-    }    
+	    maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+	    maven {
+		    url "https://repository.mulesoft.org/releases/"
+	    }
+	    maven {
+		    url "https://repository.mulesoft.org/nexus/content/repositories/releases"
+	    }
+    }
+
+    apply plugin: 'java'
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    group = 'org.mule.tooling.intellij'
+
+    task jarSources(type:Jar) {
+      from sourceSets.main.allSource
+      classifier = 'sources'
+    }
+    assemble.dependsOn jarSources
+
+    apply plugin: 'org.jetbrains.intellij'
+    intellij {
+      //  version = ideaVersion
+        updateSinceUntilBuild = false
+        downloadSources = true
+        sandboxDirectory = "${rootProject.buildDir}/idea-sandbox"
+
+        publish {
+            username System.getenv('IJ_REPO_USERNAME')
+            password System.getenv('IJ_REPO_PASSWORD')
+            channel ijPluginRepoChannel
+        }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.+'
+    }
 }
 
-repositories {
-    mavenLocal()
-	mavenCentral()
-	maven {
-		url "http://central.maven.org/maven2/"
-	}
-	maven {
-		url "https://repository.mulesoft.org/releases/"
-	}
-	maven {
-		url "https://repository.mulesoft.org/nexus/content/repositories/releases"
-	}
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 
-dependencies {
-	compile files('lib/mule-plugin-debugger-3.8.0.jar')
-	compile files('lib/weave/core_2.11-1.1.0.jar')
-	compile files('lib/weave/scala-library-2.11.7.jar')
-
-	compile ('org.mule.tools:apikit-scaffolder:1.7.3') {
-		exclude module: 'xml-apis'
-		exclude module: 'commons-logging'
-	}
-	compile 'com.github.fge:btf:1.2'
-	compile 'commons-beanutils:commons-beanutils:1.7.0'
-	compile 'commons-io:commons-io:2.4'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
-	compile 'com.fasterxml.jackson.core:jackson-core:2.4.4'
-	compile 'com.github.fge:jackson-coreutils:1.8'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
-	compile 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.4.4'
-	compile 'jaxen:jaxen:1.1.4'
-	compile 'org.jdom:jdom2:2.0.5'
-	compile 'joda-time:joda-time:2.3'
-	compile 'com.github.fge:json-schema-core:1.2.5'
-	compile 'com.github.fge:json-schema-validator:2.2.6'
-	compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
-	compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
-	compile 'javax.mail:mailapi:1.4.3'
-	compile 'org.apache.maven:maven-plugin-api:2.2.1'
-	compile 'com.github.fge:msg-simple:1.1'
-	compile 'org.raml:raml-parser:0.8.13'
-	compile 'org.yaml:snakeyaml:1.17'
-	compile 'com.github.fge:uri-template:0.9'
-
-	//exclude module: 'xml-apis'
+release {
+    buildTasks = ['doRelease']
+    // Do not change the tagTemplate value to double quotes or the version will be evaluated before
+    // the SNAPSHOT version is updated to the release version.
+    tagTemplate = 'v$version'
+    git {
+        requireBranch = /^release_v\d+.*$/
+    }
 }
 
-intellij {
-	updateSinceUntilBuild false
+// We aren't building or doing anything interesting for release.
+// We just update the version and generate the tag as CI will handle deployment.
+task doRelease {
+    doLast {
+        println '===============================!!PLEASE READ!!=================================\n\n' +
+                'IMPORTANT:  The release command will trigger the creation of a new release ' +
+                'in Github, the uploading of binaries to github, and the publishing of our plugin' +
+                'to the IntelliJ plugin repository.\n' +
+                'Hit CTRL+C to cancel.\n'
+    }
 }

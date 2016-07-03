@@ -1,0 +1,57 @@
+<idea-plugin version="2">
+    <id>org.mule.tooling.intellij.dataweave</id>
+    <name>Data Weave Intellij Plugin.</name>
+    <version>0.1</version>
+    <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
+    <description><![CDATA[
+     Data Weave Intellij Plugin. This plugin allows to edit, run debug data weave files.
+    ]]></description>
+
+    <idea-version since-build="145"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!--Data Weave-->
+
+        <configurationType implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationType"/>
+        <runConfigurationProducer implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationProducer"/>
+
+        <fileTypeFactory implementation="org.mule.tooling.lang.dw.WeaveFileTypeFactory"/>
+        <lang.parserDefinition language="Weave" implementationClass="org.mule.tooling.lang.dw.parser.WeaveParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Weave"
+                                       implementationClass="org.mule.tooling.lang.dw.highlighter.WeaveSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="org.mule.tooling.lang.dw.highlighter.WeaveColorSettingsPage"/>
+        <lang.commenter language="Weave" implementationClass="org.mule.tooling.lang.dw.WeaveCommenter"/>
+        <lang.braceMatcher language="Weave" implementationClass="org.mule.tooling.lang.dw.WeavePairedBraceMatcher"/>
+        <quoteHandler fileType="Weave" className="org.mule.tooling.lang.dw.WeaveQuoteHandler"/>
+
+        <lang.refactoringSupport language="Weave"
+                                 implementationClass="org.mule.tooling.lang.dw.refactor.WeaveRefactoringSupportProvider"/>
+        <lang.elementManipulator forClass="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+                                 implementationClass="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementManipulator"/>
+        <lang.findUsagesProvider language="Weave"
+                                 implementationClass="org.mule.tooling.lang.dw.parser.psi.WeaveFindUsagesProvider"/>
+        <lang.foldingBuilder language="Weave" implementationClass="org.mule.tooling.lang.dw.folding.WeaveFolding"/>
+        <annotator language="Weave" implementationClass="org.mule.tooling.lang.dw.annotator.WeaveAnnotator"/>
+        <lang.psiStructureViewFactory language="Weave"
+                                      implementationClass="org.mule.tooling.lang.dw.structure.WeaveStructureViewBuilderFactory"/>
+        <completion.contributor language="Weave"
+                                implementationClass="org.mule.tooling.lang.dw.completion.WeaveCompletionContributor"/>
+
+        <xdebugger.breakpointType implementation="org.mule.tooling.lang.dw.debug.breakpoint.WeaveBreakpointType"/>
+
+        <programRunner id="WeaveDebug" implementation="org.mule.tooling.lang.dw.debug.WeaveDebuggerRunner" order="last"/>
+
+
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+
+    <actions>
+
+    </actions>
+
+</idea-plugin>
