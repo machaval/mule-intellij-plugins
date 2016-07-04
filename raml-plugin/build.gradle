@@ -39,6 +39,6 @@ intellij {
 	plugins = ["yaml"]
 	pluginName = 'raml-plugin'  
 	publish {
-		pluginId '8212'
+		pluginId '8459'
 	}
 }

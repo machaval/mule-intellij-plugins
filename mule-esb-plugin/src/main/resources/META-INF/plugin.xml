@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>org.mule.tooling.intellij.esb</id>
+    <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For Intellij</name>
     <version>0.3</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>

@@ -13,63 +13,12 @@ configurations {
 dependencies {
     compile files('lib/weave/core_2.11-1.1.0.jar')
     compile files('lib/weave/scala-library-2.11.7.jar')
-//    gen files('../lib/jflex-1.7.0-SNAPSHOT.jar')
 }
-
-
-//def jflexArgs(srcFlex, targetDir) {
-//    return ["--skel", "../idea-flex.skeleton",
-//            "-d", targetDir,
-//            srcFlex
-//    ]
-//}
-
-//task generateWeaveLexer(type: JavaExec) {
-//
-//    ext.src = "src/main/java/org/mule/tooling/lang/dw/lexer/_WeaveLexer.flex"
-//    ext.dst = "src/main/gen/org/mule/tooling/lang/dw/lexer/"
-//
-//    main = "jflex.Main"
-//
-//    args = jflexArgs(src, dst)
-//
-//    inputs.file file(src)
-//    outputs.dir file(dst + "_WeaveLexer.java")
-//
-//    classpath configurations.gen
-//}
-//
-//task generateWeavePsiAndParser(type: JavaExec) {
-//    doFirst {
-//        delete file("src/main/gen/org/mule/tooling/lang/dw/parser/psi/")
-//    }
-//    ext.src = "src/main/java/org/mule/tooling/lang/dw/parser/Weave.bnf"
-//    ext.dstRoot = "src/main/gen"
-//
-//    main = "org.intellij.grammar.Main"
-//
-//    args = [dstRoot, file(src)]
-//
-//    inputs.file file(src)
-//    outputs.dir fileTree(dir: dstRoot + '/org/mule/tooling/lang/dw/', include: '**/*.java')
-//
-//    classpath(configurations.compile + files('../lib/grammar-kit.jar') +  files("build/classes/main/"))
-//}
-//
-//task generate {
-//    dependsOn generateWeaveLexer, generateWeavePsiAndParser
-//}
-//
-//
-//compileJava.dependsOn generate
-//compileTestJava.dependsOn generate
-
-//Data Weave Plugin Configuration
 
 intellij {
     pluginName = 'data-weave-plugin'
     publish {
-        pluginId '8212'
+        pluginId '8458'
     }
 }
 
