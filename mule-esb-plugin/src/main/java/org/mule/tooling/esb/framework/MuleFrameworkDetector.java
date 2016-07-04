@@ -128,10 +128,10 @@ public class MuleFrameworkDetector extends FrameworkDetector
         {
             if (this == o)
                 return true;
+            MuleFrameworkDetected that = (MuleFrameworkDetected) o;
+
             if (o == null || getClass() != o.getClass())
                 return false;
-
-            MuleFrameworkDetected that = (MuleFrameworkDetected) o;
 
             if (detector != null ? !detector.equals(that.detector) : that.detector != null)
                 return false;

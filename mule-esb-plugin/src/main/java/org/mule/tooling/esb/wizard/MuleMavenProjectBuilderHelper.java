@@ -1,4 +1,4 @@
-package org.mule.tooling.esb.wizzard;
+package org.mule.tooling.esb.wizard;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;

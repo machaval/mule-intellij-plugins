@@ -5,6 +5,7 @@ configurations {
 dependencies {
     compile files('lib/mule-plugin-debugger-3.8.0.jar')
     compile project(':data-weave-plugin')
+    compile project(':raml-plugin')
 //    gen files('../lib/jflex-1.7.0-SNAPSHOT.jar')
 }
 

@@ -1,4 +1,4 @@
-package org.mule.tooling.esb.wizzard;
+package org.mule.tooling.esb.wizard;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SourcePathsBuilder;

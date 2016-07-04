@@ -74,7 +74,7 @@
             </constraints>
             <properties/>
           </component>
-          <nested-form id="1276d" form-file="org/mule/tooling/esb/sdk/ui/MuleSdkComboSelection.form">
+          <nested-form id="1276d" form-file="org/mule/tooling/esb/sdk/ui/MuleSdkComboSelection.form" binding="muleSdkSelector">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>

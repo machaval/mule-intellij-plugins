@@ -27,11 +27,6 @@
         <editor.backspaceModeOverride language="RAML" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
         <lang.psiStructureViewFactory language="RAML" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
 
-        <!-- MUnit -->
-
-
-        <!--Templates-->
-
         <internalFileTemplate name="RAML File"/>
 
     </extensions>

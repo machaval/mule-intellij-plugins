@@ -11,7 +11,7 @@ public class MuleRunnerConfPanel
     private JPanel mainPanel;
     private ModulesComboBox moduleCombo;
     private MuleSdkComboSelection muleSdkSelector;
-    private JPanel panel1;
+
 
 
     public MuleRunnerConfPanel()
