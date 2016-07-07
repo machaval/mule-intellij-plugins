@@ -112,7 +112,9 @@ public class MuleLanguageInjector implements LanguageInjector {
                                 @NotNull InjectedLanguagePlaces injectedLanguagePlaces) {
         // Find the required Language
         final Language requiredLanguage = Language.findLanguageByID(languageId);
-        if (requiredLanguage == null) return;
+        if (requiredLanguage == null) {
+            return;
+        }
         final TextRange textRange = ((XmlAttributeValue) host).getValueTextRange();
         final int length = getLanguagePrefix(langPrefix).length() + 1;
         final TextRange expressionTextRange = TextRange.from(length, textRange.getLength() - length);

@@ -26,7 +26,9 @@
         <lang.foldingBuilder language="RAML" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
         <editor.backspaceModeOverride language="RAML" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
         <lang.psiStructureViewFactory language="RAML" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
-
+        <completion.contributor language="yaml"
+                                implementationClass="org.mule.tooling.lang.raml.completion.RamlCompletionContributor"
+                                order="first"/>
         <internalFileTemplate name="RAML File"/>
 
     </extensions>

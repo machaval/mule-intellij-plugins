@@ -16,32 +16,42 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class APIKitScaffoldingAction extends AnAction {
+public class APIKitScaffoldingAction extends AnAction
+{
 
     final static Logger logger = Logger.getInstance(APIKitScaffoldingAction.class);
 
-    public APIKitScaffoldingAction() {
+    public APIKitScaffoldingAction()
+    {
         super("Generate Flows", "Generate APIKit scaffolding from the RAML definition", RamlIcons.RamlFileType);
     }
 
     @Override
-    public void actionPerformed(AnActionEvent anActionEvent) {
+    public void actionPerformed(AnActionEvent anActionEvent)
+    {
+        System.out.println("APIKitScaffoldingAction.actionPerformed");
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
-        Project project = anActionEvent.getProject();
-        VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
+        final Project project = anActionEvent.getProject();
+        final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
         String appPath = moduleContentRoot.getPath() + "/src/main/app";
         //logger.warn("*** APP PATH IS " + appPath);
-        File appDir = new File(appPath);
-        List<File> ramlFiles = new ArrayList<File>();
-        ramlFiles.add(new File(file.getPath()));
-        //new ScaffolderAPI().run(ramlFiles, appDir);
-        new ScaffolderAPI().execute(ramlFiles, appDir, null, null);
-        //logger.warn("*** ScaffolderAPI ran successfully");
+        final File appDir = new File(appPath);
+        final List<File> ramlFiles = new ArrayList<File>();
+        final File ramlFile = new File(file.getPath());
+        ramlFiles.add(ramlFile);
+        try
+        {
+            new ScaffolderAPI().execute(ramlFiles, appDir, null, "3.8");
+        }
+        finally
+        {
+            file.getParent().getParent().refresh(false, true);
+        }
     }
 
     @Override
-    public void update(AnActionEvent anActionEvent) {
+    public void update(AnActionEvent anActionEvent)
+    {
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
         final boolean isRAML;
         if (file != null)

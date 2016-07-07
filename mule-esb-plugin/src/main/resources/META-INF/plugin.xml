@@ -116,7 +116,14 @@
         <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplateContextType"/>
         <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
 
-
+        <!--MEL Support-->
+        <fileTypeFactory implementation="org.mule.tooling.esb.lang.mel.MelFileTypeFactory"/>
+        <lang.parserDefinition language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.parser.MelParserDefinition"/>
+        <colorSettingsPage implementation="org.mule.tooling.esb.lang.mel.highlighter.MelColorSettingsPage"/>
+        <lang.syntaxHighlighterFactory language="Mel"
+                                       implementationClass="org.mule.tooling.esb.lang.mel.highlighter.MelSyntaxHighlighterFactory"/>
+        <lang.commenter language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.MelCommenter"/>
+        <lang.braceMatcher language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.MelPairedBraceMatcher"/>
 
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>

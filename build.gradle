@@ -25,6 +25,9 @@ subprojects {
 	    maven {
 		    url "https://repository.mulesoft.org/releases/"
 	    }
+        maven {
+		    url "http://repository.mulesoft.org/snapshots/"
+	    }
 	    maven {
 		    url "https://repository.mulesoft.org/nexus/content/repositories/releases"
 	    }
