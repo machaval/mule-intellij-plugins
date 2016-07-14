@@ -2,24 +2,9 @@
 ModuleRootManager.getInstance(module).getCompilerOutputPath();
 //How to extend the debugger
 
-https://devnet.jetbrains.com/message/5507158#5507158
-
-
-XsltBreakpointType
-
-    @Nullable
-    private PsiElement getElementAtLine(PsiFile file, int line) {
-        Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
-        int offset = document.getLineStartOffset(line);
-        PsiElement element = file.getViewProvider().findElementAt(offset);
-        if (document.getLineNumber(element.getTextOffset()) != line) {
-            element = element.getNextSibling();
-        }
-        return element;
-    }
-
-
-    LanguageInjector
-
     //To scan
     com.intellij.xml.util.XmlReferenceContributor
+    
+    
+    //External Annotator!!!! para raml
+    https://github.com/JetBrains/intellij-community/blob/master/platform/analysis-api/src/com/intellij/lang/annotation/ExternalAnnotator.java

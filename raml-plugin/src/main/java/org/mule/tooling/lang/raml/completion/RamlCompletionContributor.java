@@ -6,8 +6,10 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import org.mule.tooling.lang.raml.util.RamlUtils;
 import org.raml.v2.internal.framework.suggester.Suggestion;
 import org.raml.v2.internal.framework.suggester.Suggestions;
 import org.raml.v2.internal.impl.RamlSuggester;
@@ -33,18 +35,22 @@ public class RamlCompletionContributor extends CompletionContributor
         protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet)
         {
             final int offset = completionParameters.getOffset() - 1;
-            final String text = completionParameters.getOriginalFile().getText();
-            System.out.println("text = " + text);
-            System.out.println("offset = " + offset);
-            final Suggestions suggestions = new RamlSuggester().suggestions(text, offset);
-            final List<Suggestion> suggestionList = suggestions.getSuggestions();
-            for (Suggestion suggestion : suggestionList)
+            final PsiFile originalFile = completionParameters.getOriginalFile();
+            if (RamlUtils.isRamlFile(originalFile))
             {
-                final LookupElementBuilder map = LookupElementBuilder.create(suggestion.getValue())
-                                                                     .withPresentableText(suggestion.getLabel())
-                                                                     .withLookupString(suggestion.getLabel())
-                                                                     .withLookupString(suggestion.getValue());
-                completionResultSet.addElement(map);
+                final String text = originalFile.getText();
+                System.out.println("text = " + text);
+                System.out.println("offset = " + offset);
+                final Suggestions suggestions = new RamlSuggester().suggestions(text, offset);
+                final List<Suggestion> suggestionList = suggestions.getSuggestions();
+                for (Suggestion suggestion : suggestionList)
+                {
+                    final LookupElementBuilder map = LookupElementBuilder.create(suggestion.getValue())
+                                                                         .withPresentableText(suggestion.getLabel())
+                                                                         .withLookupString(suggestion.getLabel())
+                                                                         .withLookupString(suggestion.getValue());
+                    completionResultSet.addElement(map);
+                }
             }
         }
     }

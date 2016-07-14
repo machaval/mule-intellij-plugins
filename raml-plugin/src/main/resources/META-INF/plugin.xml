@@ -31,6 +31,7 @@
                                 order="first"/>
         <internalFileTemplate name="RAML File"/>
 
+        <externalAnnotator language="RAML" implementationClass="org.mule.tooling.lang.raml.annotator.RamlAnnotator"/>
     </extensions>
 
     <application-components>
