@@ -12,7 +12,6 @@ import org.raml.v2.internal.framework.nodes.ErrorNode;
 import org.raml.v2.internal.framework.nodes.Node;
 import org.raml.v2.internal.impl.RamlBuilder;
 
-import java.io.File;
 import java.util.List;
 
 public class RamlAnnotator extends ExternalAnnotator<PsiFile, RamlAnnotator.RamlValidationResult>
