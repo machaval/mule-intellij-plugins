@@ -64,6 +64,7 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
         //Add default vm parameters
         javaParams.getVMParametersList().add("-Dmule.home=" + muleHome);
         javaParams.getVMParametersList().add("-Dmule.base=" + muleHome);
+        javaParams.getVMParametersList().add("-Dmule.testingMode=true");
         javaParams.getVMParametersList().add("-Djava.net.preferIPv4Stack=TRUE ");
         javaParams.getVMParametersList().add("-Dmvel2.disable.jit=TRUE");
         javaParams.getVMParametersList().add("-Dorg.glassfish.grizzly.nio.transport.TCPNIOTransport.max-receive-buffer-size=1048576");

@@ -53,19 +53,13 @@ public class WeavePsiUtils
     public static PsiElement getFirstWeaveElement(Project project, Document document, int line)
     {
         final Ref<PsiElement> result = Ref.create();
-        XDebuggerUtil.getInstance().iterateLine(project, document, line, new Processor<PsiElement>()
-        {
-
-            @Override
-            public boolean process(PsiElement element)
+        XDebuggerUtil.getInstance().iterateLine(project, document, line, element -> {
+            if (!(element instanceof PsiWhiteSpace))
             {
-                if (!(element instanceof PsiWhiteSpace))
-                {
-                    result.set(element);
-                    return false;
-                }
-                return true;
+                result.set(element);
+                return false;
             }
+            return true;
         });
         return result.get();
     }

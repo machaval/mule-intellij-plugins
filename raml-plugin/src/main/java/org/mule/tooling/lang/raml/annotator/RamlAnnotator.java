@@ -8,9 +8,10 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.raml.util.RamlUtils;
-import org.raml.v2.internal.framework.nodes.ErrorNode;
-import org.raml.v2.internal.framework.nodes.Node;
+
 import org.raml.v2.internal.impl.RamlBuilder;
+import org.raml.yagi.framework.nodes.ErrorNode;
+import org.raml.yagi.framework.nodes.Node;
 
 import java.util.List;
 

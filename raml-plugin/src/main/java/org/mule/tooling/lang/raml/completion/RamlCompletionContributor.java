@@ -10,9 +10,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.lang.raml.util.RamlUtils;
-import org.raml.v2.internal.framework.suggester.Suggestion;
-import org.raml.v2.internal.framework.suggester.Suggestions;
+
 import org.raml.v2.internal.impl.RamlSuggester;
+import org.raml.yagi.framework.suggester.Suggestion;
+import org.raml.yagi.framework.suggester.Suggestions;
 
 import java.util.List;
 

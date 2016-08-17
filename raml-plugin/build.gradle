@@ -6,7 +6,7 @@ configurations {
 }
 
 dependencies {
-	compile ('org.mule.tools:apikit-scaffolder:3.8.1-SNAPSHOT') {
+	compile ('org.mule.tools:apikit-scaffolder:3.8.1') {
 		exclude module: 'xml-apis'
 		exclude module: 'commons-logging'
 	}
