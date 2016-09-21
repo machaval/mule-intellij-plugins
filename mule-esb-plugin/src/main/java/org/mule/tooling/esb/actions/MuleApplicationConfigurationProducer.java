@@ -25,10 +25,11 @@ public class MuleApplicationConfigurationProducer extends JavaRunConfigurationPr
         if (location != null)
         {
             final boolean muleFile = MuleConfigUtils.isMuleFile(location.getPsiElement().getContainingFile());
-            if (muleFile)
+            final Module module = configurationContext.getModule();
+            if (muleFile && module != null)
             {
-                muleConfiguration.setModule(configurationContext.getModule());
-                muleConfiguration.setName(StringUtils.capitalize(configurationContext.getModule().getName()));
+                muleConfiguration.setModule(module);
+                muleConfiguration.setName(StringUtils.capitalize(module.getName()));
                 return true;
             }
         }

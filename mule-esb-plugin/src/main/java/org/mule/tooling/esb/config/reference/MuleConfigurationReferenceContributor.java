@@ -26,11 +26,16 @@ public class MuleConfigurationReferenceContributor extends PsiReferenceContribut
         @NotNull
         @Override
         public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull final ProcessingContext context) {
-            if (element instanceof XmlAttributeValue) {
+            if (element instanceof XmlAttributeValue && !isMelExpression((XmlAttributeValue) element)) {
                 final XmlAttributeValue attribute = (XmlAttributeValue) element;
                 return new PsiReference[]{new FlowRefPsiReference(attribute)};
             }
             return PsiReference.EMPTY_ARRAY;
+        }
+
+        private boolean isMelExpression(@NotNull XmlAttributeValue element) {
+            String value = element.getValue().trim();
+            return value.startsWith("#[") && value.endsWith("]");
         }
     }
 

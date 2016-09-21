@@ -6,10 +6,11 @@ configurations {
 }
 
 dependencies {
-	compile ('org.mule.tools:apikit-scaffolder:3.8.1') {
+	compile ('org.mule.tools:apikit-scaffolder:3.8.2-SNAPSHOT') {
 		exclude module: 'xml-apis'
 		exclude module: 'commons-logging'
 	}
+	compile ('org.raml:raml-parser-2:1.0.1-SNAPSHOT')
 }
 
 intellij {

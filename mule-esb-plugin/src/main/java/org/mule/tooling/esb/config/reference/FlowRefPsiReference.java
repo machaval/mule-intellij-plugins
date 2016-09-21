@@ -41,11 +41,6 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
     @Override
     public Object[] getVariants() {
         final List<DomElement> flow = MuleConfigUtils.getFlows(getElement().getProject());
-        return mapNotNull(flow, new Function<DomElement, Object>() {
-            @Override
-            public String fun(DomElement domElement) {
-                return domElement.getXmlTag().getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
-            }
-        }).toArray();
+        return mapNotNull(flow, (Function<DomElement, Object>) domElement -> domElement.getXmlTag().getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE)).toArray();
     }
 }
