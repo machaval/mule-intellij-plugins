@@ -76,8 +76,8 @@ ESCAPE_SEQUENCE=\\[^\r\n]
   ">="                     { return GREATER_EQUAL; }
   "&&"                     { return AND_AND; }
   "||"                     { return OR_OR; }
-  "and"                    { return AND_KEYWORD; }
-  "or"                     { return OR_KEYWORD; }
+  "and" | "AND"            { return AND_KEYWORD; }
+  "or" | "OR"              { return OR_KEYWORD; }
   "not"                    { return NOT_KEYWORD; }
   "|"                      { return OR; }
   "^"                      { return XOR; }

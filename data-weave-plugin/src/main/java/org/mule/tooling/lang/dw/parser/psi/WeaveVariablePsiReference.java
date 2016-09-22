@@ -1,6 +1,7 @@
 package org.mule.tooling.lang.dw.parser.psi;
 
 
+import com.google.common.base.Optional;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
@@ -27,7 +28,13 @@ public class WeaveVariablePsiReference extends PsiReferenceBase<PsiElement> {
         if (variableName.equals("$") || variableName.equals("$$")) {
             return WeavePsiUtils.findImplicitVariable(myElement);
         } else {
-            return WeavePsiUtils.findVariables(myElement, variableName).orNull();
+            Optional<? extends PsiElement> variables = WeavePsiUtils.findVariables(myElement, variableName);
+            if (variables.isPresent()) {
+                return variables.get();
+            } else {
+                return WeavePsiUtils.findFunction(myElement, variableName).orNull();
+            }
+
         }
     }
 

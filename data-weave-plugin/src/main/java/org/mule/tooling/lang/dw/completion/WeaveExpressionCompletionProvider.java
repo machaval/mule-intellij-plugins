@@ -15,8 +15,8 @@ import org.mule.tooling.lang.dw.parser.psi.WeaveTypes;
 public class WeaveExpressionCompletionProvider extends CompletionProvider<CompletionParameters> {
 
 
-    public static String[] UNARY_OPERATORS = {"not", "sizeOf", "flatten", "valuesOf", "keysOf", "trim", "sum", "avg", "upper", "lower", "capitalize", "camelize", "dasherize", "ordinalize", "pluralize", "singularize", "underscore", "typeOf", "max", "min", "unzip"};
-    public static String[] BINARY_OPERATORS = {"mapObject", "map", "pluck", "filter", "reduce", "groupBy", "orderBy", "find", "scan", "match", "distinctBy", "startsWith", "endsWith", "matches", "contains", "splitBy", "joinBy", "zip", "++", "--"};
+    public static String[] UNARY_OPERATORS = {"not", "floor", "ceil", "round", "abs" , "sizeOf", "flatten", "valuesOf", "keysOf", "trim", "sum", "avg", "upper", "lower", "capitalize", "camelize", "dasherize", "ordinalize", "pluralize", "singularize", "underscore", "typeOf", "max", "min", "unzip"};
+    public static String[] BINARY_OPERATORS = {"mapObject", "map", "pluck", "filter", "mod", "reduce", "groupBy", "orderBy", "find", "scan", "match", "distinctBy", "startsWith", "endsWith", "matches", "contains", "splitBy", "joinBy", "zip", "++", "--"};
 
     @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {

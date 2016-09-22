@@ -11,7 +11,11 @@ import org.mule.tooling.lang.dw.parser.psi.WeaveTypes;
 public class WeavePairedBraceMatcher implements PairedBraceMatcher {
     @Override
     public BracePair[] getPairs() {
-        return new BracePair[]{new BracePair(WeaveTypes.L_BRACKET, WeaveTypes.R_BRACKET, true), new BracePair(WeaveTypes.L_CURLY, WeaveTypes.R_CURLY, true)};
+        return new BracePair[]{
+                new BracePair(WeaveTypes.L_BRACKET, WeaveTypes.R_BRACKET, true),
+                new BracePair(WeaveTypes.L_PARREN, WeaveTypes.R_PARREN, true),
+                new BracePair(WeaveTypes.L_CURLY, WeaveTypes.R_CURLY, true)
+        };
     }
 
     @Override

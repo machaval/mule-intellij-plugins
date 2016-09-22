@@ -10,17 +10,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebuggerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.WeaveFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-public class WeavePsiUtils
-{
+public class WeavePsiUtils {
 
     public static List<IElementType> OperatorsToken = Arrays.asList(WeaveTypes.RULE_UNARY_OPERATOS, WeaveTypes.RULE_BINARY_CLOJURE_OPERATORS, WeaveTypes.RULE_BINARY_OPERATORS,
             WeaveTypes.WHEN, WeaveTypes.IS, WeaveTypes.AS, WeaveTypes.UNLESS, WeaveTypes.OTHERWISE, WeaveTypes.USING, WeaveTypes.DEFAULT, WeaveTypes.RULE_MATCH_LITERAL);
@@ -30,16 +29,12 @@ public class WeavePsiUtils
                     , WeaveTypes.VAR_DIRECTIVE_KEYWORD, WeaveTypes.VERSION_DIRECTIVE_KEYWORD, WeaveTypes.FUNCTION_DIRECTIVE_KEYWORD);
 
     @NotNull
-    public static String stripQuotes(@NotNull String text)
-    {
-        if (text.length() > 0)
-        {
+    public static String stripQuotes(@NotNull String text) {
+        if (text.length() > 0) {
             final char firstChar = text.charAt(0);
             final char lastChar = text.charAt(text.length() - 1);
-            if (firstChar == '\'' || firstChar == '"')
-            {
-                if (text.length() > 1 && firstChar == lastChar && !isEscapedChar(text, text.length() - 1))
-                {
+            if (firstChar == '\'' || firstChar == '"') {
+                if (text.length() > 1 && firstChar == lastChar && !isEscapedChar(text, text.length() - 1)) {
                     return text.substring(1, text.length() - 1);
                 }
                 return text.substring(1);
@@ -50,12 +45,10 @@ public class WeavePsiUtils
 
 
     @Nullable
-    public static PsiElement getFirstWeaveElement(Project project, Document document, int line)
-    {
+    public static PsiElement getFirstWeaveElement(Project project, Document document, int line) {
         final Ref<PsiElement> result = Ref.create();
         XDebuggerUtil.getInstance().iterateLine(project, document, line, element -> {
-            if (!(element instanceof PsiWhiteSpace))
-            {
+            if (!(element instanceof PsiWhiteSpace)) {
                 result.set(element);
                 return false;
             }
@@ -64,72 +57,52 @@ public class WeavePsiUtils
         return result.get();
     }
 
-    public static boolean isEscapedChar(@NotNull String text, int position)
-    {
+    public static boolean isEscapedChar(@NotNull String text, int position) {
         int count = 0;
-        for (int i = position - 1; i >= 0 && text.charAt(i) == '\\'; i--)
-        {
+        for (int i = position - 1; i >= 0 && text.charAt(i) == '\\'; i--) {
             count++;
         }
         return count % 2 != 0;
     }
 
     @Nullable
-    public static WeaveDocument getDocument(@NotNull PsiElement element)
-    {
+    public static WeaveDocument getDocument(@NotNull PsiElement element) {
         PsiElement result = element;
-        while (!(result instanceof WeaveDocument) && result != null)
-        {
+        while (!(result instanceof WeaveDocument) && result != null) {
             result = result.getParent();
         }
         return (WeaveDocument) result;
     }
 
 
-    public static Optional<WeaveVariable> findVariables(@NotNull PsiElement element, @NotNull final String name)
-    {
+    public static Optional<WeaveVariable> findVariables(@NotNull PsiElement element, @NotNull final String name) {
         final List<WeaveVariable> variables = findVariables(element);
-        final Optional<WeaveVariable> matching = Iterables.tryFind(variables, new Predicate<WeaveVariable>()
-        {
-            @Override
-            public boolean apply(WeaveVariable weaveVariableDefinition)
-            {
-                return name.equals(weaveVariableDefinition.getVariableName());
-            }
-        });
+        final Optional<WeaveVariable> matching = Iterables.tryFind(variables, weaveVariableDefinition -> name.equals(weaveVariableDefinition.getVariableName()));
         return matching;
     }
 
-    public static List<WeaveVariable> findVariables(@NotNull PsiElement element)
-    {
+    public static List<WeaveVariable> findVariables(@NotNull PsiElement element) {
         final List<WeaveVariable> result = new ArrayList<>();
         PsiElement parent = element.getParent();
-        while (isNotWeaveFile(parent))
-        {
-            if (parent instanceof WeaveUsingExpression)
-            {
+        while (isNotWeaveFile(parent)) {
+            if (parent instanceof WeaveUsingExpression) {
                 final List<WeaveVariableDefinition> vars = ((WeaveUsingExpression) parent).getVariableDefinitionList();
                 result.addAll(vars);
             }
-            if (parent instanceof WeaveDocument)
-            {
+            if (parent instanceof WeaveDocument) {
                 final Collection<WeaveVariableDefinition> vars = PsiTreeUtil.findChildrenOfType(((WeaveDocument) parent).getHeader(), WeaveVariableDefinition.class);
                 result.addAll(vars);
             }
-            if (parent instanceof WeaveClojureLiteralExpression)
-            {
+            if (parent instanceof WeaveClojureLiteralExpression) {
                 result.addAll(((WeaveClojureLiteralExpression) parent).getFunctionParameterList());
             }
-            if (parent instanceof WeaveClojureWithOneParametersExpression)
-            {
+            if (parent instanceof WeaveClojureWithOneParametersExpression) {
                 result.add(((WeaveClojureWithOneParametersExpression) parent).getFunctionParameter());
             }
-            if (parent instanceof WeaveLambdaLiteral)
-            {
+            if (parent instanceof WeaveLambdaLiteral) {
                 result.addAll(((WeaveLambdaLiteral) parent).getFunctionParameterList());
             }
-            if (parent instanceof WeaveFunctionDefinition)
-            {
+            if (parent instanceof WeaveFunctionDefinition) {
                 result.addAll(((WeaveFunctionDefinition) parent).getFunctionParameterList());
             }
             parent = parent.getParent();
@@ -138,24 +111,15 @@ public class WeavePsiUtils
         return result;
     }
 
-    public static List<WeaveNamedElement> findFunctions(@NotNull PsiElement element)
-    {
+    public static List<WeaveNamedElement> findFunctions(@NotNull PsiElement element) {
         final List<WeaveNamedElement> result = new ArrayList<>();
         PsiElement parent = element.getParent();
-        while (isNotWeaveFile(parent))
-        {
-            if (parent instanceof WeaveDocument)
-            {
+        while (isNotWeaveFile(parent)) {
+            if (parent instanceof WeaveDocument) {
                 final Collection<WeaveVariableDefinition> vars = PsiTreeUtil.findChildrenOfType(((WeaveDocument) parent).getHeader(), WeaveVariableDefinition.class);
                 final Collection<WeaveFunctionDefinition> functionDirectives = PsiTreeUtil.findChildrenOfType(((WeaveDocument) parent).getHeader(), WeaveFunctionDefinition.class);
                 result.addAll(functionDirectives);
-                for (WeaveVariableDefinition var : vars)
-                {
-                    if (var.getExpression() instanceof WeaveLambdaLiteral)
-                    {
-                        result.add(var);
-                    }
-                }
+                result.addAll(vars.stream().filter(var -> var.getExpression() instanceof WeaveLambdaLiteral).collect(Collectors.toList()));
                 break;
             }
             parent = parent.getParent();
@@ -164,7 +128,7 @@ public class WeavePsiUtils
     }
 
     @Nullable
-    public static WeaveNamedElement findFunction(PsiElement element, final String functionName)
+    public static Optional<? extends PsiElement> findFunction(PsiElement element, final String functionName)
     {
         final List<WeaveNamedElement> variables = findFunctions(element);
         final Optional<WeaveNamedElement> matching = Iterables.tryFind(variables, new Predicate<WeaveNamedElement>()
@@ -175,23 +139,18 @@ public class WeavePsiUtils
                 return functionName.equals(weaveVariableDefinition.getName());
             }
         });
-        return matching.orNull();
+        return matching;
     }
 
     @Nullable
-    public static PsiElement findImplicitVariable(PsiElement myElement)
-    {
+    public static PsiElement findImplicitVariable(PsiElement myElement) {
         PsiElement parent = myElement.getParent();
-        while (isNotWeaveFile(parent))
-        {
-            if (parent instanceof WeaveBinaryClojureExpression)
-            {
+        while (isNotWeaveFile(parent)) {
+            if (parent instanceof WeaveBinaryClojureExpression) {
                 final List<WeaveExpression> expressionList = ((WeaveBinaryClojureExpression) parent).getExpressionList();
-                if (expressionList.size() == 2)
-                {
+                if (expressionList.size() == 2) {
                     final WeaveExpression weaveExpression = expressionList.get(1);
-                    if (!(weaveExpression instanceof WeaveClojureWithOneParametersExpression) && !(weaveExpression instanceof WeaveClojureWithoutParametersExpression))
-                    {
+                    if (!(weaveExpression instanceof WeaveClojureWithOneParametersExpression) && !(weaveExpression instanceof WeaveClojureWithoutParametersExpression)) {
                         return weaveExpression;
                     }
                 }
@@ -201,8 +160,7 @@ public class WeavePsiUtils
         return null;
     }
 
-    private static boolean isNotWeaveFile(PsiElement parent)
-    {
+    private static boolean isNotWeaveFile(PsiElement parent) {
         return parent != null && !(parent instanceof WeaveFile);
     }
 }

@@ -53,9 +53,9 @@ EXPONENT_PART=[Ee]["+""-"]?({DIGIT})*
 
 RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
 
-RULE_BINARY_CLOJURE_OPERATORS="mapObject" | "map" | "pluck" | "filter" | "reduce" | "groupBy" | "orderBy" | "find" | "scan" | "distinctBy"
+RULE_BINARY_CLOJURE_OPERATORS="mapObject" | "map" | "pluck" | "filter" | "reduce" | "groupBy" | "orderBy" | "pow" | "find" | "scan" | "distinctBy" | "mod"
 RULE_BINARY_OPERATORS="startsWith"| "to" | "endsWith" | "matches" | "contains"| "splitBy"|"joinBy" | "zip" | "++" | "--"
-RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" | "upper" | "lower" | "capitalize" | "camelize" | "dasherize" | "ordinalize" | "pluralize" | "singularize" | "underscore" | "typeOf" | "max" | "min" | "unzip"
+RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" | "upper" | "lower" | "capitalize" | "sqrt" | "abs" | "round" | "ceil" | "floor" | "camelize" | "dasherize" | "ordinalize" | "pluralize" | "singularize" | "underscore" | "typeOf" | "max" | "min" | "unzip"
 
 %%
 <YYINITIAL> {
