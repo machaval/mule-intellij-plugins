@@ -10,7 +10,6 @@
     <idea-version since-build="145"/>
 
     <depends>org.jetbrains.idea.maven</depends>
-    <depends>org.intellij.groovy</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -29,6 +28,7 @@
         <completion.contributor language="yaml"
                                 implementationClass="org.mule.tooling.lang.raml.completion.RamlCompletionContributor"
                                 order="first"/>
+        <psi.referenceContributor language="yaml" implementation="org.mule.tooling.lang.raml.reference.IncludeReferenceContributor"/>
         <internalFileTemplate name="RAML File"/>
 
         <externalAnnotator language="RAML" implementationClass="org.mule.tooling.lang.raml.annotator.RamlAnnotator"/>

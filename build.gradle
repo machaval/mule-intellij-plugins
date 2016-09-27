@@ -47,7 +47,7 @@ subprojects {
 
     apply plugin: 'org.jetbrains.intellij'
     intellij {
-      //  version = ideaVersion
+        version = ideaVersion
         updateSinceUntilBuild = false
         downloadSources = true
         sandboxDirectory = "${rootProject.buildDir}/idea-sandbox"
