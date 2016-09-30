@@ -2,6 +2,7 @@ package org.mule.tooling.esb.sdk.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
@@ -9,6 +10,7 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.esb.sdk.MuleSdk;
@@ -24,20 +26,22 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.ZipFile;
 
 import static java.lang.String.format;
 
-public class MuleSdkSelectionDialog extends JDialog
-{
+public class MuleSdkSelectionDialog extends JDialog {
+    //
+    private static final int BUFFER_SIZE = 1024 * 5;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -47,8 +51,7 @@ public class MuleSdkSelectionDialog extends JDialog
     private final ListTableModel<MuleSdk> myTableModel = getSdkTableModel();
     private MuleSdk mySelectedSdk;
 
-    public MuleSdkSelectionDialog(JComponent parent)
-    {
+    public MuleSdkSelectionDialog(JComponent parent) {
         super((Window) parent.getTopLevelAncestor());
         setTitle(format("Select Folder for the new %s SDK", getLanguageName()));
         myParent = parent;
@@ -64,17 +67,17 @@ public class MuleSdkSelectionDialog extends JDialog
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        AnActionButton downloadVersionActions = new AnActionButton("Download a version", AllIcons.ToolbarDecorator.Import) {
+            @Override
+            public void actionPerformed(AnActionEvent anActionEvent) {
+                onDownload();
+            }
+        };
+        downloadVersionActions.setEnabled(true);
         listPanel.add(ToolbarDecorator.createDecorator(myInputsTable)
-                                      .setAddAction(anActionButton -> onBrowse())
-                                      .setRemoveAction(anActionButton -> removeSelected())
-                                      .addExtraAction(new AnActionButton("Download a version", AllIcons.ToolbarDecorator.Import)
-                                      {
-                                          @Override
-                                          public void actionPerformed(AnActionEvent anActionEvent)
-                                          {
-                                              onDownload();
-                                          }
-                                      }).createPanel(), BorderLayout.CENTER);
+                .setAddAction(anActionButton -> onBrowse())
+                .setRemoveAction(anActionButton -> removeSelected())
+                .addExtraAction(downloadVersionActions).createPanel(), BorderLayout.CENTER);
 
         buttonOK.addActionListener(e -> onOK());
         buttonCancel.addActionListener(e -> onCancel());
@@ -82,10 +85,8 @@ public class MuleSdkSelectionDialog extends JDialog
         myInputsTable.getSelectionModel().addListSelectionListener(new SdkSelectionListener());
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter()
-        {
-            public void windowClosing(WindowEvent e)
-            {
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
                 onCancel();
             }
         });
@@ -95,98 +96,116 @@ public class MuleSdkSelectionDialog extends JDialog
         updateTable();
     }
 
-    protected ListTableModel<MuleSdk> getSdkTableModel()
-    {
+    protected ListTableModel<MuleSdk> getSdkTableModel() {
         return new SdkTableModel();
     }
 
-    private void removeSelected()
-    {
+    private void removeSelected() {
         final MuleSdk selectedObject = myInputsTable.getSelectedObject();
-        if (selectedObject != null)
-        {
+        if (selectedObject != null) {
             final int selectedRow = myInputsTable.getSelectedRow();
             myTableModel.removeRow(selectedRow);
             MuleSdkManager.getInstance().removeSdk(selectedObject);
         }
     }
 
-    private void updateTable()
-    {
+    private void updateTable() {
         final List<MuleSdk> sdks = new ArrayList<>(MuleSdkManager.getInstance().getSdks());
         myTableModel.setItems(sdks);
         myInputsTable.setModelAndUpdateColumns(myTableModel);
-        if (!sdks.isEmpty())
-        {
+        if (!sdks.isEmpty()) {
             myInputsTable.getSelectionModel().setSelectionInterval(0, 0);
         }
     }
 
-    protected String getLanguageName()
-    {
+    protected String getLanguageName() {
         return "Mule";
     }
 
-    private void onDownload()
-    {
+    private void onDownload() {
         String languageName = getLanguageName();
-        List<String> versions = MuleUrl.VERSIONS.stream().map(MuleUrl::getName).collect(Collectors.toList());
+        List<String> versions = MuleUrl.getVERSIONS().stream().map(MuleUrl::getName).collect(Collectors.toList());
         final SdkVersionSelectionDialog<String> dialog = new SdkVersionSelectionDialog<>(contentPane, "Download ", format("%s version:", languageName), versions);
-        if (dialog.showAndGet())
-        {
+        if (dialog.showAndGet()) {
             downloadVersionWithProgress(dialog.getSelectedValue());
         }
 
     }
 
-    private void downloadVersionWithProgress(String version)
-    {
+    private void downloadVersionWithProgress(String version) {
 
-        Messages.showInfoMessage(contentPane, "Mule Distribution download", "Download is going to take some time.");
-        final Optional<MuleUrl> first = MuleUrl.VERSIONS.stream().filter((url) -> url.getName().equals(version)).findFirst();
+        Messages.showInfoMessage(contentPane, "Download Is Going to Take Some Time. Good time for a coffee.", "Mule Distribution Download");
+        final Optional<MuleUrl> first = MuleUrl.getVERSIONS().stream().filter((url) -> url.getName().equals(version)).findFirst();
         final MuleUrl muleUrl = first.get();
-        try
-        {
+        try {
             final ProgressManager instance = ProgressManager.getInstance();
             final File distro = instance.runProcessWithProgressSynchronously(() -> {
-                URL website = new URL(muleUrl.getUrl());
-                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                final File sourceFile = FileUtil.createTempFile("mule" + version, ".targz");
-                FileOutputStream fos = new FileOutputStream(sourceFile);
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                final File destDir = new File(getUserHome(), "mule-distro");
-                destDir.mkdirs();
-                final ProcessBuilder processBuilder = new ProcessBuilder();
-                processBuilder.command("tar", "xvf", sourceFile.getAbsolutePath(), "-C", destDir.getAbsolutePath()).inheritIO().start().waitFor();
-                return new File(destDir, muleUrl.getFolderName());
-            }, "Downloading Mule Distribution " + muleUrl.getName(), false, null);
-            final MuleSdk muleSdk = new MuleSdk(distro.getAbsolutePath());
-            MuleSdkManagerImpl.getInstance().addSdk(muleSdk);
-            myTableModel.addRow(muleSdk);
-            final int rowIndex = myTableModel.getRowCount() - 1;
-            myInputsTable.getSelectionModel().setSelectionInterval(rowIndex, rowIndex);
-            onOK();
-        }
-        catch (Exception e)
-        {
+                final URL artifactUrl = new URL(muleUrl.getUrl());
+                final File sourceFile = FileUtil.createTempFile("mule" + version, ".zip");
+                if (download(instance.getProgressIndicator(), artifactUrl, sourceFile, version)) {
+                    final File destDir = new File(getUserHome(), "mule-distro");
+                    destDir.mkdirs();
+                    ZipUtil.extract(sourceFile, destDir, null);
+                    try (ZipFile zipFile = new ZipFile(sourceFile)) {
+                        String rootName = zipFile.entries().nextElement().getName();
+                        return new File(destDir, rootName);
+                    }
+                } else {
+                    return null;
+                }
+            }, "Downloading Mule Distribution " + muleUrl.getName(), true, null);
+            if (distro != null) {
+                final MuleSdk muleSdk = new MuleSdk(distro.getAbsolutePath());
+                MuleSdkManagerImpl.getInstance().addSdk(muleSdk);
+                myTableModel.addRow(muleSdk);
+                final int rowIndex = myTableModel.getRowCount() - 1;
+                myInputsTable.getSelectionModel().setSelectionInterval(rowIndex, rowIndex);
+                onOK();
+            }
+        } catch (Exception e) {
             Messages.showErrorDialog("An error occurred while trying to download " + version + ".\n" + e.getMessage(),
                     "Mule SDK Download Error");
         }
 
     }
 
+
+    private boolean download(ProgressIndicator progressIndicator, URL url, File outputFile, String version) {
+        try {
+            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+            long completeFileSize = httpConnection.getContentLength();
+            java.io.BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(outputFile);
+            java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, BUFFER_SIZE);
+            byte[] data = new byte[BUFFER_SIZE];
+            long downloadedFileSize = 0;
+            int x;
+            while (!progressIndicator.isCanceled() && (x = in.read(data, 0, BUFFER_SIZE)) >= 0) {
+                downloadedFileSize += x;
+                // calculate progress
+                final double currentProgress = ((double) downloadedFileSize) / ((double) completeFileSize);
+                progressIndicator.setFraction(currentProgress);
+                progressIndicator.setText2(Math.ceil(downloadedFileSize / (1024 * 1024)) + "/" + (Math.ceil(completeFileSize / (1024 * 1024)) + " MB"));
+                bout.write(data, 0, x);
+            }
+            bout.close();
+            in.close();
+        } catch (IOException e) {
+            Messages.showErrorDialog("An error occurred while trying to download " + version + ".\n" + e.getMessage(), "Mule SDK Download Error");
+            return false;
+        }
+        return !progressIndicator.isCanceled();
+    }
+
     @NotNull
-    private File getUserHome()
-    {
+    private File getUserHome() {
         return new File(SystemProperties.getUserHome());
     }
 
 
-    private void onBrowse()
-    {
+    private void onBrowse() {
         final MuleSdk muleSdk = MuleUIUtils.selectSdk(contentPane);
-        if (muleSdk != null)
-        {
+        if (muleSdk != null) {
             MuleSdkManagerImpl.getInstance().addSdk(muleSdk);
             myTableModel.addRow(muleSdk);
             final int rowIndex = myTableModel.getRowCount() - 1;
@@ -196,23 +215,19 @@ public class MuleSdkSelectionDialog extends JDialog
     }
 
 
-    private void onOK()
-    {
-        if (myInputsTable.getSelectedRowCount() > 0)
-        {
+    private void onOK() {
+        if (myInputsTable.getSelectedRowCount() > 0) {
             mySelectedSdk = myTableModel.getItems().get(myInputsTable.getSelectedRow());
         }
         dispose();
     }
 
-    private void onCancel()
-    {
+    private void onCancel() {
         mySelectedSdk = null;
         dispose();
     }
 
-    public MuleSdk open()
-    {
+    public MuleSdk open() {
         pack();
         setLocationRelativeTo(myParent.getTopLevelAncestor());
         setVisible(true);
@@ -220,11 +235,9 @@ public class MuleSdkSelectionDialog extends JDialog
     }
 
 
-    private class SdkSelectionListener implements ListSelectionListener
-    {
+    private class SdkSelectionListener implements ListSelectionListener {
         @Override
-        public void valueChanged(ListSelectionEvent e)
-        {
+        public void valueChanged(ListSelectionEvent e) {
             buttonOK.setEnabled(myInputsTable.getSelectedRow() >= 0);
         }
     }

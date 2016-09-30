@@ -39,8 +39,7 @@ import java.util.regex.Pattern;
 /**
  * @author nik
  */
-public class MuleSdk
-{
+public class MuleSdk {
 
     private static final String BOOT_DIR = "/lib/boot";
     private static final String PATCH_DIR = "/lib/patches";
@@ -60,49 +59,40 @@ public class MuleSdk
     @Tag("mule-home")
     private String muleHome;
 
-    public MuleSdk()
-    {
+    public MuleSdk() {
     }
 
-    public MuleSdk(String homePath)
-    {
+    public MuleSdk(String homePath) {
         this.muleHome = homePath;
     }
 
-    public String getMuleHome()
-    {
+    public String getMuleHome() {
         return muleHome;
     }
 
-    public void setMuleHome(String muleHome)
-    {
+    public void setMuleHome(String muleHome) {
         this.muleHome = muleHome;
     }
 
     @NotNull
-    public String getVersion()
-    {
+    public String getVersion() {
         final File file = new File(getMuleHome());
         final String distroName = file.getName();
         final Matcher matcher = VERSION_NUMBER.matcher(distroName);
-        if (matcher.find())
-        {
+        if (matcher.find()) {
             return matcher.group(1);
         }
         return UNDEFINED_VERSION;
     }
 
     @NotNull
-    public List<File> getLibraryEntries()
-    {
+    public List<File> getLibraryEntries() {
         final File muleHome = new File(this.muleHome);
         final List<File> muleClassPath = new MuleClassPath(muleHome).getJars();
         List<File> result = new ArrayList<>();
-        for (File file : muleClassPath)
-        {
+        for (File file : muleClassPath) {
             //No directory
-            if (file.isFile())
-            {
+            if (file.isFile()) {
                 result.add(file);
             }
         }
@@ -110,18 +100,16 @@ public class MuleSdk
         //We add the plugins lib
         final File pluginsFolder = new File(muleHome, "plugins");
         final File[] files = pluginsFolder.listFiles();
-        for (File plugin : files)
-        {
-            //Exclude debugger
-            if (!plugin.getName().contains("debugger"))
-            {
-                final File lib = new File(plugin, "lib");
-                if (lib.exists())
-                {
-                    final File[] libJars = lib.listFiles();
-                    for (File jar : libJars)
-                    {
-                        result.add(jar);
+        if (files != null) {
+            for (File plugin : files) {
+                //Exclude debugger
+                if (!plugin.getName().contains("debugger")) {
+                    final File lib = new File(plugin, "lib");
+                    if (lib.exists()) {
+                        final File[] libJars = lib.listFiles();
+                        for (File jar : libJars) {
+                            result.add(jar);
+                        }
                     }
                 }
             }
@@ -130,14 +118,12 @@ public class MuleSdk
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return getVersion();
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
@@ -150,8 +136,7 @@ public class MuleSdk
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return muleHome != null ? muleHome.hashCode() : 0;
     }
 
@@ -159,36 +144,27 @@ public class MuleSdk
     //Helper methods
 
     @Nullable
-    public static MuleSdk getFrom(Module module)
-    {
+    public static MuleSdk getFrom(Module module) {
         final String muleHome = getMuleHome(module);
-        if (muleHome != null)
-        {
+        if (muleHome != null) {
             return new MuleSdk(muleHome);
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
     @Nullable
-    private static String getMuleHome(@NotNull Module module)
-    {
-        if (!DumbService.isDumb(module.getProject()))
-        {
+    private static String getMuleHome(@NotNull Module module) {
+        if (!DumbService.isDumb(module.getProject())) {
             final OrderEnumerator enumerator = ModuleRootManager.getInstance(module)
-                                                                .orderEntries().recursively().librariesOnly().exportedOnly();
+                    .orderEntries().recursively().librariesOnly().exportedOnly();
             final String[] home = new String[1];
             enumerator.forEachLibrary(library -> {
 
-                if (MuleLibraryKind.MULE_LIBRARY_KIND.equals(((LibraryEx) library).getKind()))
-                {
+                if (MuleLibraryKind.MULE_LIBRARY_KIND.equals(((LibraryEx) library).getKind())) {
                     home[0] = getMuleHome(library.getFiles(OrderRootType.CLASSES)[0]);
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             });
@@ -198,17 +174,13 @@ public class MuleSdk
         return null;
     }
 
-    public static boolean isValidMuleHome(String dir)
-    {
-        if (dir == null)
-        {
+    public static boolean isValidMuleHome(String dir) {
+        if (dir == null) {
             return false;
         }
         final File muleHome = new File(dir);
-        for (String muleJarsFolder : MULE_REQUIRED_FOLDERS)
-        {
-            if (!new File(muleHome, muleJarsFolder).exists())
-            {
+        for (String muleJarsFolder : MULE_REQUIRED_FOLDERS) {
+            if (!new File(muleHome, muleJarsFolder).exists()) {
                 return false;
             }
         }
@@ -218,23 +190,16 @@ public class MuleSdk
 
 
     @Nullable
-    public static String getMuleHome(VirtualFile local)
-    {
-        if (local != null)
-        {
+    public static String getMuleHome(VirtualFile local) {
+        if (local != null) {
             File parent = new File(local.getPath()).getParentFile();
-            if (parent != null)
-            {
+            if (parent != null) {
                 parent = parent.getParentFile();
 
-                if (parent != null)
-                {
-                    if (isValidMuleHome(parent.getPath()))
-                    {
+                if (parent != null) {
+                    if (isValidMuleHome(parent.getPath())) {
                         return parent.getPath();
-                    }
-                    else if (parent.getParent() != null && isValidMuleHome(parent.getParentFile().getPath()))
-                    {
+                    } else if (parent.getParent() != null && isValidMuleHome(parent.getParentFile().getPath())) {
                         return parent.getParentFile().getPath();
                     }
                 }
