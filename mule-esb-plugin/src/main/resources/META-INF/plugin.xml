@@ -8,6 +8,16 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.7</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Improve Version Download.</li>
+            <li>Several bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.3</h1>
       <ul>
        <li>

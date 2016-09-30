@@ -9,6 +9,21 @@
 
     <idea-version since-build="145"/>
 
+    <change-notes><![CDATA[
+    <h1>v0.7</h1>
+      <ul>
+       <li>
+          <p>BugFixes</p>
+          <ul>
+            <li>New Icon</li>
+            <li>Fix go to function.</li>
+            <li>Add missing operators.</li>
+          </ul>
+        </li>
+      </ul>
+    ]]>
+    </change-notes>
+
     <extensions defaultExtensionNs="com.intellij">
 
         <!--Data Weave-->
