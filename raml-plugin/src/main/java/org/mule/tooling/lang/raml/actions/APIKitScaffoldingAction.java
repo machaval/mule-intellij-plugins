@@ -34,7 +34,10 @@ public class APIKitScaffoldingAction extends AnAction
         final Project project = anActionEvent.getProject();
         final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
         String appPath = moduleContentRoot.getPath() + "/src/main/app";
-        //logger.warn("*** APP PATH IS " + appPath);
+
+
+        logger.info("*** APP PATH IS " + appPath);
+
         final File appDir = new File(appPath);
         final List<File> ramlFiles = new ArrayList<File>();
         final File ramlFile = new File(file.getPath());

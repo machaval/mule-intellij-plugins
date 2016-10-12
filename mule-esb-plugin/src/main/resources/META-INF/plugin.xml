@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For Intellij</name>
-    <version>0.3</version>
+    <version>0.9</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule Intellij Plugin.
@@ -79,6 +79,7 @@
     <depends>org.mule.tooling.intellij.raml</depends>
     <depends>org.intellij.groovy</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
+    <depends>com.intellij.properties</depends>
 
     <extensions defaultExtensionNs="com.intellij">
 
@@ -179,6 +180,12 @@
 
         </action>
 
+        <action id="Mule.EncryptProperty" class="org.mule.tooling.esb.actions.EncryptPropertyAction">
+            <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+        </action>
+        <action id="Mule.DecryptProperty" class="org.mule.tooling.esb.actions.DecryptPropertyAction">
+            <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+        </action>
     </actions>
 
 </idea-plugin>

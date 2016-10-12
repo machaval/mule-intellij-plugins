@@ -1,11 +1,19 @@
 configurations {
     gen
+
 }
 
 dependencies {
+    compile ('com.mulesoft.security:mule-module-security:1.6.0')
     compile files('lib/mule-plugin-debugger-3.8.0.jar')
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
+    compile files('properties.jar')
+    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {
+        exclude group: 'org.mule.modules'
+        exclude group: 'org.mule.transports'
+    }
+    //compile (group: 'org.bouncycastle', name: 'bcprov-ext-jdk15on', version: '1.55')
 //    gen files('../lib/jflex-1.7.0-SNAPSHOT.jar')
 }
 
@@ -19,7 +27,7 @@ sourceSets {
 }
 
 intellij {
-    plugins = ["maven", "groovy", 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
+    plugins = ["maven", "groovy", 'properties', 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
     pluginName = 'mule-esb-plugin'
     publish {
         pluginId '8212'
