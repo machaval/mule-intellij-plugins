@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.mule.tooling.esb.util.MuleConfigUtils;
 import org.mule.tooling.lang.raml.file.RamlFileType;
 import org.mule.tooling.lang.raml.util.RamlIcons;
 import org.mule.tools.apikit.ScaffolderAPI;
@@ -31,7 +32,7 @@ public class APIKitScaffoldingAction extends AnAction
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
         final Project project = anActionEvent.getProject();
         final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
-        String appPath = moduleContentRoot.getPath() + "/src/main/app";
+        String appPath = moduleContentRoot.getPath() + MuleConfigUtils.CONFIG_RELATIVE_PATH;
 
 
         logger.debug("*** APP PATH IS " + appPath);

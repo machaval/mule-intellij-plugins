@@ -45,7 +45,7 @@ public class MuleProjectManager extends AbstractProjectComponent {
                                 String fileAbsolutePath = event.getFile().getPath();
 
                                 String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                                String appPath = moduleContentRoot + "/src/main/app";
+                                String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
 
                                 PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
 
@@ -85,7 +85,7 @@ public class MuleProjectManager extends AbstractProjectComponent {
                             String fileAbsolutePath = event.getFile().getPath();
 
                             String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                            String appPath = moduleContentRoot + "/src/main/app";
+                            String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                             if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
                                 if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
@@ -120,7 +120,7 @@ public class MuleProjectManager extends AbstractProjectComponent {
                             String newAbsolutePath = event.getNewParent() + "/" + fileName;
 
                             String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                            String appPath = moduleContentRoot + "/src/main/app";
+                            String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
 
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                             if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
