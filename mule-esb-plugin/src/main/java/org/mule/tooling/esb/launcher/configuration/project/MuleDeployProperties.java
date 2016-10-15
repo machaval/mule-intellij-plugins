@@ -47,6 +47,32 @@ public class MuleDeployProperties
         }
     }
 
+    public static List<String> getConfigFileNames(String appPath) {
+        List<String> configFileNames = new ArrayList<String>();
+
+        final String deployPropertiesFilePath = appPath + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
+
+        logger.debug("*** DEPLOY PROPS PATH " + deployPropertiesFilePath);
+
+        try {
+            if (new File(deployPropertiesFilePath).exists()) {
+                final Properties deployProperties = new Properties();
+                deployProperties.load(new FileInputStream(deployPropertiesFilePath));
+                String cfg = deployProperties.getProperty("config.resources");
+
+                logger.debug("*** GOT CONFIG RESOURCES " + cfg);
+
+                if (cfg != null && !"".equals(cfg.trim())) {
+                    String[] configs = cfg.trim().split(",");
+                    configFileNames.addAll(Arrays.asList(configs));
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Unable to get config names", e);
+        }
+        return configFileNames;
+    }
+
     public static void deleteConfigFile(String appPath, String configFile)
     {
         final String deployPropertiesFilePath = appPath + "/" + MULE_DEPLOY_PROPERTIES_FILE_NAME;
@@ -56,6 +82,7 @@ public class MuleDeployProperties
             final Properties deployProperties = new Properties();
             deployProperties.load(new FileInputStream(deployPropertiesFilePath));
             final String cfg = deployProperties.getProperty("config.resources");
+
             if (cfg != null && !"".equals(cfg.trim()))
             {
                 String[] configs = cfg.trim().split(",");

@@ -95,7 +95,7 @@ public class EncryptDialog extends DialogWrapper {
 
         EncryptionAlgorithm selectedAlgorithm = (EncryptionAlgorithm)getAlgorithm().getSelectedItem();
         if (encKey == null || encKey.length() < selectedAlgorithm.minKeySize()) {
-            validationInfo = new ValidationInfo("The encryption key for the algorithm " + selectedAlgorithm.toString() + " must be " + selectedAlgorithm.minKeySize() + " characters long",
+            validationInfo = new ValidationInfo("The encryption key for the algorithm " + selectedAlgorithm.toString() + " must be at least " + selectedAlgorithm.minKeySize() + " characters long",
                     this.encryptionKey);
         }
 

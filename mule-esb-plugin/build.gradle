@@ -4,17 +4,27 @@ configurations {
 }
 
 dependencies {
-    compile ('com.mulesoft.security:mule-module-security:1.6.0')
-    compile files('lib/mule-plugin-debugger-3.8.0.jar')
+    compile files('lib/mule-plugin-debugger-3.8.0.jar',
+                  'lib/security-api-1.6.0.jar',
+                  'lib/mule-module-apikit-soap-common-1.0.0.jar',
+                  'lib/mule-module-apikit-soap-xml-generator-1.0.0.jar',
+    )
+
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
-    compile files('properties.jar')
-    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {
-        exclude group: 'org.mule.modules'
-        exclude group: 'org.mule.transports'
+
+    compile ('org.mule.tools:apikit-scaffolder:3.8.2') {
+        exclude module: 'xml-apis'
+        exclude module: 'commons-logging'
     }
-    //compile (group: 'org.bouncycastle', name: 'bcprov-ext-jdk15on', version: '1.55')
-//    gen files('../lib/jflex-1.7.0-SNAPSHOT.jar')
+
+//    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {
+//        exclude group: 'org.mule.modules'
+//        exclude group: 'org.mule.transports'
+//    }
+
+    compile (group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55')
+    compile (group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3')
 }
 
 
