@@ -1,5 +1,7 @@
 package org.mule.tooling.esb.util;
 
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.util.io.FileUtil;
@@ -13,6 +15,10 @@ import javax.swing.*;
 
 public class MuleUIUtils
 {
+    public static final NotificationGroup MULE_NOTIFICATION_GROUP =
+            new NotificationGroup("Mule ESB Plugin",
+                    NotificationDisplayType.BALLOON, true);
+
     @Nullable public static MuleSdk selectSdk(@NotNull JComponent parentComponent)
     {
         final VirtualFile initial = findFile(System.getenv("MULE_HOME"));

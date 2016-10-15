@@ -60,11 +60,6 @@
             to create a new Camel related file
         -->
 
-        <action id="Mule.GenerateFlowsFromRAML"
-                class="org.mule.tooling.lang.raml.actions.APIKitScaffoldingAction">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="NewGroup1"/>
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
     </actions>
 
 </idea-plugin>

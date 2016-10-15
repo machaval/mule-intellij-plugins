@@ -1,4 +1,4 @@
-package org.mule.tooling.lang.raml.actions;
+package org.mule.tooling.esb.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -10,7 +10,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.mule.tooling.lang.raml.file.RamlFileType;
 import org.mule.tooling.lang.raml.util.RamlIcons;
 import org.mule.tools.apikit.ScaffolderAPI;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,12 +28,14 @@ public class APIKitScaffoldingAction extends AnAction
     @Override
     public void actionPerformed(AnActionEvent anActionEvent)
     {
-        System.out.println("APIKitScaffoldingAction.actionPerformed");
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
         final Project project = anActionEvent.getProject();
         final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
         String appPath = moduleContentRoot.getPath() + "/src/main/app";
-        //logger.warn("*** APP PATH IS " + appPath);
+
+
+        logger.debug("*** APP PATH IS " + appPath);
+
         final File appDir = new File(appPath);
         final List<File> ramlFiles = new ArrayList<File>();
         final File ramlFile = new File(file.getPath());
