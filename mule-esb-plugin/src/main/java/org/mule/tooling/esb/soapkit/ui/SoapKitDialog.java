@@ -23,6 +23,7 @@ public class SoapKitDialog extends DialogWrapper {
     private JComboBox port;
     private JComboBox configFile;
     private JComboBox service;
+    private JLabel warning;
 
     Definition wsdlDefinition;
 
@@ -55,16 +56,22 @@ public class SoapKitDialog extends DialogWrapper {
                     Port nextPort = (Port) nextPortEntry.getValue();
                     port.addItem(nextPort.getName());
                 }
-
             }
         });
-
         service.setSelectedIndex(0);
 
+        configFile.addItem(NEW_FILE);
         for (String nextName : configFiles) {
             configFile.addItem(nextName);
         }
-        configFile.addItem(NEW_FILE);
+        configFile.setSelectedIndex(0);
+
+        configFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                warning.setVisible(!(NEW_FILE.equals(configFile.getSelectedItem().toString())));
+            }
+        });
     }
 
     public JPanel getRoot() {

@@ -11,7 +11,6 @@ public class MuleDeployProperties
 {
 
     public static final String MULE_DEPLOY_PROPERTIES_FILE_NAME = "mule-deploy.properties";
-    public static final String MULE_DEPLOY_PROPERTIES_DIR = "src/main/app";
 
     static Logger logger = Logger.getInstance(MuleDeployProperties.class);
 

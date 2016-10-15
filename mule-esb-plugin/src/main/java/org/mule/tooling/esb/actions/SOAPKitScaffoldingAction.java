@@ -1,32 +1,39 @@
 package org.mule.tooling.esb.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiFile;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.mule.security.encryption.binary.jce.algorithms.EncryptionAlgorithm;
+import org.mule.security.encryption.binary.jce.algorithms.EncryptionMode;
 import org.mule.soapkit.common.utils.WsdlUtils;
 import org.mule.soapkit.xml.generator.Scaffolder;
 import org.mule.soapkit.xml.generator.model.buildables.SoapkitApiConfig;
 import org.mule.soapkit.xml.generator.parsers.SoapkitMuleConfigParser;
 import org.mule.tooling.esb.launcher.configuration.project.MuleDeployProperties;
 import org.mule.tooling.esb.soapkit.ui.SoapKitDialog;
+import org.mule.tooling.esb.util.MuleConfigUtils;
+import org.mule.tooling.esb.util.MuleUIUtils;
 
 import javax.wsdl.Definition;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 
 public class SOAPKitScaffoldingAction extends AnAction
@@ -46,21 +53,18 @@ public class SOAPKitScaffoldingAction extends AnAction
 
         final VirtualFile selectedWsdlFile = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
         final Project project = anActionEvent.getProject();
+        PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
 
         final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(selectedWsdlFile);
-        String appPath = moduleContentRoot.getPath() + "/src/main/app";
-
-        logger.debug("*** APP PATH IS " + appPath);
+        final VirtualFile appsRoot = moduleContentRoot.findFileByRelativePath(MuleConfigUtils.CONFIG_RELATIVE_PATH);
+        String appPath = appsRoot.getPath();
 
         String wsdlPath = selectedWsdlFile.getPath();
 
         logger.debug("*** WSDL PATH IS " + wsdlPath);
+        logger.debug("*** APP PATH IS " + appPath);
 
         Definition wsdlDefinition = WsdlUtils.parseWSDL(wsdlPath);
-
-        String service = "";
-        String port = "";
-        String muleXml = null;
 
         List<String> configFiles = MuleDeployProperties.getConfigFileNames(appPath);
 
@@ -71,17 +75,17 @@ public class SOAPKitScaffoldingAction extends AnAction
         if (!isOk)
             return;
 
-        service = form.getService().getSelectedItem().toString();
-        port = form.getPort().getSelectedItem().toString();
-        muleXml = form.getConfigFile().getSelectedItem().toString();
+        final String service = form.getService().getSelectedItem().toString();
+        final String port = form.getPort().getSelectedItem().toString();
+        String muleXml = form.getConfigFile().getSelectedItem().toString();
 
-        System.out.println("*** SERVICE " + service);
-        System.out.println("*** PORT " + port);
-        System.out.println("*** muleXml " + muleXml);
-        System.out.println("*** wsdlPath " + wsdlPath);
+        logger.debug("*** SERVICE " + service);
+        logger.debug("*** PORT " + port);
+        logger.debug("*** muleXml " + muleXml);
+        logger.debug("*** wsdlPath " + wsdlPath);
 
-        File muleXmlFile = null;
         if (SoapKitDialog.NEW_FILE.equals(muleXml)) {
+            File muleXmlFile = null;
             int i = 0;
 
             do {
@@ -89,24 +93,24 @@ public class SOAPKitScaffoldingAction extends AnAction
                 muleXmlFile = new File(appPath, muleXml);
                 i++;
             } while (muleXmlFile.exists());
-        } else {
-            muleXmlFile = new File(appPath, muleXml);
         }
 
-        logger.debug("Mule XML file absolute path is " + muleXmlFile.getAbsolutePath());
+        final String muleXmlConfigFileName = muleXml;
 
-        SoapkitApiConfig soapkitConfig = findSoapkitConfig(muleXmlFile);
-
-        Element resultElement = null;
-        if (soapkitConfig == null || !(service.equals(soapkitConfig.getService()) && port.equals(soapkitConfig.getPort()))) {
-            //TODO: The second wsdlPath / wsdlLocationAttribute - what is it?
-            //TODO - Domains are not supported yet!
-            resultElement = SCAFFOLDER.scaffold(wsdlPath, wsdlPath, service, port, "");
-        } else {
-            resultElement = SCAFFOLDER.scaffold(muleXmlFile, wsdlPath, soapkitConfig, "");
+        try {
+            new WriteCommandAction.Simple(project, psiFile) {
+                @Override
+                protected void run() throws Throwable {
+                    VirtualFile vMuleXmlFile = appsRoot.findOrCreateChildData(this, muleXmlConfigFileName);
+                    Element resultElement = SCAFFOLDER.scaffold(wsdlPath, wsdlPath, service, port, "");
+                    writeMuleXmlFile(resultElement, vMuleXmlFile);
+                }
+            }.execute();
+        } catch (Exception e) {
+            Notification notification = MuleUIUtils.MULE_NOTIFICATION_GROUP.createNotification("Unable to generate flows from WSDL File",
+                    "Error Message : " + e, NotificationType.ERROR, null);
+            Notifications.Bus.notify(notification, project);
         }
-        writeMuleXmlFile(resultElement, muleXmlFile);
-
         moduleContentRoot.refresh(false, true);
     }
 
@@ -123,7 +127,7 @@ public class SOAPKitScaffoldingAction extends AnAction
         }
 
     }
-
+/*
     private SoapkitApiConfig findSoapkitConfig(File muleConfig) {
         SoapkitApiConfig soapkitApiConfig = null;
         if (muleConfig.exists()) {
@@ -138,14 +142,15 @@ public class SOAPKitScaffoldingAction extends AnAction
         }
         return soapkitApiConfig;
     }
+*/
+    private void writeMuleXmlFile(Element element, VirtualFile muleConfig) {
 
-    private static void writeMuleXmlFile(Element element, File muleConfig) {
         XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());
         InputStream inputStream = null;
         try {
             String outputString = xout.outputString(element);
-            System.out.println("*** OUTPUT STRING IS " + outputString);
-            FileWriter writer = new FileWriter(muleConfig, false);
+            logger.debug("*** OUTPUT STRING IS " + outputString);
+            OutputStreamWriter writer = new OutputStreamWriter(muleConfig.getOutputStream(this));
             writer.write(outputString);
             writer.flush();
             writer.close();

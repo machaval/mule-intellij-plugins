@@ -56,6 +56,7 @@ import java.util.List;
 
 public class MuleConfigUtils
 {
+    public static final String CONFIG_RELATIVE_PATH = "src/main/app";
 
     public static final String MULE_LOCAL_NAME = "mule";
     public static final String MUNIT_TEST_LOCAL_NAME = "test";
