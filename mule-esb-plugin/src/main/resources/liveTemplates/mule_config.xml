@@ -16,11 +16,30 @@
         </context>
     </template>
 
-    <template id="mule-log-payload-string" name="flr" description="Flow Reference"
+    <template id="mule-flow-ref" name="flr" description="Flow Reference"
               value="&lt;flow-ref name=&quot;&quot;/&gt;"
               toReformat="true" toShortenFQNames="false">
         <context>
             <option name="MULE_CONFIG" value="true"/>
+        </context>
+    </template>
+
+    <template id="mule-namespace" name="mns" description="Mule Module Namespace"
+              value="xmlns:$NAME$=&quot;http://www.mulesoft.org/schema/mule/$NAME$&quot;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <option name="XML" value="true"/>
+        </context>
+    </template>
+    <template id="mule-schema-location" name="msl" description="Mule Module Schema Location"
+              value="http://www.mulesoft.org/schema/mule/$NAME$ http://www.mulesoft.org/schema/mule/$NAME$/current/mule-$NAME$.xsd"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <option name="XML" value="true"/>
         </context>
     </template>
 
