@@ -4,11 +4,13 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.esb.util.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 
 
@@ -39,6 +41,10 @@ public class SdkVersionSelectionDialog<T> extends DialogWrapper
         destination.addBrowseFolderListener("Select new Mule distribution destination", null, null, FileChooserDescriptorFactory.createSingleFolderDescriptor());
         destinationLabel = new JLabel("Destination:", JLabel.TRAILING);
         destinationLabel.setLabelFor(destination);
+
+        //By default, should be ~/mule-distro
+        File distro = new File(SystemProperties.getUserHome(), "mule-distro");
+        destination.setText(distro.getAbsolutePath());
 
         centerPanel.add(destinationLabel);
         centerPanel.add(destination);
