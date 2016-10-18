@@ -16,12 +16,78 @@
         </context>
     </template>
 
-    <template id="mule-log-payload-string" name="flr" description="Flow Reference"
+    <template id="mule-flow-ref" name="flr" description="Flow Reference"
               value="&lt;flow-ref name=&quot;&quot;/&gt;"
               toReformat="true" toShortenFQNames="false">
         <context>
             <option name="MULE_CONFIG" value="true"/>
         </context>
     </template>
+
+    <template id="mule-namespace" name="mns" description="Mule Module Namespace"
+              value="xmlns:$NAME$=&quot;http://www.mulesoft.org/schema/mule/$NAME$&quot;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <option name="XML" value="true"/>
+        </context>
+    </template>
+    <template id="mule-schema-location" name="msl" description="Mule Module Schema Location"
+              value="http://www.mulesoft.org/schema/mule/$NAME$ http://www.mulesoft.org/schema/mule/$NAME$/current/mule-$NAME$.xsd"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <option name="XML" value="true"/>
+        </context>
+    </template>
+
+    <template id="mule-http-listener-config" name="httplc" description="Mule HTTP Listener Config"
+              value="&lt;http:listener-config name=&quot;$NAME$&quot; host=&quot;$HOST$&quot; port=&quot;$PORT$&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <variable name="HOST" expression="" defaultValue="0.0.0.0" alwaysStopAt="true" />
+        <variable name="PORT" expression="" defaultValue="8081" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <!--<option name="XML" value="true"/>-->
+        </context>
+    </template>
+    <template id="mule-http-listener" name="httpl" description="Mule HTTP Listener"
+              value="&lt;http:listener config-ref=&quot;$NAME$&quot; path=&quot;$PATH$&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="complete()" defaultValue="" alwaysStopAt="true" />
+        <variable name="PATH" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <!--<option name="XML" value="true"/>-->
+        </context>
+    </template>
+
+    <template id="mule-http-request-config" name="httprc" description="Mule HTTP Request Config"
+              value="&lt;http:request-config name=&quot;$NAME$&quot; host=&quot;$HOST$&quot; port=&quot;$PORT$&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <variable name="HOST" expression="" defaultValue="0.0.0.0" alwaysStopAt="true" />
+        <variable name="PORT" expression="" defaultValue="8081" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <!--<option name="XML" value="true"/>-->
+        </context>
+    </template>
+    <template id="mule-http-request" name="httpr" description="Mule HTTP Request"
+              value="&lt;http:request config-ref=&quot;$NAME$&quot; path=&quot;$PATH$&quot; method=&quot;$METHOD$&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="complete()" defaultValue="" alwaysStopAt="true" />
+        <variable name="PATH" expression="" defaultValue="" alwaysStopAt="true" />
+        <variable name="METHOD" expression="enum(&quot;GET&quot;,&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;)" defaultValue="POST" alwaysStopAt="true" />
+
+        <context>
+            <option name="MULE_CONFIG" value="true"/>
+            <!--<option name="XML" value="true"/>-->
+        </context>
+    </template>
+
 
 </templateSet>

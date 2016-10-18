@@ -1,46 +1,81 @@
 package org.mule.tooling.esb.sdk.ui;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.Nullable;
+import org.mule.tooling.esb.util.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 
 
 public class SdkVersionSelectionDialog<T> extends DialogWrapper
 {
-    private JLabel myLabel;
-    private JComboBox myComboBox;
+    private JLabel versionLabel;
+    private JComboBox versionComboBox;
+    private TextFieldWithBrowseButton destination;
+    private JLabel destinationLabel;
+
+    private JPanel centerPanel;
 
     public SdkVersionSelectionDialog(JComponent parent, String title, String name, List<String> scalaVersions)
     {
         super(parent, false);
         setTitle(title);
-        myLabel = new JLabel(name);
-        myComboBox = new ComboBox(new DefaultComboBoxModel<>(scalaVersions.toArray()));
-        myLabel.setLabelFor(myComboBox);
+        //Create and populate the panel.
+        centerPanel = new JPanel(new SpringLayout());
+
+        versionLabel = new JLabel(name, JLabel.TRAILING);
+        versionComboBox = new ComboBox(new DefaultComboBoxModel<>(scalaVersions.toArray()));
+        versionLabel.setLabelFor(versionComboBox);
+
+        centerPanel.add(versionLabel);
+        centerPanel.add(versionComboBox);
+
+        destination = new TextFieldWithBrowseButton();
+        destination.addBrowseFolderListener("Select new Mule distribution destination", null, null, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+        destinationLabel = new JLabel("Destination:", JLabel.TRAILING);
+        destinationLabel.setLabelFor(destination);
+
+        //By default, should be ~/mule-distro
+        File distro = new File(SystemProperties.getUserHome(), "mule-distro");
+        destination.setText(distro.getAbsolutePath());
+
+        centerPanel.add(destinationLabel);
+        centerPanel.add(destination);
+
+        //Lay out the panel.
+        SpringUtilities.makeCompactGrid(centerPanel,
+                2, 2, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
         init();
     }
 
     protected JComponent createCenterPanel()
     {
-        JPanel panel = new JPanel(new FlowLayout());
-        panel.add(myLabel);
-        panel.add(myComboBox);
-        return panel;
+        return centerPanel;
     }
 
     @Nullable
     @Override
     public JComponent getPreferredFocusedComponent()
     {
-        return myComboBox;
+        return versionComboBox;
     }
 
     public T getSelectedValue()
     {
-        return (T) myComboBox.getSelectedItem();
+        return (T) versionComboBox.getSelectedItem();
+    }
+
+    public String getDestinationText() {
+        return destination.getText();
     }
 }

@@ -11,8 +11,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <mule.version>${MULE_VERSION}</mule.version>
-    <munit.version>1.1.1</munit.version>
-    <munit.support.version>3.7.2</munit.support.version>
+    <munit.version>1.2.1</munit.version>
+    <munit.support.version>${MULE_VERSION}</munit.support.version>
     <mule.tools.version>1.1</mule.tools.version>
   </properties>
   
