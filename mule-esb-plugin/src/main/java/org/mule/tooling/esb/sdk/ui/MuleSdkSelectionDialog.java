@@ -127,12 +127,12 @@ public class MuleSdkSelectionDialog extends JDialog {
         List<String> versions = MuleUrl.getVERSIONS().stream().map(MuleUrl::getName).collect(Collectors.toList());
         final SdkVersionSelectionDialog<String> dialog = new SdkVersionSelectionDialog<>(contentPane, "Download ", format("%s version:", languageName), versions);
         if (dialog.showAndGet()) {
-            downloadVersionWithProgress(dialog.getSelectedValue());
+            downloadVersionWithProgress(dialog.getSelectedValue(), dialog.getDestinationText());
         }
 
     }
 
-    private void downloadVersionWithProgress(String version) {
+    private void downloadVersionWithProgress(String version, String destinationDir) {
 
         Messages.showInfoMessage(contentPane, "Download Is Going to Take Some Time. Good time for a coffee.", "Mule Distribution Download");
         final Optional<MuleUrl> first = MuleUrl.getVERSIONS().stream().filter((url) -> url.getName().equals(version)).findFirst();
@@ -143,7 +143,7 @@ public class MuleSdkSelectionDialog extends JDialog {
                 final URL artifactUrl = new URL(muleUrl.getUrl());
                 final File sourceFile = FileUtil.createTempFile("mule" + version, ".zip");
                 if (download(instance.getProgressIndicator(), artifactUrl, sourceFile, version)) {
-                    final File destDir = new File(getUserHome(), "mule-distro");
+                    final File destDir = new File(destinationDir);
                     destDir.mkdirs();
                     ZipUtil.extract(sourceFile, destDir, null);
                     try (ZipFile zipFile = new ZipFile(sourceFile)) {
