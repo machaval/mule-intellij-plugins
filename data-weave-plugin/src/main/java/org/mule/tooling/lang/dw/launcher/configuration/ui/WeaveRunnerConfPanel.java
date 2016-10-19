@@ -4,6 +4,8 @@ import com.intellij.application.options.ModulesComboBox;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
@@ -22,7 +24,7 @@ public class WeaveRunnerConfPanel
     private JPanel mainPanel;
     private ModulesComboBox moduleCombo;
     private JTextField output;
-    private JTextField weaveFile;
+    private TextFieldWithBrowseButton weaveFile;
     private JPanel inputPanel;
     private TableView<WeaveInput> myInputsTable;
     private Project project;
@@ -33,6 +35,16 @@ public class WeaveRunnerConfPanel
         this.project = project;
         final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
         getWeaveHome().addBrowseFolderListener("Select Weave Home", "Select weave home", project, descriptor);
+
+        final FileChooserDescriptor waveDescriptor = new FileChooserDescriptor(true, false, false, false, false, false)
+                .withHideIgnored(true).withShowHiddenFiles(false).withFileFilter(new Condition<VirtualFile>() {
+                    @Override
+                    public boolean value(VirtualFile virtualFile) {
+                        String fn = virtualFile.getName().toLowerCase();
+                        return (fn.endsWith(".wev") || fn.endsWith(".dw"));
+                    }
+                });
+        getWeaveFile().addBrowseFolderListener("Select Weave File", "Select Weave File", project, waveDescriptor);
 
         myModel = new ListTableModel<>(NAME, FILE);
         myInputsTable = new TableView<>(myModel);
@@ -90,7 +102,7 @@ public class WeaveRunnerConfPanel
         return output;
     }
 
-    public JTextField getWeaveFile()
+    public TextFieldWithBrowseButton getWeaveFile()
     {
         return weaveFile;
     }
