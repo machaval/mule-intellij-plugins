@@ -32,12 +32,14 @@ public class APIKitScaffoldingAction extends AnAction
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
         final Project project = anActionEvent.getProject();
         final VirtualFile moduleContentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(file);
-        String appPath = moduleContentRoot.getPath() + MuleConfigUtils.CONFIG_RELATIVE_PATH;
-
+        String appPath = moduleContentRoot.getPath() + File.separator + MuleConfigUtils.CONFIG_RELATIVE_PATH;
 
         logger.debug("*** APP PATH IS " + appPath);
 
         final File appDir = new File(appPath);
+
+        logger.debug("*** APP DIR IS DIRECTORY = " + appDir.isDirectory());
+
         final List<File> ramlFiles = new ArrayList<File>();
         final File ramlFile = new File(file.getPath());
         ramlFiles.add(ramlFile);
