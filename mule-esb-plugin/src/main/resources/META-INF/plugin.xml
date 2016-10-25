@@ -118,6 +118,7 @@
         <languageInjector implementation="org.mule.tooling.esb.config.MuleLanguageInjector"/>
         <gotoSymbolContributor implementation="org.mule.tooling.esb.config.FlowGoToSymbol"/>
 
+        <moduleBuilder builderClass="org.mule.tooling.esb.wizard.MuleDomainMavenModuleBuilder" id="MULE_DOMAIN_STEP" order="first"/>
         <moduleBuilder builderClass="org.mule.tooling.esb.wizard.MuleMavenModuleBuilder" id="MULE_STEP" order="first"/>
 
         <completion.contributor language="XML"
@@ -142,11 +143,14 @@
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
+        <internalFileTemplate name="Mule Domain Config"/>
         <internalFileTemplate name="MUnit Config"/>
         <internalFileTemplate name="Mel File"/>
         <internalFileTemplate name="Mule Maven Project"/>
+        <internalFileTemplate name="Mule Domain Maven Project"/>
         <internalFileTemplate name="log4j2"/>
         <internalFileTemplate name="Mule Deploy Properties"/>
+        <internalFileTemplate name="Mule Domain Deploy Properties"/>
         <internalFileTemplate name="RAML File"/>
 
     </extensions>

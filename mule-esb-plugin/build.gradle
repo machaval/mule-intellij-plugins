@@ -16,6 +16,7 @@ dependencies {
     compile ('org.mule.tools:apikit-scaffolder:3.8.2') {
         exclude module: 'xml-apis'
         exclude module: 'commons-logging'
+        exclude group: "org.slf4j"
     }
 
 //    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {

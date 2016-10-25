@@ -21,13 +21,13 @@ import org.mule.tooling.esb.util.MuleIcons;
 import javax.swing.*;
 import java.io.File;
 
-public class MuleMavenModuleBuilder extends MavenModuleBuilder implements SourcePathsBuilder, MuleModuleBuilder {
+public class MuleDomainMavenModuleBuilder extends MavenModuleBuilder implements SourcePathsBuilder, MuleModuleBuilder {
 
     public static final String DEFAULT_MULE_VERSION = "3.8.2";
     private String muleVersion = DEFAULT_MULE_VERSION;
 
-    public MuleMavenModuleBuilder() {
-        setProjectId(new MavenId("org.mule.app", "my-app", "1.0.0-SNAPSHOT"));
+    public MuleDomainMavenModuleBuilder() {
+        setProjectId(new MavenId("org.mule.app", "my-domain", "1.0.0-SNAPSHOT"));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
-        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root));
+        MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> new MuleDomainMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root));
     }
 
     private VirtualFile createAndGetContentEntry() {
@@ -47,7 +47,7 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
 
     @Override
     public String getName() {
-        return "Mule Application";
+        return "Mule Domain";
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
 
     @Override
     public String getPresentableName() {
-        return "Mule Application";
+        return "Mule Domain";
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
 
     @Override
     public String getDescription() {
-        return "Creates a Mule ESB Application Maven Based Project. Maven modules are used for developing <b>JVM-based</b> applications with dependencies managed by <b>Maven</b>. ";
+        return "Creates a Mule ESB Domain Maven Based Project";
     }
 
     @Nullable
