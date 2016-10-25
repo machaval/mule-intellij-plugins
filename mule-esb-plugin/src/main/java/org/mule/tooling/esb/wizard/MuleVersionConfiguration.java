@@ -16,9 +16,9 @@ public class MuleVersionConfiguration extends ModuleWizardStep implements Dispos
 
     private JPanel mainPanel;
     private MuleSdkComboSelection muleSdkCombo;
-    private MuleMavenModuleBuilder moduleBuilder;
+    private MuleModuleBuilder moduleBuilder;
 
-    public MuleVersionConfiguration(MuleMavenModuleBuilder moduleBuilder, String muleVersion)
+    public MuleVersionConfiguration(MuleModuleBuilder moduleBuilder, String muleVersion)
     {
         this.moduleBuilder = moduleBuilder;
         muleSdkCombo.setSelectedSdk(MuleSdkManagerImpl.getInstance().findFromVersion(muleVersion));

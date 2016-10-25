@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain:mule-domain xmlns="http://www.mulesoft.org/schema/mule/core"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns:http="http://www.mulesoft.org/schema/mule/http"
+                    xmlns:domain="http://www.mulesoft.org/schema/mule/ee/domain"
+
+                    xsi:schemaLocation="
+                        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+                        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+                        http://www.mulesoft.org/schema/mule/ee/domain http://www.mulesoft.org/schema/mule/ee/domain/current/mule-domain-ee.xsd
+">
+
+    <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" protocol="HTTP"/>
+
+</domain:mule-domain>

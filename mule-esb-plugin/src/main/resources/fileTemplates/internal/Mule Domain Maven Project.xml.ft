@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${GROUP_ID}</groupId>
+    <artifactId>${ARTIFACT_ID}</artifactId>
+    <packaging>mule-domain</packaging>
+    <version>${VERSION}</version>
+    <name>Mule Domain ${ARTIFACT_ID} Project</name>
+
+    <properties>
+        <mule.version>${MULE_VERSION}</mule.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-domain-maven-plugin</artifactId>
+                <version>1.2</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- if MULE_HOME variable is configured then the domain will be copy to domains directory of your mule installation -->
+                    <copyToDomainsDirectory>true</copyToDomainsDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mulesoft-release</id>
+            <name>mulesoft release repository</name>
+            <layout>default</layout>
+            <url>http://repository.mulesoft.org/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-http</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
