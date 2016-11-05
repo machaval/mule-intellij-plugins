@@ -4,7 +4,7 @@ package org.mule.tooling.esb.lang.mel;
 import com.intellij.lang.Commenter;
 import org.jetbrains.annotations.Nullable;
 
-public class MelCommenter implements Commenter{
+public class MelCommenter implements Commenter {
 
     public static final String COMMENT_LINE = "//";
 
