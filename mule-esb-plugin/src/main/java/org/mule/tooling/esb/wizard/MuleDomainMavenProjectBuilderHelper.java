@@ -50,6 +50,9 @@ public class MuleDomainMavenProjectBuilderHelper
 
     private VirtualFile createMuleConfigFile(final Project project, final MavenId projectId, final VirtualFile appDirectory)
     {
+        //final String domainConfigName = projectId.getArtifactId();
+        final String domainConfigName = "mule-domain-config"; //Currently Mule requires it to be mule-domain-config.xml
+
         return new WriteCommandAction<VirtualFile>(project, "Create Mule Domain Config File", PsiFile.EMPTY_ARRAY)
         {
             @Override
@@ -58,7 +61,7 @@ public class MuleDomainMavenProjectBuilderHelper
 
                 try
                 {
-                    VirtualFile configFile = appDirectory.findOrCreateChildData(this, projectId.getArtifactId() + ".xml");
+                    VirtualFile configFile = appDirectory.findOrCreateChildData(this, domainConfigName + ".xml");
                     final Properties templateProps = new Properties();
                     templateProps.setProperty("NAME", projectId.getArtifactId());
                     final FileTemplateManager manager = FileTemplateManager.getInstance(project);
@@ -91,7 +94,7 @@ public class MuleDomainMavenProjectBuilderHelper
                     final Properties templateProps = new Properties();
                     templateProps.setProperty("NAME", projectId.getArtifactId());
                     final FileTemplateManager manager = FileTemplateManager.getInstance(project);
-                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.MULE_DEPLOY_PROPERTIES);
+                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.MULE_DOMAIN_DEPLOY_PROPERTIES);
                     final Properties defaultProperties = manager.getDefaultProperties();
                     defaultProperties.putAll(templateProps);
                     final String text = template.getText(defaultProperties);
