@@ -270,19 +270,31 @@ public class WeaveEditor implements FileEditor {
             language = langs.iterator().next();//Pick first one
         }
 
+        String title = identifier == null ? "output" : identifier.getName();
+
         PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language,"");
+        if (identifier != null) {
+            f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
+                @Override
+                public void documentChanged(DocumentEvent e) {
+                    super.documentChanged(e);
+                    runPreview();
+                }
+            });
+        }
 
         Editor editor = (identifier != null ?
                             EditorFactory.getInstance().createEditor(f.getViewProvider().getDocument(), getProject(), language.getAssociatedFileType(), false) :
                             EditorFactory.getInstance().createViewer(f.getViewProvider().getDocument(), getProject()));
-        editors.put(identifier != null ? identifier.getName() : "output", editor);
+        editors.put(title, editor);
 
-        contentTypes.put(identifier != null ? identifier.getName() : "output", dataType.getText());
+        contentTypes.put(title, dataType.getText());
 
         tabsPane.getTabs().addTab(new TabInfo(editor.getComponent())
-                .setText(identifier == null ? "output" : identifier.getName())
+                .setText(title)
                 .setIcon(icon));
     }
+
     private void updateTab(@NotNull JBTabsPaneImpl tabsPane, int index, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
         tabsPane.setTitleAt(index, (identifier == null ? "output" : identifier.getName()));
