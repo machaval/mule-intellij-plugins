@@ -86,7 +86,7 @@ public class WeaveEditor implements FileEditor {
                 public void childReplaced(@NotNull PsiTreeChangeEvent event) {
                     super.childReplaced(event);
 
-                    if (event.getFile() != psiFile)
+                    if (event.getFile() != psiFile && !(event.getFile() instanceof WeaveFile))
                         return;
 
                     //Iterate over input directives
@@ -277,7 +277,7 @@ public class WeaveEditor implements FileEditor {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override
                 public void documentChanged(DocumentEvent e) {
-                    super.documentChanged(e);
+                    //super.documentChanged(e);
                     runPreview();
                 }
             });
