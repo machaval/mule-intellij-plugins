@@ -88,9 +88,14 @@ public class WeaveEditor implements FileEditor {
 
                     if (event.getFile() != psiFile && !(event.getFile() instanceof WeaveFile))
                         return;
-
+                    WeaveDocument weaveDocument = weaveFile.getDocument();
+                    if (weaveDocument == null)
+                        return;
+                    WeaveHeader weaveHeader = weaveDocument.getHeader();
+                    if (weaveHeader == null)
+                        return;
                     //Iterate over input directives
-                    List<WeaveInputDirective> inputDirectives = WeaveUtils.getInputDirectiveList(weaveFile.getDocument().getHeader());
+                    List<WeaveInputDirective> inputDirectives = WeaveUtils.getInputDirectiveList(weaveHeader);
                     List<String> identifierNames = new ArrayList<String>();
 
                     for (WeaveInputDirective directive : inputDirectives) {
@@ -111,27 +116,27 @@ public class WeaveEditor implements FileEditor {
                                 } else {//If in the list of tabs - check type and replace as needed
                                     updateTab(inputTabs, tabIndex, identifier, dataType);
                                 }
-
-                                //Remove all tabs that are not in the input
-                                List<TabInfo> itemsToRemove = new ArrayList<TabInfo>();
-                                int count = inputTabs.getTabCount();
-                                for (int index = 0; index < count; index++) {
-                                    String title = inputTabs.getTitleAt(index);
-                                    if (!identifierNames.contains(title)) {
-                                        itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
-                                        editors.remove(title);
-                                        contentTypes.remove(title);
-                                    }
-                                }
-                                if (!itemsToRemove.isEmpty()) {
-                                    for (TabInfo info : itemsToRemove) {
-                                        inputTabs.getTabs().removeTab(info);
-                                    }
-                                }
                             }
                         }
 
                     }
+                    //Remove all tabs that are not in the input
+                    List<TabInfo> itemsToRemove = new ArrayList<TabInfo>();
+                    int count = inputTabs.getTabCount();
+                    for (int index = 0; index < count; index++) {
+                        String title = inputTabs.getTitleAt(index);
+                        if (!identifierNames.contains(title)) {
+                            itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
+                            editors.remove(title);
+                            contentTypes.remove(title);
+                        }
+                    }
+                    if (!itemsToRemove.isEmpty()) {
+                        for (TabInfo info : itemsToRemove) {
+                            inputTabs.getTabs().removeTab(info);
+                        }
+                    }
+
                     //Update output directive
                     List<WeaveOutputDirective> outputDirectives = WeaveUtils.getOutputDirectiveList(weaveFile.getDocument().getHeader());
                     if (outputDirectives.isEmpty()) {
