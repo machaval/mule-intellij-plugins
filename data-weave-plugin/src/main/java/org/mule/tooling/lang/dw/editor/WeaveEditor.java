@@ -9,6 +9,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
@@ -302,10 +304,12 @@ public class WeaveEditor implements FileEditor {
 
     private void updateTab(@NotNull JBTabsPaneImpl tabsPane, int index, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
+        FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
         tabsPane.setTitleAt(index, (identifier == null ? "output" : identifier.getName()));
         tabsPane.setIconAt(index, icon);
         contentTypes.put(identifier != null ? identifier.getName() : "output", dataType.getText());
-//        Editor editor = editors.get(identifier != null ? identifier.getName() : "output");
+        Editor editor = editors.get(identifier != null ? identifier.getName() : "output");
+        ((EditorEx)editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
     }
     private void initTabs(WeaveFile weaveFile) {
         WeaveDocument document = weaveFile.getDocument();
