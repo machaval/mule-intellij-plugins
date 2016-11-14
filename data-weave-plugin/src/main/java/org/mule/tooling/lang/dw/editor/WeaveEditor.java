@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
+import com.intellij.refactoring.RefactoringFactory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBTabsPaneImpl;
 import com.intellij.ui.tabs.JBTabs;
@@ -280,6 +281,7 @@ public class WeaveEditor implements FileEditor {
         String title = identifier == null ? "output" : identifier.getName();
 
         PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language,"");
+
         if (identifier != null) {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override

@@ -31,14 +31,27 @@ public class WeavePreview {
                                     Map<String, Map<String, Object>> recordVars,
                                     List<String> functions
                                     ) {
+        String result = "";
+
         try {
+
             final Map<String, Object> runPreview = PreviewRunner.runPreview(dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
-            final Object result = runPreview.get(PreviewRunner.result_key());
-            return result.toString();
+            logger.debug("RunPreview is " + runPreview);
+            if (runPreview.containsKey(PreviewRunner.result_key())) {
+                result = runPreview.get(PreviewRunner.result_key()).toString();
+            } else if (runPreview.containsKey(PreviewRunner.message_key())) {
+                result = runPreview.get(PreviewRunner.message_key()).toString();
+                if (runPreview.containsKey("exceptionMessage")) {
+                    result = result + "\n" + runPreview.get("exceptionMessage").toString();
+                }
+
+            }
         } catch (Exception e) {
             logger.debug(e);
-            return e.toString();
+            result = e.toString();
         }
+
+        return result;
     }
 
 
