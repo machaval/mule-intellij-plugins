@@ -3,6 +3,7 @@ package org.mule.tooling.lang.dw.editor;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -11,8 +12,10 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorLocation;
+import com.intellij.openapi.fileEditor.FileEditorState;
+import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.*;
@@ -20,22 +23,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBTabsPaneImpl;
-import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.FileContentUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.WeaveFile;
 import org.mule.tooling.lang.dw.WeaveFileType;
-import org.mule.tooling.lang.dw.launcher.configuration.ui.WeaveInput;
 import org.mule.tooling.lang.dw.parser.psi.*;
 import org.mule.tooling.lang.dw.util.WeaveUtils;
 
@@ -56,6 +52,7 @@ public class WeaveEditor implements FileEditor {
 
     private Map<String, Editor> editors = new HashMap<String, Editor>();
     private Map<String, String> contentTypes = new HashMap<String, String>();
+    private Map<String, VirtualFile> inputOutputFiles = new HashMap<String, VirtualFile>();
 
     private JBTabsPaneImpl inputTabs;
     private JBTabsPaneImpl outputTabs;
@@ -132,6 +129,7 @@ public class WeaveEditor implements FileEditor {
                             itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
                             editors.remove(title);
                             contentTypes.remove(title);
+                            inputOutputFiles.remove(title);
                         }
                     }
                     if (!itemsToRemove.isEmpty()) {
@@ -270,17 +268,12 @@ public class WeaveEditor implements FileEditor {
     private void addTab(@NotNull JBTabsPaneImpl tabsPane, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
 
-        Language language = null;
-        Collection<Language> langs = Language.findInstancesByMimeType(dataType.getText());
-        if (langs.isEmpty()) {
-            language = PlainTextLanguage.INSTANCE;
-        } else {
-            language = langs.iterator().next();//Pick first one
-        }
+        Language language = getLanguage(dataType.getText());
 
         String title = identifier == null ? "output" : identifier.getName();
 
         PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language,"");
+        inputOutputFiles.put(title, f.getVirtualFile());
 
         if (identifier != null) {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
@@ -299,20 +292,26 @@ public class WeaveEditor implements FileEditor {
 
         contentTypes.put(title, dataType.getText());
 
-        tabsPane.getTabs().addTab(new TabInfo(editor.getComponent())
-                .setText(title)
-                .setIcon(icon));
+        TabInfo tabInfo = new TabInfo(editor.getComponent());
+        tabInfo.setText(title);
+        tabInfo.setIcon(icon);
+        tabsPane.getTabs().addTab(tabInfo);
     }
 
     private void updateTab(@NotNull JBTabsPaneImpl tabsPane, int index, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
         FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
-        tabsPane.setTitleAt(index, (identifier == null ? "output" : identifier.getName()));
+
+        String title = (identifier == null ? "output" : identifier.getName());
+
+        tabsPane.setTitleAt(index, title);
         tabsPane.setIconAt(index, icon);
-        contentTypes.put(identifier != null ? identifier.getName() : "output", dataType.getText());
-        Editor editor = editors.get(identifier != null ? identifier.getName() : "output");
-        ((EditorEx)editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
+        contentTypes.put(title, dataType.getText());
+
+        Editor oldEditor = editors.get(title);
+        ((EditorEx)oldEditor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
     }
+
     private void initTabs(WeaveFile weaveFile) {
         WeaveDocument document = weaveFile.getDocument();
         if (document != null) {
@@ -383,6 +382,18 @@ public class WeaveEditor implements FileEditor {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    private static Language getLanguage(String mimeType) {
+        Language language = null;
+        Collection<Language> langs = Language.findInstancesByMimeType(mimeType);
+        if (langs.isEmpty()) {
+            language = PlainTextLanguage.INSTANCE;
+        } else {
+            language = langs.iterator().next();//Pick first one
+        }
+
+        return language;
     }
 
     private static Map<String, Icon> iconsMap = new HashMap<String, Icon>() {{
