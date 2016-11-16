@@ -6,8 +6,11 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
+<<<<<<< HEAD
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+=======
+>>>>>>> machaval/develop-dw
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -55,6 +58,7 @@ public class OpenSampleAction extends AnAction {
         } catch (Exception e) {
             logger.error(e);
         }
+
     }
 
 }
