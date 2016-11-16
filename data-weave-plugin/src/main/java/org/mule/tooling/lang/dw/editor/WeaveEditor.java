@@ -71,9 +71,11 @@ public class WeaveEditor implements FileEditor {
         gui = new WeaveEditorUI(textEditor);
 
         inputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
+        ((JBTabsImpl)inputTabs.getTabs()).setSideComponentVertical(true);
         gui.getSourcePanel().add(inputTabs.getComponent(), BorderLayout.CENTER);
 
         outputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
+        ((JBTabsImpl)outputTabs.getTabs()).setSideComponentVertical(true);
         gui.getOutputPanel().add(outputTabs.getComponent(), BorderLayout.CENTER);
         gui.getOutputPanel().setSize(1000, 1000);
 
@@ -295,6 +297,14 @@ public class WeaveEditor implements FileEditor {
         TabInfo tabInfo = new TabInfo(editor.getComponent());
         tabInfo.setText(title);
         tabInfo.setIcon(icon);
+
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
+        actionGroup.add(new OpenSchemaAction());
+        if (identifier != null) { //For input tabs only
+            actionGroup.add(new OpenSampleAction(editor.getDocument()));
+        }
+        tabInfo.setActions(actionGroup, "SchemaOrSample");
+
         tabsPane.getTabs().addTab(tabInfo);
     }
 
