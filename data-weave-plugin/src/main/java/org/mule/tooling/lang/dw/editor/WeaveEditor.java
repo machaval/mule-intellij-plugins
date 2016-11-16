@@ -3,12 +3,19 @@ package org.mule.tooling.lang.dw.editor;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorLocation;
+import com.intellij.openapi.fileEditor.FileEditorState;
+import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.*;
@@ -16,21 +23,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
-import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBTabsPaneImpl;
-import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.FileContentUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.WeaveFile;
 import org.mule.tooling.lang.dw.WeaveFileType;
-import org.mule.tooling.lang.dw.launcher.configuration.ui.WeaveInput;
 import org.mule.tooling.lang.dw.parser.psi.*;
 import org.mule.tooling.lang.dw.util.WeaveUtils;
 
@@ -45,32 +46,36 @@ import java.util.List;
  */
 public class WeaveEditor implements FileEditor {
 
-    private VirtualFile virtualFile;
+    //private VirtualFile virtualFile;
     private Project project;
     private PsiAwareTextEditorImpl textEditor;
 
-    private List<Editor> editors = new ArrayList<Editor>();
+    private Map<String, Editor> editors = new HashMap<String, Editor>();
+    private Map<String, String> contentTypes = new HashMap<String, String>();
+    private Map<String, VirtualFile> inputOutputFiles = new HashMap<String, VirtualFile>();
 
     private JBTabsPaneImpl inputTabs;
     private JBTabsPaneImpl outputTabs;
 
-    private Map<String, TabInfo> tabsMap = new HashMap<String, TabInfo>();
+    //private Map<String, TabInfo> tabsMap = new HashMap<String, TabInfo>();
 
     private WeaveEditorUI gui;
 
     final static Logger logger = Logger.getInstance(WeaveEditor.class);
 
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
-        this.virtualFile = virtualFile;
+        //this.virtualFile = virtualFile;
         this.project = project;
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
 
         gui = new WeaveEditorUI(textEditor);
 
         inputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
+        ((JBTabsImpl)inputTabs.getTabs()).setSideComponentVertical(true);
         gui.getSourcePanel().add(inputTabs.getComponent(), BorderLayout.CENTER);
 
         outputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
+        ((JBTabsImpl)outputTabs.getTabs()).setSideComponentVertical(true);
         gui.getOutputPanel().add(outputTabs.getComponent(), BorderLayout.CENTER);
         gui.getOutputPanel().setSize(1000, 1000);
 
@@ -83,11 +88,16 @@ public class WeaveEditor implements FileEditor {
                 public void childReplaced(@NotNull PsiTreeChangeEvent event) {
                     super.childReplaced(event);
 
-                    if (event.getFile() != psiFile)
+                    if (event.getFile() != psiFile && !(event.getFile() instanceof WeaveFile))
                         return;
-
+                    WeaveDocument weaveDocument = weaveFile.getDocument();
+                    if (weaveDocument == null)
+                        return;
+                    WeaveHeader weaveHeader = weaveDocument.getHeader();
+                    if (weaveHeader == null)
+                        return;
                     //Iterate over input directives
-                    List<WeaveInputDirective> inputDirectives = WeaveUtils.getInputDirectiveList(weaveFile.getDocument().getHeader());
+                    List<WeaveInputDirective> inputDirectives = WeaveUtils.getInputDirectiveList(weaveHeader);
                     List<String> identifierNames = new ArrayList<String>();
 
                     for (WeaveInputDirective directive : inputDirectives) {
@@ -108,25 +118,28 @@ public class WeaveEditor implements FileEditor {
                                 } else {//If in the list of tabs - check type and replace as needed
                                     updateTab(inputTabs, tabIndex, identifier, dataType);
                                 }
-
-                                //Remove all tabs that are not in the input
-                                List<TabInfo> itemsToRemove = new ArrayList<TabInfo>();
-                                int count = inputTabs.getTabCount();
-                                for (int index = 0; index < count; index++) {
-                                    String title = inputTabs.getTitleAt(index);
-                                    if (!identifierNames.contains(title)) {
-                                        itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
-                                    }
-                                }
-                                if (!itemsToRemove.isEmpty()) {
-                                    for (TabInfo info : itemsToRemove) {
-                                        inputTabs.getTabs().removeTab(info);
-                                    }
-                                }
                             }
                         }
 
                     }
+                    //Remove all tabs that are not in the input
+                    List<TabInfo> itemsToRemove = new ArrayList<TabInfo>();
+                    int count = inputTabs.getTabCount();
+                    for (int index = 0; index < count; index++) {
+                        String title = inputTabs.getTitleAt(index);
+                        if (!identifierNames.contains(title)) {
+                            itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
+                            editors.remove(title);
+                            contentTypes.remove(title);
+                            inputOutputFiles.remove(title);
+                        }
+                    }
+                    if (!itemsToRemove.isEmpty()) {
+                        for (TabInfo info : itemsToRemove) {
+                            inputTabs.getTabs().removeTab(info);
+                        }
+                    }
+
                     //Update output directive
                     List<WeaveOutputDirective> outputDirectives = WeaveUtils.getOutputDirectiveList(weaveFile.getDocument().getHeader());
                     if (outputDirectives.isEmpty()) {
@@ -145,6 +158,8 @@ public class WeaveEditor implements FileEditor {
                     }
 
                     textEditor.getPreferredFocusedComponent().grabFocus();
+
+                    runPreview();
                 }
             });
 
@@ -225,7 +240,7 @@ public class WeaveEditor implements FileEditor {
 
     @Override
     public void dispose() {
-        for (Editor editor : editors) {
+        for (Editor editor : editors.values()) {
             EditorFactory.getInstance().releaseEditor(editor);
         }
         Disposer.dispose(textEditor);
@@ -255,31 +270,58 @@ public class WeaveEditor implements FileEditor {
     private void addTab(@NotNull JBTabsPaneImpl tabsPane, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
 
-        Language language = null;
-        Collection<Language> langs = Language.findInstancesByMimeType(dataType.getText());
-        if (langs.isEmpty()) {
-            language = PlainTextLanguage.INSTANCE;
-        } else {
-            language = langs.iterator().next();//Pick first one
-        }
+        Language language = getLanguage(dataType.getText());
+
+        String title = identifier == null ? "output" : identifier.getName();
 
         PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language,"");
+        inputOutputFiles.put(title, f.getVirtualFile());
 
+        if (identifier != null) {
+            f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
+                @Override
+                public void documentChanged(DocumentEvent e) {
+                    //super.documentChanged(e);
+                    runPreview();
+                }
+            });
+        }
 
         Editor editor = (identifier != null ?
                             EditorFactory.getInstance().createEditor(f.getViewProvider().getDocument(), getProject(), language.getAssociatedFileType(), false) :
                             EditorFactory.getInstance().createViewer(f.getViewProvider().getDocument(), getProject()));
-        editors.add(editor);
+        editors.put(title, editor);
 
-        tabsPane.getTabs().addTab(new TabInfo(editor.getComponent())
-                .setText(identifier == null ? "output" : identifier.getName())
-                .setIcon(icon));
+        contentTypes.put(title, dataType.getText());
+
+        TabInfo tabInfo = new TabInfo(editor.getComponent());
+        tabInfo.setText(title);
+        tabInfo.setIcon(icon);
+
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
+        actionGroup.add(new OpenSchemaAction());
+        if (identifier != null) { //For input tabs only
+            actionGroup.add(new OpenSampleAction(editor.getDocument()));
+        }
+        tabInfo.setActions(actionGroup, "SchemaOrSample");
+
+        tabsPane.getTabs().addTab(tabInfo);
     }
+
     private void updateTab(@NotNull JBTabsPaneImpl tabsPane, int index, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
-        tabsPane.setTitleAt(index, (identifier == null ? "output" : identifier.getName()));
+        FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
+
+        String title = (identifier == null ? "output" : identifier.getName());
+
+        tabsPane.setTitleAt(index, title);
         tabsPane.setIconAt(index, icon);
+        contentTypes.put(title, dataType.getText());
+
+        Editor oldEditor = editors.get(title);
+        ((EditorEx)oldEditor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
     }
+
     private void initTabs(WeaveFile weaveFile) {
         WeaveDocument document = weaveFile.getDocument();
         if (document != null) {
@@ -313,12 +355,55 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
+    private void runPreview() {
+        Map <String, Object> payload = new HashMap<String, Object>();
+        Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
+
+
+        /*
+        1. Get input from tabs - if payload exists, use payload, otherwise put in the Map
+        2. Get text from DW
+        3. Run preview, put the output to the output tab
+         */
+
+        int count = inputTabs.getTabCount();
+        for (int index = 0; index < count; index++) {
+            String title = inputTabs.getTitleAt(index);
+            Editor editor = editors.get(title);
+            Document document = editor.getDocument();
+            String text = document.getText();
+            String contentType = contentTypes.get(title);
+            Map<String, Object> content = WeavePreview.createContent(contentType, text);
+            if ("payload".equalsIgnoreCase(title)) {
+                payload = content;
+            } else {
+                flowVars.put(title, content);
+            }
+        }
+
+        String dwScript = this.textEditor.getEditor().getDocument().getText();
+        String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, new ArrayList<>());
+        editors.get("output").getDocument().setText(output);
+    }
+
     public Project getProject() {
         return project;
     }
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    private static Language getLanguage(String mimeType) {
+        Language language = null;
+        Collection<Language> langs = Language.findInstancesByMimeType(mimeType);
+        if (langs.isEmpty()) {
+            language = PlainTextLanguage.INSTANCE;
+        } else {
+            language = langs.iterator().next();//Pick first one
+        }
+
+        return language;
     }
 
     private static Map<String, Icon> iconsMap = new HashMap<String, Icon>() {{

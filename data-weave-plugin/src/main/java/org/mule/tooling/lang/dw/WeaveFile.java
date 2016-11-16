@@ -19,7 +19,10 @@ public class WeaveFile extends PsiFileBase {
     }
 
     public WeaveDocument getDocument() {
-        return getChildren().length > 0 ? (WeaveDocument) getChildren()[0] : null;
+        WeaveDocument document = null;
+        if (getChildren().length > 0 && getChildren()[0] instanceof WeaveDocument)
+            document = (WeaveDocument) getChildren()[0];
+        return document;
     }
 
 }
