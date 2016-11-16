@@ -6,6 +6,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,12 +38,24 @@ public class OpenSampleAction extends AnAction {
         final Project project = anActionEvent.getProject();
         final PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
 
-        new WriteCommandAction.Simple(project, psiFile) {
-            @Override
-            protected void run() throws Throwable {
-                document.setText("TODO: Open file dialog and load sample from disk");
-            }
-        }.execute();
+        VirtualFile sample = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(),
+                project, null);
+        if (sample == null)
+            return;
+
+        try {
+            final String text = new String(sample.contentsToByteArray(), sample.getCharset());
+
+            new WriteCommandAction.Simple(project, psiFile) {
+                @Override
+                protected void run() throws Throwable {
+                    document.setText(text);
+                }
+            }.execute();
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
     }
 
 }
