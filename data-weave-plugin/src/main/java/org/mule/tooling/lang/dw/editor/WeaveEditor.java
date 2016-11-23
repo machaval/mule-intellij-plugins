@@ -446,19 +446,15 @@ public class WeaveEditor implements FileEditor {
             Language language = null;
 
             if (file != null) {
-                logger.debug("*** VFile is " + file);
+                //logger.debug("*** VFile is " + file);
                 String newDataType = file.getUserData(WeaveEditor.newFileDataTypeKey);
-                logger.debug("*** newDataType is " + newDataType);
+                //logger.debug("*** newDataType is " + newDataType);
                 if (newDataType != null) {
                     language = WeaveEditor.getLanguage(newDataType);
-                    logger.debug("*** Resolved Language is " + language);
-                } else {
-                    language = LanguageUtil.getFileLanguage(file);
-                    logger.debug("*** LanguageUtil Language is " + language);
+                    //logger.debug("*** Resolved Language is " + language);
                 }
-            } else {
-                logger.debug("*** VFile is NULL ***");
             }
+
             return language;
         }
     }
