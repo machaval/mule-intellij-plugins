@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.esb.util.MuleConfigUtils;
+import org.mule.tooling.esb.util.MulePathUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,11 +42,10 @@ public class MuleProjectManager extends AbstractProjectComponent {
                             Module module = projectIndex.getModuleForFile(event.getFile());
                             if (module != null) { // File belongs to this module
 
-                                String fileName = event.getFileName();
                                 String fileAbsolutePath = event.getFile().getPath();
 
                                 String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                                String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
+                                String appPath = Paths.get(moduleContentRoot, MuleConfigUtils.CONFIG_RELATIVE_PATH).toString();
 
                                 PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
 
@@ -59,7 +59,7 @@ public class MuleProjectManager extends AbstractProjectComponent {
 
                                 if (psiFile != null && fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
                                     if (psiFile.getFileType() == StdFileTypes.XML) { //This is config file
-                                        String pathRelative = getRelativePath(fileAbsolutePath, appPath);
+                                        String pathRelative = MulePathUtils.getRelativePath(fileAbsolutePath, appPath);
                                         MuleDeployProperties.addConfigFile(appPath, pathRelative);
                                     }
                                 }
@@ -81,15 +81,14 @@ public class MuleProjectManager extends AbstractProjectComponent {
                         Module module = projectIndex.getModuleForFile(event.getFile());
 
                         if (module != null) { // File belongs to this module
-                            String fileName = event.getFileName();
                             String fileAbsolutePath = event.getFile().getPath();
 
                             String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                            String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
+                            String appPath = Paths.get(moduleContentRoot, MuleConfigUtils.CONFIG_RELATIVE_PATH).toString();
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                             if (fileAbsolutePath.startsWith(appPath)) { //The file was deleted in src/main/app
                                 if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
-                                    String pathRelative = getRelativePath(fileAbsolutePath, appPath);
+                                    String pathRelative = MulePathUtils.getRelativePath(fileAbsolutePath, appPath);
                                     MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
                                 } else if (event.getFile().isDirectory()) {
                             /* TODO
@@ -116,21 +115,21 @@ public class MuleProjectManager extends AbstractProjectComponent {
 
                             String fileName = event.getFileName();
 
-                            String oldAbsolutePath = event.getOldParent().getPath() + "/" + fileName;
-                            String newAbsolutePath = event.getNewParent() + "/" + fileName;
+                            String oldAbsolutePath = Paths.get(event.getOldParent().getPath(), fileName).toString();
+                            String newAbsolutePath = Paths.get(event.getNewParent().getPath(), fileName).toString();
 
                             String moduleContentRoot = projectIndex.getContentRootForFile(event.getFile()).getCanonicalPath();
-                            String appPath = moduleContentRoot + MuleConfigUtils.CONFIG_RELATIVE_PATH;
+                            String appPath = Paths.get(moduleContentRoot, MuleConfigUtils.CONFIG_RELATIVE_PATH).toString();
 
                             PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
                             if (MuleConfigUtils.isMuleFile(psiFile)) { //This is config file
 
                                 if (oldAbsolutePath.startsWith(appPath)) { //The file was in src/main/app, remove
-                                    String pathRelative = getRelativePath(oldAbsolutePath, appPath);
+                                    String pathRelative = MulePathUtils.getRelativePath(oldAbsolutePath, appPath);
                                     MuleDeployProperties.deleteConfigFile(appPath, pathRelative);
                                 }
                                 if (newAbsolutePath.startsWith(appPath)) { //The file now is in src/main/app, add
-                                    String pathRelative = getRelativePath(newAbsolutePath, appPath);
+                                    String pathRelative = MulePathUtils.getRelativePath(newAbsolutePath, appPath);
                                     MuleDeployProperties.addConfigFile(appPath, pathRelative);
                                 }
                             }
@@ -141,13 +140,7 @@ public class MuleProjectManager extends AbstractProjectComponent {
             }
             //=======================================
 
-            private String getRelativePath(String absolutePath, String appPath) {
-                Path pathAbsolute = Paths.get(absolutePath);
-                Path pathBase = Paths.get(appPath);
-                Path pathRelative = pathBase.relativize(pathAbsolute);
 
-                return pathRelative.toString();
-            }
 
         });
     }
