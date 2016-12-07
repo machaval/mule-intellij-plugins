@@ -37,7 +37,8 @@ public class MuleMavenProjectBuilderHelper
             VfsUtil.createDirectories(root.getPath() + "/src/main/api");
             //MUnit support
             VfsUtil.createDirectories(root.getPath() + "/src/test/munit");
-            VfsUtil.createDirectories(root.getPath() + "/src/test/resources");
+            final VirtualFile testResources = VfsUtil.createDirectories(root.getPath() + "/src/test/resources");
+            createLog4JTest(project, projectId, testResources);
 
             createPomFile(project, projectId, muleVersion, root);
             // execute when current dialog is closed (e.g. Project Structure)
@@ -98,7 +99,7 @@ public class MuleMavenProjectBuilderHelper
 
     private VirtualFile createLog4J(final Project project, final MavenId projectId, final VirtualFile appDirectory)
     {
-        return new WriteCommandAction<VirtualFile>(project, "Create Mule Deploy Properties File", PsiFile.EMPTY_ARRAY)
+        return new WriteCommandAction<VirtualFile>(project, "Create Log4J File", PsiFile.EMPTY_ARRAY)
         {
             @Override
             protected void run(@NotNull Result<VirtualFile> result) throws Throwable
@@ -114,6 +115,32 @@ public class MuleMavenProjectBuilderHelper
                     final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.LOG4J2);
                     final Properties defaultProperties = manager.getDefaultProperties();
                     defaultProperties.putAll(templateProps);
+                    final String text = template.getText(defaultProperties);
+                    VfsUtil.saveText(configFile, text);
+                    result.setResult(configFile);
+                }
+                catch (IOException e)
+                {
+                    showError(project, e);
+                }
+            }
+        }.execute().getResultObject();
+    }
+
+    private VirtualFile createLog4JTest(final Project project, final MavenId projectId, final VirtualFile appDirectory)
+    {
+        return new WriteCommandAction<VirtualFile>(project, "Create Log4J Test File", PsiFile.EMPTY_ARRAY)
+        {
+            @Override
+            protected void run(@NotNull Result<VirtualFile> result) throws Throwable
+            {
+
+                try
+                {
+                    VirtualFile configFile = appDirectory.findOrCreateChildData(this, "log4j2-test.xml");
+                    final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.LOG4J2_TEST);
+                    final Properties defaultProperties = manager.getDefaultProperties();
                     final String text = template.getText(defaultProperties);
                     VfsUtil.saveText(configFile, text);
                     result.setResult(configFile);
