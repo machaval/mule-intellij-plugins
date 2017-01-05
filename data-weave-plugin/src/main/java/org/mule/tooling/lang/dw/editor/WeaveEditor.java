@@ -306,7 +306,8 @@ public class WeaveEditor implements FileEditor {
         tabInfo.setIcon(icon);
 
         DefaultActionGroup actionGroup = new DefaultActionGroup();
-        actionGroup.add(new OpenSchemaAction());
+        //TODO: Removed OpenSchemaAction for now...
+        //actionGroup.add(new OpenSchemaAction());
         if (identifier != null) { //For input tabs only
             actionGroup.add(new OpenSampleAction(editor.getDocument()));
         }
