@@ -10,16 +10,11 @@ ModuleRootManager.getInstance(module).getCompilerOutputPath();
     https://github.com/JetBrains/intellij-community/blob/master/platform/analysis-api/src/com/intellij/lang/annotation/ExternalAnnotator.java
 
 
-//Playground for DW - file editor provider:
+//Playground for DW:
 
- Persisting metadata set for DW: http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html
+    - Persisting metadata set for DW: http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html
+    - Find a way to specify the application/java for inputs;
+    - Find a way to pass the MEL global functions to the Preview;
+    - Schemas/samples and autocompletion;
 
-Use the EditorTextField component.
-public class TesterFactory implements ToolWindowFactory {
-  public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    LightVirtualFile virtualFile = new LightVirtualFile("Foo.gs", GosuClassFileType.instance(), "");
-    FileEditor editor = PsiAwareTextEditorProvider.getInstance().createEditor(project, virtualFile);
-    JComponent component = editor.getComponent();
-    toolWindow.getComponent().add(component);
-  }
-}
+

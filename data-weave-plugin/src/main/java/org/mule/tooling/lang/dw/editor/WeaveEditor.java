@@ -2,7 +2,10 @@ package org.mule.tooling.lang.dw.editor;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.scratch.RootType;
+import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -22,8 +25,12 @@ import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
+import com.intellij.psi.util.FileTypeUtils;
 import com.intellij.ui.JBTabsPaneImpl;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
@@ -38,6 +45,9 @@ import org.mule.tooling.lang.dw.util.WeaveUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.List;
 
@@ -46,7 +56,6 @@ import java.util.List;
  */
 public class WeaveEditor implements FileEditor {
 
-    //private VirtualFile virtualFile;
     private Project project;
     private PsiAwareTextEditorImpl textEditor;
 
@@ -57,14 +66,13 @@ public class WeaveEditor implements FileEditor {
     private JBTabsPaneImpl inputTabs;
     private JBTabsPaneImpl outputTabs;
 
-    //private Map<String, TabInfo> tabsMap = new HashMap<String, TabInfo>();
-
     private WeaveEditorUI gui;
 
     final static Logger logger = Logger.getInstance(WeaveEditor.class);
 
+    final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
+
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
-        //this.virtualFile = virtualFile;
         this.project = project;
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
 
@@ -281,15 +289,14 @@ public class WeaveEditor implements FileEditor {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override
                 public void documentChanged(DocumentEvent e) {
-                    //super.documentChanged(e);
                     runPreview();
                 }
             });
         }
 
-        Editor editor = (identifier != null ?
-                            EditorFactory.getInstance().createEditor(f.getViewProvider().getDocument(), getProject(), language.getAssociatedFileType(), false) :
-                            EditorFactory.getInstance().createViewer(f.getViewProvider().getDocument(), getProject()));
+        f.getVirtualFile().putUserData(newFileDataTypeKey, dataType.getText());
+
+        Editor editor = EditorFactory.getInstance().createEditor(f.getViewProvider().getDocument(), getProject(), language.getAssociatedFileType(), (identifier == null));
         editors.put(title, editor);
 
         contentTypes.put(title, dataType.getText());
@@ -310,7 +317,6 @@ public class WeaveEditor implements FileEditor {
 
     private void updateTab(@NotNull JBTabsPaneImpl tabsPane, int index, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
-        FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
 
         String title = (identifier == null ? "output" : identifier.getName());
 
@@ -318,7 +324,12 @@ public class WeaveEditor implements FileEditor {
         tabsPane.setIconAt(index, icon);
         contentTypes.put(title, dataType.getText());
 
+        VirtualFile vfile = inputOutputFiles.get(title);
+        vfile.putUserData(newFileDataTypeKey, dataType.getText());
+        FileContentUtilCore.reparseFiles(vfile);
+
         Editor oldEditor = editors.get(title);
+        FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
         ((EditorEx)oldEditor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
     }
 
@@ -423,4 +434,28 @@ public class WeaveEditor implements FileEditor {
         put("application/java", StdFileTypes.JAVA);
     }};
 
+    public static class WeaveIOSubstitutor extends LanguageSubstitutor {
+        @Nullable
+        @Override
+        public Language getLanguage(@NotNull VirtualFile file, @NotNull Project project) {
+            return substituteLanguage(project, file);
+        }
+
+        @Nullable
+        public static Language substituteLanguage(@NotNull Project project, @NotNull VirtualFile file) {
+            Language language = null;
+
+            if (file != null) {
+                //logger.debug("*** VFile is " + file);
+                String newDataType = file.getUserData(WeaveEditor.newFileDataTypeKey);
+                //logger.debug("*** newDataType is " + newDataType);
+                if (newDataType != null) {
+                    language = WeaveEditor.getLanguage(newDataType);
+                    //logger.debug("*** Resolved Language is " + language);
+                }
+            }
+
+            return language;
+        }
+    }
 }
