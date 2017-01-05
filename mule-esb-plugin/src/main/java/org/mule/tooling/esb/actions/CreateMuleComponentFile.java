@@ -14,7 +14,7 @@ public class CreateMuleComponentFile extends CreateFileFromTemplateAction implem
     public static final String MULE_CONFIGURATION = "Create Mule Component";
 
     public CreateMuleComponentFile() {
-        super(MULE_CONFIGURATION, "New Mule Component.", MuleIcons.MuleIcon);
+        super("Mule Component", "Create New Mule Component.", MuleIcons.MuleIcon);
     }
 
     @Override
