@@ -26,6 +26,7 @@
     <idea-version since-build="145"/>
 
     <depends>org.jetbrains.plugins.yaml</depends>
+    <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
 
