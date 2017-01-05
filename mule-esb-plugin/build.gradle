@@ -4,7 +4,7 @@ configurations {
 }
 
 dependencies {
-    compile files('lib/mule-plugin-debugger-3.8.0.jar',
+    compile files('lib/mule-plugin-debugger-3.8.3.jar',
                   'lib/security-api-1.6.0.jar',
                   'lib/mule-module-apikit-soap-common-1.0.0.jar',
                   'lib/mule-module-apikit-soap-xml-generator-1.0.0.jar',

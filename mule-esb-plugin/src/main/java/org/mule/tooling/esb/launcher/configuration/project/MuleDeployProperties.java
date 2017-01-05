@@ -99,4 +99,7 @@ public class MuleDeployProperties
         }
     }
 
+    public static void renameConfigFile(String oldName, String newName) {
+
+    }
 }
