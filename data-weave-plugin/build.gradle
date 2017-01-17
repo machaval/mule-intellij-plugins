@@ -8,6 +8,7 @@ sourceSets {
 
 configurations {
     gen
+    all*.exclude module: 'stax-api'
 }
 
 dependencies {
@@ -24,8 +25,6 @@ dependencies {
     //compile (group: 'stax', name: 'stax-api', version: '1.0.1')
     compile (group: 'org.codehaus.woodstox', name: 'stax2-api', version: '4.0.0')
     compile (group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '5.0.2')
-
-
 }
 
 intellij {
