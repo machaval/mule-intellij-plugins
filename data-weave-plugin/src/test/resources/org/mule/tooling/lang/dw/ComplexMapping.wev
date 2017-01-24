@@ -46,7 +46,7 @@
 				Address1: payload.crm#Individual.crm#AddressList.*crm#Address[($.crm#AddressType == "Residential")][0].crm#Line1 default ""
 			},
 			gLLADDRESS @(g: 1): {
-				(payload.crm#Individual.crm#AddressList.*crm#Address[($.crm#AddressType == "Residential")] map ((address, indexOfAddress) -> {
+				(payload.crm#Individual.crm#AddressList.*crm#Address[?($.crm#AddressType == "Residential")] map ((address, indexOfAddress) -> {
 					mLLADDRESS @(m: 1): {
 						sgLLADDRESS @(sg: 1): {
 						    Address2: address.crm#Line2 default ""
@@ -104,7 +104,7 @@
             	   }))
             },
 			gOFFPHONE @(g: 1): {
-				OffPhone: payload.crm#Individual.crm#PhoneList.*crm#Phone[($.crm#PhoneType == "Work")][0].crm#PhoneNumber default ""
+				OffPhone: payload.crm#Individual.crm#PhoneList.*crm#Phone[?($.crm#PhoneType == "Work")][0].crm#PhoneNumber default ""
 			},
 			ReviewFrequency: "",
 			CustomerLiability: "",
@@ -141,7 +141,7 @@
 					Occupation: payload.crm#Individual.crm#Occupation,
 					JobTitle: payload.crm#Individual.crm#JobTitle default "",
 					EmployersName: payload.crm#Individual.crm#Employer,
-					sgEMPLOYERSADD @(sg: 1): using (employerAddress = payload.crm#Individual.crm#AddressList.*crm#Address[($.crm#AddressType == "Employer")][0]) {
+					sgEMPLOYERSADD @(sg: 1): using (employerAddress = payload.crm#Individual.crm#AddressList.*crm#Address[?($.crm#AddressType == "Employer")][0]) {
                         EmployersAddress: (employerAddress.crm#AddressNumber default "") ++ " " ++ (employerAddress.crm#Line1 default "") ++ " " ++ (employerAddress.crm#Line2 default "")
 					},
 					EmployersBusiness: "",
