@@ -2016,10 +2016,10 @@ public class WeaveParser implements PsiParser, LightPsiParser {
   // 14: BINARY(MultiplicationDivisionExpression)
   // 15: POSTFIX(FunctionCallExpression)
   // 16: POSTFIX(DotSelectorExpression)
-  // 17: POSTFIX(BracketSelectorExpression)
-  // 18: BINARY(DynamicSelectorExpression)
-  // 19: POSTFIX(RangeSelectorExpression)
-  // 20: BINARY(FilterSelectorExpression)
+  // 17: BINARY(FilterSelectorExpression)
+  // 18: POSTFIX(BracketSelectorExpression)
+  // 19: BINARY(DynamicSelectorExpression)
+  // 20: POSTFIX(RangeSelectorExpression)
   // 21: ATOM(UsingExpression)
   // 22: ATOM(UnaryExpression)
   // 23: ATOM(ValueExpression)
@@ -2112,23 +2112,23 @@ public class WeaveParser implements PsiParser, LightPsiParser {
         r = true;
         exit_section_(b, l, m, DOT_SELECTOR_EXPRESSION, r, true, null);
       }
-      else if (g < 17 && BracketSelectorExpression_0(b, l + 1)) {
+      else if (g < 17 && FilterSelectorExpression_0(b, l + 1)) {
+        r = report_error_(b, Expression(b, l, 17));
+        r = consumeToken(b, R_BRACKET) && r;
+        exit_section_(b, l, m, FILTER_SELECTOR_EXPRESSION, r, true, null);
+      }
+      else if (g < 18 && BracketSelectorExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, BRACKET_SELECTOR_EXPRESSION, r, true, null);
       }
-      else if (g < 18 && consumeTokenSmart(b, L_BRACKET)) {
-        r = report_error_(b, Expression(b, l, 18));
+      else if (g < 19 && consumeTokenSmart(b, L_BRACKET)) {
+        r = report_error_(b, Expression(b, l, 19));
         r = consumeToken(b, R_BRACKET) && r;
         exit_section_(b, l, m, DYNAMIC_SELECTOR_EXPRESSION, r, true, null);
       }
-      else if (g < 19 && consumeTokenSmart(b, RULE_RANGE_LITERAL)) {
+      else if (g < 20 && consumeTokenSmart(b, RULE_RANGE_LITERAL)) {
         r = true;
         exit_section_(b, l, m, RANGE_SELECTOR_EXPRESSION, r, true, null);
-      }
-      else if (g < 20 && FilterSelectorExpression_0(b, l + 1)) {
-        r = report_error_(b, Expression(b, l, 20));
-        r = FilterSelectorExpression_1(b, l + 1) && r;
-        exit_section_(b, l, m, FILTER_SELECTOR_EXPRESSION, r, true, null);
       }
       else {
         exit_section_(b, l, m, null, false, false, null);
@@ -2326,6 +2326,17 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  // '[' '?'
+  private static boolean FilterSelectorExpression_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FilterSelectorExpression_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, L_BRACKET);
+    r = r && consumeToken(b, QUESTION);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // '[' Selector ']'
   private static boolean BracketSelectorExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BracketSelectorExpression_0")) return false;
@@ -2333,29 +2344,6 @@ public class WeaveParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, L_BRACKET);
     r = r && Selector(b, l + 1);
-    r = r && consumeToken(b, R_BRACKET);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // '[' '?' '('
-  private static boolean FilterSelectorExpression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FilterSelectorExpression_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokenSmart(b, L_BRACKET);
-    r = r && consumeToken(b, QUESTION);
-    r = r && consumeToken(b, L_PARREN);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // ')' ']'
-  private static boolean FilterSelectorExpression_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FilterSelectorExpression_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, R_PARREN);
     r = r && consumeToken(b, R_BRACKET);
     exit_section_(b, m, null, r);
     return r;

@@ -237,9 +237,6 @@ public interface WeaveTypes {
       else if (type == CLOJURE_LITERAL_EXPRESSION) {
         return new WeaveClojureLiteralExpressionImpl(node);
       }
-      else if (type == CLOJURE_WITHOUT_PARAMETERS_EXPRESSION) {
-        return new WeaveClojureWithoutParametersExpressionImpl(node);
-      }
       else if (type == CLOJURE_WITH_ONE_PARAMETERS_EXPRESSION) {
         return new WeaveClojureWithOneParametersExpressionImpl(node);
       }
@@ -294,9 +291,6 @@ public interface WeaveTypes {
       else if (type == EQUALITY_EXPRESSION) {
         return new WeaveEqualityExpressionImpl(node);
       }
-      else if (type == EXPRESSION) {
-        return new WeaveExpressionImpl(node);
-      }
       else if (type == EXPRESSION_PATTERN) {
         return new WeaveExpressionPatternImpl(node);
       }
@@ -341,9 +335,6 @@ public interface WeaveTypes {
       }
       else if (type == LAMBDA_LITERAL) {
         return new WeaveLambdaLiteralImpl(node);
-      }
-      else if (type == LITERAL_EXPRESSION) {
-        return new WeaveLiteralExpressionImpl(node);
       }
       else if (type == LITERAL_PATTERN) {
         return new WeaveLiteralPatternImpl(node);
@@ -393,14 +384,8 @@ public interface WeaveTypes {
       else if (type == OUTPUT_DIRECTIVE) {
         return new WeaveOutputDirectiveImpl(node);
       }
-      else if (type == PATTERN) {
-        return new WeavePatternImpl(node);
-      }
       else if (type == PATTERN_MATCHER_EXPRESSION) {
         return new WeavePatternMatcherExpressionImpl(node);
-      }
-      else if (type == RANGE_EXPRESSION) {
-        return new WeaveRangeExpressionImpl(node);
       }
       else if (type == RANGE_LITERAL) {
         return new WeaveRangeLiteralImpl(node);
@@ -458,9 +443,6 @@ public interface WeaveTypes {
       }
       else if (type == USING_EXPRESSION) {
         return new WeaveUsingExpressionImpl(node);
-      }
-      else if (type == VALUE_EXPRESSION) {
-        return new WeaveValueExpressionImpl(node);
       }
       else if (type == VALUE_SELECTOR) {
         return new WeaveValueSelectorImpl(node);

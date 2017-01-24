@@ -11,7 +11,7 @@ import static org.mule.tooling.lang.dw.parser.psi.WeaveTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.mule.tooling.lang.dw.parser.psi.*;
 
-public class WeaveExpressionImpl extends ASTWrapperPsiElement implements WeaveExpression {
+public abstract class WeaveExpressionImpl extends ASTWrapperPsiElement implements WeaveExpression {
 
   public WeaveExpressionImpl(ASTNode node) {
     super(node);

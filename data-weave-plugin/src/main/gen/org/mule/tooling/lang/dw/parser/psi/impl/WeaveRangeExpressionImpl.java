@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.mule.tooling.lang.dw.parser.psi.WeaveTypes.*;
 import org.mule.tooling.lang.dw.parser.psi.*;
 
-public class WeaveRangeExpressionImpl extends WeaveExpressionImpl implements WeaveRangeExpression {
+public abstract class WeaveRangeExpressionImpl extends WeaveExpressionImpl implements WeaveRangeExpression {
 
   public WeaveRangeExpressionImpl(ASTNode node) {
     super(node);

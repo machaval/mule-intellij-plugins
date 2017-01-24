@@ -202,10 +202,10 @@ Expression::= ConditionalExpression|
             MultiplicationDivisionExpression|
             FunctionCallExpression|
             DotSelectorExpression|
+            FilterSelectorExpression|
             BracketSelectorExpression|
             DynamicSelectorExpression|
             RangeSelectorExpression|
-            FilterSelectorExpression|
             UsingExpression|
             UnaryExpression|
             ValueExpression
@@ -321,7 +321,7 @@ RangeSelectorExpression ::=Expression RULE_RANGE_LITERAL
 
 DynamicSelectorExpression ::=Expression'[' Expression ']'
 
-FilterSelectorExpression ::=Expression'[' '?' '(' ClojureWithoutParametersExpression ')' ']'
+FilterSelectorExpression ::=Expression'[' '?' EnclosedExpression ']'
 
 BracketSelectorExpression::=Expression'[' Selector ']'
 
