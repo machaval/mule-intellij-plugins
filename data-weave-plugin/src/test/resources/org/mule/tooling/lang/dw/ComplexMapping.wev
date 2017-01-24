@@ -1,0 +1,170 @@
+%dw 1.0
+%input payload application/xml
+%output application/xml
+%namespace t24 http://temenos.com/Juno-1.6-R13PI-30
+%namespace crm http://crm.sagicorjamaica.com/
+%var defSectorCode="1300"
+%var defIndustryCode="2310"
+---
+{
+	t24#CreateIndividualCustomer: {
+		WebRequestCommon: {
+//			company: "JM0011000",
+//			password: "T3men0sSpnc309",
+//			userName: "MULESOFT1"
+    		company: p('t24.hof.companycode'),
+        	password: p('t24.api.password'),
+        	userName: p('t24.api.username')
+		},
+
+		OfsFunction: {
+			activityName: "",
+			assignReason: "",
+			dueDate: "",
+			extProcess: "",
+			extProcessID: "",
+			gtsControl: "",
+			messageId: "",
+			noOfAuth: "",
+			owner: "",
+			"replace": "",
+			startDate: "",
+			user: ""
+		},
+		CUSTOMERSBJINPUTEBBType @(id: ""): {
+			gSHORTNAME @(g: 1): {
+				ShortName: payload.crm#Individual.crm#FirstName[0..3]
+							++ payload.crm#Individual.crm#LastName[0..3]
+			},
+			gNAME1 @(g: 1): {
+				Name1: payload.crm#Individual.crm#FirstName
+			},
+			gNAME2 @(g: 1): {
+				Name2: payload.crm#Individual.crm#LastName
+			},
+			gSTREET @(g: 1): {
+				Address1: payload.crm#Individual.crm#AddressList.*crm#Address[($.crm#AddressType == "Residential")][0].crm#Line1 default ""
+			},
+			gLLADDRESS @(g: 1): {
+				(payload.crm#Individual.crm#AddressList.*crm#Address[?($.crm#AddressType == "Residential")] map ((address, indexOfAddress) -> {
+					mLLADDRESS @(m: 1): {
+						sgLLADDRESS @(sg: 1): {
+						    Address2: address.crm#Line2 default ""
+						}
+					}
+				}))
+			},
+			gTOWNCOUNTRY @(g: 1): {
+				TownCity: payload.crm#Individual.crm#AddressList.crm#Address.crm#City
+			},
+			gPOSTCODE @(g: 1): {
+				ParishState: payload.crm#Individual.crm#AddressList.crm#Address.crm#PostalZip
+			},
+			gCOUNTRY @(g: 1): {
+				Country: payload.crm#Individual.crm#AddressList.crm#Address.crm#Country.crm#IsoCode
+			},
+			gRELATIONCODE @(g: 1): {
+				mRELATIONCODE @(m: 1): {
+					RelationCode: "",
+					RelationCustomer: "",
+					ReverseRelation: "",
+					sgRELDELIVOPT @(sg: 1): {
+						RelationDelOption @(s: 1): {
+							RelationDelOption: "",
+							RelRole: "",
+							MoreRoleinfo: "",
+							Rolenotes: ""
+						}
+					}
+				}
+			},
+			Sector: defSectorCode,
+			AccountOfficer: payload.crm#Individual.crm#CreatedBy default "",
+			gOTHEROFFICER @(g: 1): {
+				OtherOfficer: ""
+			},
+			Industry: defIndustryCode,
+			Target: "1",
+			Nationality: payload.crm#Individual.crm#Nationality,
+			CustomerStatus: "1",
+			Residence: payload.crm#Individual.crm#CountryOfResidence.crm#IsoCode,
+			gTEXT @(g: 1): {
+				Text: ""
+			},
+			gLEGALID @(g: 1): {
+            	      (payload.crm#Individual.crm#IdNumbers.*crm#IdNumber map ((idNumber, count) -> {
+            				mLEGALID @(m: count + 1): {
+            					IdentificationNumber: idNumber.crm#IdNumber,
+            					DocumentName: idNumber.crm#IdNumberType,
+            					NameonID: "",
+            					IssueAuthority: "",
+            					IssueDate: "2017-01-13",
+            					ExpirationDate: idNumber.crm#IdNumberExpiryDate
+            				}
+            	   }))
+            },
+			gOFFPHONE @(g: 1): {
+				OffPhone: payload.crm#Individual.crm#PhoneList.*crm#Phone[?($.crm#PhoneType == "Work")][0].crm#PhoneNumber default ""
+			},
+			ReviewFrequency: "",
+			CustomerLiability: "",
+			ResidenceRegion: payload.crm#Individual.crm#CountryOfResidence.crm#IsoCode,
+			gCUSTOMERRATING @(g: 1): {
+				CustomerRating: ""
+			},
+			gCRPROFILETYPE @(g: 1): {
+				mCRPROFILETYPE @(m: 1): {
+					CrProfileType: "",
+					CrProfile: ""
+				}
+			},
+			CRMUpdateYN: "",
+			Title: payload.crm#Individual.crm#Title,
+			GivenName: payload.crm#Individual.crm#FirstName,
+			FamilyName: payload.crm#Individual.crm#LastName,
+			//gender: payload.crm#Individual.crm#Gender,
+			DateofBirth: payload.crm#Individual.crm#DateOfBirth,
+			MaritalStatus: payload.crm#Individual.crm#MaritialStatus,
+			NoOfDependents: "",
+
+            gPHONE1 @(g: 1): payload.crm#Individual.crm#PhoneList.*crm#Phone mapObject {
+                mPHONE1 @(m: 1): {
+					Phone1: $.crm#PhoneNumber,
+					Sms1: "",
+					Email1: ""
+				}
+            },
+
+			gEMPLOYMENTSTATUS @(g: 1): {
+				mEMPLOYMENTSTATUS @(m: 1): {
+					EmploymentStatus: "",
+					Occupation: payload.crm#Individual.crm#Occupation,
+					JobTitle: payload.crm#Individual.crm#JobTitle default "",
+					EmployersName: payload.crm#Individual.crm#Employer,
+					sgEMPLOYERSADD @(sg: 1): using (employerAddress = payload.crm#Individual.crm#AddressList.*crm#Address[?($.crm#AddressType == "Employer")][0]) {
+                        EmployersAddress: (employerAddress.crm#AddressNumber default "") ++ " " ++ (employerAddress.crm#Line1 default "") ++ " " ++ (employerAddress.crm#Line2 default "")
+					},
+					EmployersBusiness: "",
+					EmploymentStartDt: payload.crm#Individual.crm#EmpStartDate default "1970-01-01",
+					CustomerCurrency: ""
+				}
+			},
+			gRESIDENCESTATUS @(g: 1): {
+				mRESIDENCESTATUS @(m: 1): {
+					ResidenceStatus: payload.crm#Individual.crm#ResidencyStatus,
+					ResidenceType: ""
+				}
+			},
+			gCOMMTYPE @(g: 1): {
+				mCOMMTYPE @(m: 1): {
+					CommType: ""
+				}
+			},
+			gTAXID @(g: 1): {
+				TaxID: payload.crm#Individual.crm#TaxID
+			},
+			PlaceofBirth: payload.crm#Individual.crm#CountryOfBirth.crm#IsoCode,
+			Mothersmaidenname: payload.crm#Individual.crm#MothersMaidenName
+		}
+	}
+}

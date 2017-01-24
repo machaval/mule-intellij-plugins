@@ -73,6 +73,11 @@ public class WeaveParserTest extends ParsingTestCase
         doTest(true);
     }
 
+    public void testComplexMapping()
+    {
+        doTest(true);
+    }
+
 
     @Override
     protected String getTestDataPath()
