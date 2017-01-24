@@ -14,7 +14,7 @@
           <dividerLocation value="317"/>
           <dividerSize value="9"/>
           <doubleBuffered value="true"/>
-          <oneTouchExpandable value="true"/>
+          <preferredSize width="18" height="100"/>
           <resizeWeight value="0.33"/>
         </properties>
         <border type="empty"/>
@@ -42,7 +42,6 @@
                   <dividerSize value="9"/>
                   <doubleBuffered value="true"/>
                   <enabled value="true"/>
-                  <oneTouchExpandable value="true"/>
                   <preferredSize width="9" height="10000"/>
                   <requestFocusEnabled value="false"/>
                   <resizeWeight value="0.8"/>
@@ -56,7 +55,9 @@
                     <constraints>
                       <splitpane position="left"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="10" height="10"/>
+                    </properties>
                     <border type="none"/>
                     <children/>
                   </grid>
@@ -64,7 +65,10 @@
                     <constraints>
                       <splitpane position="right"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredSize width="10" height="10"/>
+                    </properties>
                     <border type="empty"/>
                     <children/>
                   </grid>

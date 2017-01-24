@@ -310,6 +310,8 @@ public class WeaveEditor implements FileEditor {
         //actionGroup.add(new OpenSchemaAction());
         if (identifier != null) { //For input tabs only
             actionGroup.add(new OpenSampleAction(editor.getDocument()));
+        } else { //Add Refresh to OutputTab
+            actionGroup.add(new RefreshAction(this));
         }
         tabInfo.setActions(actionGroup, "SchemaOrSample");
 
@@ -367,7 +369,7 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
-    private void runPreview() {
+    protected void runPreview() {
         Map <String, Object> payload = new HashMap<String, Object>();
         Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
 
