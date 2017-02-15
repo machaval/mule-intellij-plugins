@@ -141,6 +141,9 @@
         <!-- MUnit -->
         <dom.fileDescription implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>
 
+
+        <fileEditorProvider  implementation="org.mule.tooling.esb.editor.MuleConfigEditorProvider"/>
+
         <!--Templates-->
         <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
