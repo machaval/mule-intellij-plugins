@@ -7,22 +7,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 
 
-class WeaveConfigurationFactory extends ConfigurationFactory
-{
+class WeaveConfigurationFactory extends ConfigurationFactory {
 
-    public WeaveConfigurationFactory(WeaveConfigurationType configurationType)
-    {
-        super(configurationType);
-    }
+  public WeaveConfigurationFactory(WeaveConfigurationType configurationType) {
+    super(configurationType);
+  }
 
-    public RunConfiguration createTemplateConfiguration(Project project)
-    {
-        return new WeaveConfiguration("Data Weave", this, project);
-    }
+  public RunConfiguration createTemplateConfiguration(Project project) {
+    return new WeaveConfiguration("Data Weave", this, project);
+  }
 
-    @Override
-    public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task)
-    {
-        super.configureBeforeRunTaskDefaults(providerID, task);
-    }
+  @Override
+  public void configureBeforeRunTaskDefaults(Key<? extends BeforeRunTask> providerID, BeforeRunTask task) {
+    super.configureBeforeRunTaskDefaults(providerID, task);
+  }
 }

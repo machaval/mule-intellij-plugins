@@ -1,0 +1,11 @@
+%function fun(name: String): String = name
+%function fun1(name: String) = name
+%function fun2(name) = name
+%function fun3(callback: (msg: String)=> String ) = callback("The cat is under the table")
+
+%var lambda = (name: String): String -> name
+%var lambda1 = (name: String) -> name
+%function echo(message) message
+%output application/dw
+---
+echo("Mariano")

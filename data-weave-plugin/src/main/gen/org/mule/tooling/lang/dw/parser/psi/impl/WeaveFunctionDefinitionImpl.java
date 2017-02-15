@@ -44,4 +44,10 @@ public class WeaveFunctionDefinitionImpl extends WeaveNamedElementImpl implement
     return findNotNullChildByClass(WeaveIdentifier.class);
   }
 
+  @Override
+  @Nullable
+  public WeaveType getType() {
+    return findChildByClass(WeaveType.class);
+  }
+
 }

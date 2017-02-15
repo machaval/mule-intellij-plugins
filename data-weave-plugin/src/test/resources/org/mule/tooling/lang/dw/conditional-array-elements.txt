@@ -1,0 +1,13 @@
+{
+  a: [ "a", ("b") when true, "c" ],
+  b: [ "a", ("b") when false, "c" ],
+  c: [ "a", ("b") when in0."true", "c" ],
+  d: [ "a", ("b") when in0."false", "c" ],
+  e: [ "a", ("b") when true, "c" ].b,
+  f: [ "a", ("b") when false, "c" ].b,
+  g: [ "a", ("b") when false, "c" ] == [ "a", ("b") when true, "c" ],
+  h: ([ "a", ("b") when false, "c" ] map $).b,
+  i: sizeOf([ "a", ("b") when false, "c" ]),
+  j: [ "a", ("b") when true, "c" ] filter $ != "c",
+  k: [ "a", ("b") when false, "c" ] filter $ != "c"
+}

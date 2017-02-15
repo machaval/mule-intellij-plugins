@@ -13,24 +13,24 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class WeaveVariableDirectiveView extends PsiTreeElementBase<WeaveVariableDirective> {
-    protected WeaveVariableDirectiveView(WeaveVariableDirective psiElement) {
-        super(psiElement);
-    }
+  protected WeaveVariableDirectiveView(WeaveVariableDirective psiElement) {
+    super(psiElement);
+  }
 
-    @NotNull
-    @Override
-    public Collection<StructureViewTreeElement> getChildrenBase() {
-        return Arrays.asList();
-    }
+  @NotNull
+  @Override
+  public Collection<StructureViewTreeElement> getChildrenBase() {
+    return Arrays.asList();
+  }
 
-    @Nullable
-    @Override
-    public String getPresentableText() {
-        return getElement().getVariableDefinition().getName();
-    }
+  @Nullable
+  @Override
+  public String getPresentableText() {
+    return getElement().getVariableDefinition().getName();
+  }
 
-    @Override
-    public Icon getIcon(boolean open) {
-        return AllIcons.Nodes.Variable;
-    }
+  @Override
+  public Icon getIcon(boolean open) {
+    return AllIcons.Nodes.Variable;
+  }
 }

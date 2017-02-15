@@ -1,0 +1,8 @@
+|-DocumentNode Start='1,1,0' End='3,19,56'
+|-HeaderNode Start='1,1,0' End='2,1,34'
+  |-VersionDirective Start='1,2,1' End='1,8,7' Minor='0' Major='1'
+|-ObjectNode Start='3,1,38' End='3,19,56'
+  |-KeyValuePairNode Start='3,3,40' End='3,17,54'
+    |-KeyNode Start='3,3,40' End='3,8,45'
+      |-StringNode Start='3,3,40' End='3,8,45' Value='empty'
+    |-StringNode Start='3,10,47' End='3,17,54' Value='empty'

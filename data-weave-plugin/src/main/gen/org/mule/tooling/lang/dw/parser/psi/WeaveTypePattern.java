@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface WeaveTypePattern extends WeavePattern {
 
   @NotNull
-  List<WeaveExpression> getExpressionList();
+  WeaveExpression getExpression();
+
+  @NotNull
+  WeaveType getType();
 
 }

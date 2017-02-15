@@ -9,14 +9,14 @@ import org.mule.tooling.lang.dw.parser.psi.WeaveKeyValuePair;
 
 public class WeaveElementFactory {
 
-    public static WeaveIdentifier createIdentifier(Project project, String name) {
-        return ((WeaveVariableReferenceExpression) createFile(project, name).getBody().getExpression()).getIdentifier();
-    }
+  public static WeaveFqnIdentifier createIdentifier(Project project, String name) {
+    return ((WeaveVariableReferenceExpression) createFile(project, name).getBody().getExpression()).getFqnIdentifier();
+  }
 
 
-    public static WeaveDocument createFile(Project project, String text) {
-        String name = "dummy.wev";
-        return (WeaveDocument) PsiFileFactory.getInstance(project).
-                createFileFromText(name, WeaveFileType.getInstance(), text).getChildren()[0];
-    }
+  public static WeaveDocument createFile(Project project, String text) {
+    String name = "dummy.wev";
+    return (WeaveDocument) PsiFileFactory.getInstance(project).
+            createFileFromText(name, WeaveFileType.getInstance(), text).getChildren()[0];
+  }
 }

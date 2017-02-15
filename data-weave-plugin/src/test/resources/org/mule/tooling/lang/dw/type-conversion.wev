@@ -1,1 +1,1 @@
-("3.0" as :number) == 3
+("3.0" as Number) == 3

@@ -33,6 +33,10 @@ public class WeaveVisitor extends PsiElementVisitor {
     // visitNavigatablePsiElement(o);
   }
 
+  public void visitArrayType(@NotNull WeaveArrayType o) {
+    visitType(o);
+  }
+
   public void visitAsExpression(@NotNull WeaveAsExpression o) {
     visitExpression(o);
   }
@@ -53,8 +57,8 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitBinaryClojureExpression(@NotNull WeaveBinaryClojureExpression o) {
-    visitExpression(o);
+  public void visitAttributesType(@NotNull WeaveAttributesType o) {
+    visitType(o);
   }
 
   public void visitBinaryExpression(@NotNull WeaveBinaryExpression o) {
@@ -73,15 +77,7 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitClojureLiteralExpression(@NotNull WeaveClojureLiteralExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitClojureWithOneParametersExpression(@NotNull WeaveClojureWithOneParametersExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitClojureWithoutParametersExpression(@NotNull WeaveClojureWithoutParametersExpression o) {
+  public void visitClojureExpression(@NotNull WeaveClojureExpression o) {
     visitExpression(o);
   }
 
@@ -101,12 +97,12 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitDataType(@NotNull WeaveDataType o) {
+  public void visitCustomLoader(@NotNull WeaveCustomLoader o) {
     visitPsiElement(o);
   }
 
-  public void visitDebugDirective(@NotNull WeaveDebugDirective o) {
-    visitDirective(o);
+  public void visitDataFormat(@NotNull WeaveDataFormat o) {
+    visitPsiElement(o);
   }
 
   public void visitDeclaredNamespace(@NotNull WeaveDeclaredNamespace o) {
@@ -166,6 +162,10 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitFqnIdentifier(@NotNull WeaveFqnIdentifier o) {
+    visitPsiElement(o);
+  }
+
   public void visitFunctionCallExpression(@NotNull WeaveFunctionCallExpression o) {
     visitExpression(o);
   }
@@ -194,6 +194,18 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitIdentifierPackage(@NotNull WeaveIdentifierPackage o) {
+    visitPsiElement(o);
+  }
+
+  public void visitImportDirective(@NotNull WeaveImportDirective o) {
+    visitDirective(o);
+  }
+
+  public void visitImportedElement(@NotNull WeaveImportedElement o) {
+    visitPsiElement(o);
+  }
+
   public void visitInputDirective(@NotNull WeaveInputDirective o) {
     visitDirective(o);
   }
@@ -210,8 +222,16 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitKeyType(@NotNull WeaveKeyType o) {
+    visitType(o);
+  }
+
   public void visitKeyValuePair(@NotNull WeaveKeyValuePair o) {
     visitPsiElement(o);
+  }
+
+  public void visitKeyValuePairType(@NotNull WeaveKeyValuePairType o) {
+    visitType(o);
   }
 
   public void visitLambdaLiteral(@NotNull WeaveLambdaLiteral o) {
@@ -240,6 +260,10 @@ public class WeaveVisitor extends PsiElementVisitor {
 
   public void visitMultiplicationDivisionExpression(@NotNull WeaveMultiplicationDivisionExpression o) {
     visitExpression(o);
+  }
+
+  public void visitNameType(@NotNull WeaveNameType o) {
+    visitType(o);
   }
 
   public void visitNamedLiteralPattern(@NotNull WeaveNamedLiteralPattern o) {
@@ -272,6 +296,10 @@ public class WeaveVisitor extends PsiElementVisitor {
   public void visitObjectExpression(@NotNull WeaveObjectExpression o) {
     visitExpression(o);
     // visitNavigatablePsiElement(o);
+  }
+
+  public void visitObjectType(@NotNull WeaveObjectType o) {
+    visitType(o);
   }
 
   public void visitOptionElement(@NotNull WeaveOptionElement o) {
@@ -310,6 +338,10 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitReferenceType(@NotNull WeaveReferenceType o) {
+    visitType(o);
+  }
+
   public void visitRegexPattern(@NotNull WeaveRegexPattern o) {
     visitPattern(o);
   }
@@ -342,6 +374,10 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitNavigatablePsiElement(o);
   }
 
+  public void visitSimpleType(@NotNull WeaveSimpleType o) {
+    visitType(o);
+  }
+
   public void visitSingleKeyValuePairObj(@NotNull WeaveSingleKeyValuePairObj o) {
     visitPsiElement(o);
   }
@@ -350,8 +386,8 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitTernaryExpression(@NotNull WeaveTernaryExpression o) {
-    visitExpression(o);
+  public void visitType(@NotNull WeaveType o) {
+    visitPsiElement(o);
   }
 
   public void visitTypeDefinition(@NotNull WeaveTypeDefinition o) {
@@ -370,8 +406,12 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitPattern(o);
   }
 
-  public void visitUnaryExpression(@NotNull WeaveUnaryExpression o) {
-    visitExpression(o);
+  public void visitTypeType(@NotNull WeaveTypeType o) {
+    visitType(o);
+  }
+
+  public void visitUnionType(@NotNull WeaveUnionType o) {
+    visitType(o);
   }
 
   public void visitUsingExpression(@NotNull WeaveUsingExpression o) {
@@ -396,7 +436,6 @@ public class WeaveVisitor extends PsiElementVisitor {
 
   public void visitVariableReferenceExpression(@NotNull WeaveVariableReferenceExpression o) {
     visitExpression(o);
-    // visitNamedElement(o);
   }
 
   public void visitVersionDirective(@NotNull WeaveVersionDirective o) {

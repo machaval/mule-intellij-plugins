@@ -10,4 +10,7 @@ public interface WeaveTypeLiteral extends WeaveExpression {
   @Nullable
   WeaveSchema getSchema();
 
+  @NotNull
+  WeaveType getType();
+
 }

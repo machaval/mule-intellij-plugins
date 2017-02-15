@@ -12,17 +12,16 @@ import javax.swing.*;
  */
 public class OpenSchemaAction extends AnAction {
 
-    final static Logger logger = Logger.getInstance(OpenSchemaAction.class);
-    final static Icon loadSchemaIcon = IconLoader.findIcon("/openschema.png");
+  final static Logger logger = Logger.getInstance(OpenSchemaAction.class);
+  final static Icon loadSchemaIcon = IconLoader.findIcon("/openschema.png");
 
-    public OpenSchemaAction()
-    {
-        super("Load Schema", "Load XSD or Json Schema", loadSchemaIcon);
-    }
+  public OpenSchemaAction() {
+    super("Load Schema", "Load XSD or Json Schema", loadSchemaIcon);
+  }
 
-    @Override
-    public void actionPerformed(AnActionEvent anActionEvent) {
-        logger.debug("Loading schema!");
-    }
+  @Override
+  public void actionPerformed(AnActionEvent anActionEvent) {
+    logger.debug("Loading schema!");
+  }
 
 }

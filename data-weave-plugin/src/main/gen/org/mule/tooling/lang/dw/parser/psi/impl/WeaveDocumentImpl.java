@@ -28,9 +28,9 @@ public class WeaveDocumentImpl extends ASTWrapperPsiElement implements WeaveDocu
   }
 
   @Override
-  @NotNull
+  @Nullable
   public WeaveBody getBody() {
-    return findNotNullChildByClass(WeaveBody.class);
+    return findChildByClass(WeaveBody.class);
   }
 
   @Override

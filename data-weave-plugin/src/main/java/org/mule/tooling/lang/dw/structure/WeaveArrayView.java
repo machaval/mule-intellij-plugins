@@ -16,36 +16,36 @@ import java.util.Collection;
 import java.util.List;
 
 public class WeaveArrayView extends PsiTreeElementBase<WeaveArrayExpression> {
-    protected WeaveArrayView(WeaveArrayExpression psiElement) {
-        super(psiElement);
-    }
+  protected WeaveArrayView(WeaveArrayExpression psiElement) {
+    super(psiElement);
+  }
 
-    @NotNull
-    @Override
-    public Collection<StructureViewTreeElement> getChildrenBase() {
-        List<StructureViewTreeElement> result = new ArrayList<>();
-        final List<WeaveArrayElement> arrayElementList = getElement().getArrayElementList();
-        for (WeaveArrayElement weaveArrayElement : arrayElementList) {
-            final WeaveSimpleArrayElement simpleArrayElement = weaveArrayElement.getSimpleArrayElement();
-            if (simpleArrayElement != null) {
-                final WeaveExpression expression = simpleArrayElement.getExpression();
-                final StructureViewTreeElement structureViewTreeElement = WeaveStructureElementFactory.create(expression);
-                if (structureViewTreeElement != null) {
-                    result.add(structureViewTreeElement);
-                }
-            }
+  @NotNull
+  @Override
+  public Collection<StructureViewTreeElement> getChildrenBase() {
+    List<StructureViewTreeElement> result = new ArrayList<>();
+    final List<WeaveArrayElement> arrayElementList = getElement().getArrayElementList();
+    for (WeaveArrayElement weaveArrayElement : arrayElementList) {
+      final WeaveSimpleArrayElement simpleArrayElement = weaveArrayElement.getSimpleArrayElement();
+      if (simpleArrayElement != null) {
+        final WeaveExpression expression = simpleArrayElement.getExpression();
+        final StructureViewTreeElement structureViewTreeElement = WeaveStructureElementFactory.create(expression);
+        if (structureViewTreeElement != null) {
+          result.add(structureViewTreeElement);
         }
-        return result;
+      }
     }
+    return result;
+  }
 
-    @Nullable
-    @Override
-    public String getPresentableText() {
-        return "";
-    }
+  @Nullable
+  @Override
+  public String getPresentableText() {
+    return "";
+  }
 
-    @Override
-    public Icon getIcon(boolean open) {
-        return getElement().getPresentation().getIcon(open);
-    }
+  @Override
+  public Icon getIcon(boolean open) {
+    return getElement().getPresentation().getIcon(open);
+  }
 }

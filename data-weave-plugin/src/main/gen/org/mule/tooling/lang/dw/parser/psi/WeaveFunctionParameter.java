@@ -14,6 +14,9 @@ public interface WeaveFunctionParameter extends WeaveVariable {
   WeaveIdentifier getIdentifier();
 
   @Nullable
+  WeaveType getType();
+
+  @Nullable
   String getVariableName();
 
   @Nullable

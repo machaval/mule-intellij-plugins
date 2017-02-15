@@ -14,6 +14,9 @@ public interface WeaveVariableDefinition extends WeaveVariable {
   WeaveIdentifier getIdentifier();
 
   @Nullable
+  WeaveType getType();
+
+  @Nullable
   String getVariableName();
 
   @Nullable

@@ -1,0 +1,8 @@
+|-DocumentNode Start='1,1,0' End='3,2,58'
+|-HeaderNode Start='0,0,0' End='0,0,0'
+  |-VersionDirective Start='0,0,0' End='0,0,0' Minor='0' Major='1'
+|-ObjectNode Start='1,1,0' End='3,2,58'
+  |-KeyValuePairNode Start='2,3,4' End='2,55,56'
+    |-KeyNode Start='2,3,4' End='2,4,5'
+      |-StringNode Start='2,3,4' End='2,4,5' Value='a'
+    |-StringNode Start='2,6,7' End='2,55,56' Value='This is a string "new" "lines and with \' {} []'

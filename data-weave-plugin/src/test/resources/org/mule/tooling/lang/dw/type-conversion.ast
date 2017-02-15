@@ -1,0 +1,8 @@
+|-DocumentNode Start='1,1,0' End='1,23,22'
+|-HeaderNode Start='0,0,0' End='0,0,0'
+  |-VersionDirective Start='0,0,0' End='0,0,0' Minor='0' Major='1'
+|-BinaryOpNode Start='1,2,1' End='1,23,22' Name='=='
+  |-BinaryOpNode Start='1,2,1' End='1,17,16' Name='as'
+    |-StringNode Start='1,2,1' End='1,7,6' Value='3.0'
+    |-SimpleTypeNode Start='1,11,10' End='1,17,16'
+  |-NumberNode Start='1,22,21' End='1,23,22' Value='3'

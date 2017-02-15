@@ -1,0 +1,4 @@
+|-DocumentNode Start='1,1,0' End='1,7,6'
+|-HeaderNode Start='0,0,0' End='0,0,0'
+  |-VersionDirective Start='0,0,0' End='0,0,0' Minor='0' Major='1'
+|-StringNode Start='1,1,0' End='1,7,6' Value='exit'

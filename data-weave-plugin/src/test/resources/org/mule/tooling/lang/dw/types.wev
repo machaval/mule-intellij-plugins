@@ -1,0 +1,17 @@
+%namespace ns0 http://mulesoft.com/dw
+%namespace ns1 http://mulesoft.com/mule
+%type XmlUser = Object(
+                  (ns0#root:
+                      Object(
+                        (ns0#name: String),
+                        (ns0#lastName: String)
+                        ))
+                  )
+%type User = Object((name: String),(lastName: String), ("key with spaces": Number))
+%type Account = Object((email: String), (id: String))
+%function toAccount(user: User) : Account = {
+   email: "$(user.name).$(user.lastName)@mulesoft.com",
+   id: user.name
+}
+---
+toAccount({name: "Mariano", lastName: "Achaval"})

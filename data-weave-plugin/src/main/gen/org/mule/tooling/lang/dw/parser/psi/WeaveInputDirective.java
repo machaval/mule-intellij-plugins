@@ -8,12 +8,15 @@ import com.intellij.psi.PsiElement;
 public interface WeaveInputDirective extends WeaveDirective {
 
   @Nullable
-  WeaveDataType getDataType();
+  WeaveDataFormat getDataFormat();
 
   @Nullable
   WeaveIdentifier getIdentifier();
 
   @Nullable
   WeaveOptions getOptions();
+
+  @Nullable
+  WeaveType getType();
 
 }

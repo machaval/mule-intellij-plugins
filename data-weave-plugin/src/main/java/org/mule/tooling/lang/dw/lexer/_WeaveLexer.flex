@@ -2,6 +2,7 @@ package org.mule.tooling.lang.dw.lexer;
 import com.intellij.lexer.*;
 import com.intellij.psi.tree.IElementType;
 import static org.mule.tooling.lang.dw.parser.psi.WeaveTypes.*;
+import static org.mule.tooling.lang.dw.parser.WeaveParserDefinition.*;
 
 %%
 
@@ -25,6 +26,7 @@ WHITE_SPACE=({LINE_WS}|{EOL})+
 DOT="."
 
 LINE_COMMENT = "//" [^\r\n]*
+MULTILINE_COMMENT = "/*" ( ([^"*"]|[\r\n])* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 
 DOUBLE_QUOTED_STRING=\"([^\\\"\r\n]|\\[^\r\n])*\"?
 SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
@@ -36,7 +38,9 @@ NAMESPACE_URI=[a-z]+"://"[a-zA-Z0-9/:\.\-_?=&]+ | "urn:"[a-zA-Z0-9:\-_\.?=&]+
 
 ID={ALPHA}[:jletterdigit:]*
 
-RULE_TYPE_ID=":"[a-z]+
+SIMPLE_TYPE= "String" | "Number" | "Regex" | "Boolean" | "Range" | "Date" | "Time" | "DateTime" | "LocalDateTime" | "LocalTime" | "Time" | "Period" | "Binary" | "Uri" | "Any"
+
+DOLLAR_VARIABLE=[\$]+
 
 RULE_ANY_REGEX=\/([^\\\/\r\n]|\\[^\r\n])+\/
 RULE_ANY_DATE="|"([^|\r\n] )+"|"
@@ -53,9 +57,6 @@ EXPONENT_PART=[Ee]["+""-"]?({DIGIT})*
 
 RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
 
-RULE_BINARY_CLOJURE_OPERATORS="mapObject" | "map" | "pluck" | "filter" | "reduce" | "groupBy" | "orderBy" | "pow" | "find" | "scan" | "distinctBy" | "mod"
-RULE_BINARY_OPERATORS="startsWith"| "to" | "endsWith" | "matches" | "contains"| "splitBy"|"joinBy" | "zip" | "++" | "--"
-RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" | "upper" | "lower" | "capitalize" | "sqrt" | "abs" | "round" | "ceil" | "floor" | "camelize" | "dasherize" | "ordinalize" | "pluralize" | "singularize" | "underscore" | "typeOf" | "max" | "min" | "unzip"
 
 %%
 <YYINITIAL> {
@@ -73,11 +74,9 @@ RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" 
   "default"                   { return DEFAULT; }
   "as"                        { return AS; }
   "is"                        { return IS; }
-  "replace"                   {return REPLACE;}
-  "with"                      {return WITH;}
-  "when"                      {return WHEN;}
-  "unless"                    {return UNLESS;}
-  "otherwise"                 {return OTHERWISE;}
+  "when"                      { return WHEN;}
+  "unless"                    { return UNLESS;}
+  "otherwise"                 { return OTHERWISE;}
   "---"                       { return DOCUMENT_SEPARATOR; }
   "<<"                        { return SHIFT_LEFT; }
   ">>"                        { return SHIFT_RIGHT; }
@@ -98,7 +97,6 @@ RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" 
   "@"                         { return AT; }
   "?"                         { return QUESTION; }
   "!"                         { return ESCLAMATION; }
-  "$"                         { return DOLLAR; }
   "#"                         { return HASH; }
   "&&"                        { return AND_AND; }
   "||"                        { return OR_OR; }
@@ -111,20 +109,23 @@ RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" 
   "false"                     { return FALSE_LITERAL;}
   "null"                      { return RULE_NULL_LITERAL;}
   "match"                     { return RULE_MATCH_LITERAL;}
-  "->"                         {return ARROW_TOKEN;}
+  "->"                        { return ARROW_TOKEN;}
 
-  "%dw"                          {return VERSION_DIRECTIVE_KEYWORD;}
-  "%input"                          {return INPUT_DIRECTIVE_KEYWORD;}
-  "%output"                          {return OUTPUT_DIRECTIVE_KEYWORD;}
-  "%namespace"                          {return NAMESPACE_DIRECTIVE_KEYWORD;}
-  "%type"                          {return TYPE_DIRECTIVE_KEYWORD;}
-  "%var"                          {return VAR_DIRECTIVE_KEYWORD;}
-  "%function"                          {return FUNCTION_DIRECTIVE_KEYWORD;}
+  "%dw"                       { return VERSION_DIRECTIVE_KEYWORD;}
+  "%input"                    { return INPUT_DIRECTIVE_KEYWORD;}
+  "%output"                   { return OUTPUT_DIRECTIVE_KEYWORD;}
+  "%namespace"                { return NAMESPACE_DIRECTIVE_KEYWORD;}
+  "%type"                     { return TYPE_DIRECTIVE_KEYWORD;}
+  "%var"                      { return VAR_DIRECTIVE_KEYWORD;}
+  "%function"                 { return FUNCTION_DIRECTIVE_KEYWORD;}
+  "%import"                   { return IMPORT_DIRECTIVE_KEYWORD;}
+  "case"                      { return CASE_KEYWORD;}
+  "Array"                     { return ARRAY_KEYWORD;}
+  "Object"                    { return OBJECT_KEYWORD;}
+  "Type"                      { return TYPE_KEYWORD;}
 
   {LINE_COMMENT}              { return LINE_COMMENT;}
-  {RULE_BINARY_CLOJURE_OPERATORS} { return RULE_BINARY_CLOJURE_OPERATORS;}
-  {RULE_BINARY_OPERATORS}         { return RULE_BINARY_OPERATORS;}
-  {RULE_UNARY_OPERATOS}           { return RULE_UNARY_OPERATOS;}
+  {MULTILINE_COMMENT}         { return MULTILINE_COMMENT; }
   {NAMESPACE_URI}             { return NAMESPACE_URI;}
   {RULE_MIME_TYPE}            { return RULE_MIME_TYPE;}
 
@@ -133,11 +134,13 @@ RULE_UNARY_OPERATOS="-" | "not" | "sizeOf" | "flatten" | "trim" | "sum" | "avg" 
 
   {DOUBLE_LITERAL}            { return DOUBLE_LITERAL; }
   {INTEGER_LITERAL}           { return INTEGER_LITERAL; }
-
+  {DOLLAR_VARIABLE}           { return DOLLAR_VARIABLE;}
 
   {DOUBLE_QUOTED_STRING}      { return DOUBLE_QUOTED_STRING; }
   {SINGLE_QUOTED_STRING}      { return SINGLE_QUOTED_STRING; }
-  {RULE_TYPE_ID}              { return RULE_TYPE_ID;}
+
+  {SIMPLE_TYPE}               { return SIMPLE_TYPE_LITERAL;}
+
   {ID}                        { return ID; }
 
   [^] { return com.intellij.psi.TokenType.BAD_CHARACTER; }

@@ -1,0 +1,7 @@
+{
+    a: in0 as Number >= in1,
+    b: in0 <= in1 as Number,
+    c: in0 == in1 as Number,
+    d: in0 != in1 as Number
+
+}

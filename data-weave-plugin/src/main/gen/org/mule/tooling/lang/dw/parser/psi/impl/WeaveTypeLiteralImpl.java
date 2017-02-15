@@ -31,4 +31,10 @@ public class WeaveTypeLiteralImpl extends WeaveExpressionImpl implements WeaveTy
     return findChildByClass(WeaveSchema.class);
   }
 
+  @Override
+  @NotNull
+  public WeaveType getType() {
+    return findNotNullChildByClass(WeaveType.class);
+  }
+
 }

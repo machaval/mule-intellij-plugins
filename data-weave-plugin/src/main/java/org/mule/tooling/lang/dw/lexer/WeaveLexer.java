@@ -4,7 +4,7 @@ import com.intellij.lexer.FlexAdapter;
 
 
 public class WeaveLexer extends FlexAdapter {
-    public WeaveLexer() {
-        super(new _WeaveLexer());
-    }
+  public WeaveLexer() {
+    super(new _WeaveLexer());
+  }
 }

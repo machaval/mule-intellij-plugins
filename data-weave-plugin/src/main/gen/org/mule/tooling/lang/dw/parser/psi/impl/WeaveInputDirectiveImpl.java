@@ -27,8 +27,8 @@ public class WeaveInputDirectiveImpl extends WeaveDirectiveImpl implements Weave
 
   @Override
   @Nullable
-  public WeaveDataType getDataType() {
-    return findChildByClass(WeaveDataType.class);
+  public WeaveDataFormat getDataFormat() {
+    return findChildByClass(WeaveDataFormat.class);
   }
 
   @Override
@@ -41,6 +41,12 @@ public class WeaveInputDirectiveImpl extends WeaveDirectiveImpl implements Weave
   @Nullable
   public WeaveOptions getOptions() {
     return findChildByClass(WeaveOptions.class);
+  }
+
+  @Override
+  @Nullable
+  public WeaveType getType() {
+    return findChildByClass(WeaveType.class);
   }
 
 }

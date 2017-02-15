@@ -16,6 +16,9 @@ public interface WeaveFunctionDefinition extends WeaveNamedElement {
   @NotNull
   WeaveIdentifier getIdentifier();
 
+  @Nullable
+  WeaveType getType();
+
   String getName();
 
   PsiElement setName(String newName);

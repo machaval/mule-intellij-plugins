@@ -1,0 +1,5 @@
+%dw 1.0
+%function traverse(value,func) func(value)
+---
+traverse(in0,(v) -> sizeOf(v))
+

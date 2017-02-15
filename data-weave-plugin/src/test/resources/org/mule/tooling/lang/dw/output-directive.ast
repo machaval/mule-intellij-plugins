@@ -1,0 +1,6 @@
+|-DocumentNode Start='1,1,0' End='5,4,40'
+|-HeaderNode Start='1,1,0' End='4,1,33'
+  |-VersionDirective Start='1,2,1' End='1,8,7' Minor='0' Major='1'
+  |-OutputDirective Start='2,2,9' End='2,24,31'
+|-VariableReferenceNode Start='5,1,37' End='5,4,40'
+  |-NameIdentifier Start='5,1,37' End='5,4,40' Name='in0'

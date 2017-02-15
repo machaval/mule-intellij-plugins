@@ -20,42 +20,41 @@ import javax.swing.*;
  */
 public class OpenSampleAction extends AnAction {
 
-    final static Logger logger = Logger.getInstance(OpenSampleAction.class);
-    final static Icon loadSampleIcon = IconLoader.findIcon("/opensample.png");
+  final static Logger logger = Logger.getInstance(OpenSampleAction.class);
+  final static Icon loadSampleIcon = IconLoader.findIcon("/opensample.png");
 
-    Document document;
+  Document document;
 
-    public OpenSampleAction(Document document)
-    {
-        super("Load Sample", "Load Sample Data", loadSampleIcon);
-        this.document = document;
-    }
+  public OpenSampleAction(Document document) {
+    super("Load Sample", "Load Sample Data", loadSampleIcon);
+    this.document = document;
+  }
 
-    @Override
-    public void actionPerformed(AnActionEvent anActionEvent) {
-        logger.debug("Loading sample!");
+  @Override
+  public void actionPerformed(AnActionEvent anActionEvent) {
+    logger.debug("Loading sample!");
 
-        final Project project = anActionEvent.getProject();
-        final PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
+    final Project project = anActionEvent.getProject();
+    final PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
 
-        VirtualFile sample = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(),
-                project, null);
-        if (sample == null)
-            return;
+    VirtualFile sample = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(),
+            project, null);
+    if (sample == null)
+      return;
 
-        try {
-            final String text = new String(sample.contentsToByteArray(), sample.getCharset());
+    try {
+      final String text = new String(sample.contentsToByteArray(), sample.getCharset());
 
-            new WriteCommandAction.Simple(project, psiFile) {
-                @Override
-                protected void run() throws Throwable {
-                    document.setText(text);
-                }
-            }.execute();
-        } catch (Exception e) {
-            logger.error(e);
+      new WriteCommandAction.Simple(project, psiFile) {
+        @Override
+        protected void run() throws Throwable {
+          document.setText(text);
         }
-
+      }.execute();
+    } catch (Exception e) {
+      logger.error(e);
     }
+
+  }
 
 }

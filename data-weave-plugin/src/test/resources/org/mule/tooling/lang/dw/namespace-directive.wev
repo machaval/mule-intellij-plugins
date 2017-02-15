@@ -1,12 +1,12 @@
 %dw 1.0
-%namespace mule-mule http://www.mulesoft.org/schema/mule/core
+%namespace mule_mule http://www.mulesoft.org/schema/mule/core
 %namespace http http://www.mulesoft.org/schema/mule/http
 %namespace doc http://www.mulesoft.org/schema/mule/documentation
 %namespace urn urn:oid:2.16.840
 ---
-mule-mule#flow @(name: "HelloWorldFlow1"): {
-    http#inbound-endpoint @(exchange-pattern: "request-response", host: "localhost", port: 8081,
+mule_mule#flow @(name: "HelloWorldFlow1"): {
+    http#"inbound-endpoint" @("exchange-pattern": "request-response", host: "localhost", port: 8081,
                             doc#name: "HTTP", doc#description: "This endpoint receives an HTTP message"): null,
-    mule-mule#set-payload @(value: "Hello World",
+    mule_mule#"set-payload" @(value: "Hello World",
                        doc#name: "Set Payload", doc#description: "This processor sets the payload of the message to the string 'Hello World'"): null
 }

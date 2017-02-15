@@ -1,1 +1,1 @@
-person @((root.@), country: "Arg") : $
+person @((in0.@), country: "Arg") : in0

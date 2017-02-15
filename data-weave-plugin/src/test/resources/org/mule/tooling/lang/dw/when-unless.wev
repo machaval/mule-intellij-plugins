@@ -1,4 +1,8 @@
 {
   a: "Mariano" when in0.male otherwise "Mariana",
-  b: "Mariana" unless in0.male otherwise "Mariano"
+  b: "Mariana" unless in0.male otherwise "Mariano",
+  c: "1" when in0 == 1
+     otherwise "2" when in0 == 2
+     otherwise "3" when in0 == 3
+     otherwise "otro"
 }

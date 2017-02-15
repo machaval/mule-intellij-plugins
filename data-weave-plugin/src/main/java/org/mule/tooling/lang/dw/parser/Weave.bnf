@@ -51,7 +51,6 @@
         AT="@"
         QUESTION="?"
         ESCLAMATION="!"
-        DOLLAR="$"
         HASH="#"
 
         AND_AND="&&"
@@ -69,7 +68,6 @@
 
         VERSION_DIRECTIVE_KEYWORD="%dw"
         INPUT_DIRECTIVE_KEYWORD="%input"
-        OUTPUT_DIRECTIVE_KEYWORD="%output"
         VAR_DIRECTIVE_KEYWORD="%var"
         FUNCTION_DIRECTIVE_KEYWORD="%function"
         NAMESPACE_DIRECTIVE_KEYWORD="%namespace"
@@ -83,6 +81,7 @@
 
     extends(".*(Directive)")=Directive
     extends(".*(Expression|Literal)")=Expression
+    extends(".*(Type)")=Type
     extends(".*(Pattern)")=Pattern
     pin(".*Directive") =1
 
@@ -90,12 +89,12 @@
 
 root ::= Document
 
-Document ::= Header? Body {
+Document ::= Header ('---'  Body) ? | Body{
     implements="com.intellij.psi.NavigatablePsiElement"
     methods=[getPresentation]
 }
 
-Header::= Directive+ '---' {pin=2}
+Header::= Directive+ {pin=2}
 
 Directive
          ::= VersionDirective
@@ -103,20 +102,23 @@ Directive
            | VariableDirective
            | OutputDirective
            | InputDirective
-           | DebugDirective
            | TypeDirective
-           | FunctionDirective
-           | '%ast' {recoverWhile=HeaderRecover}
+           | ImportDirective
+           | FunctionDirective {recoverWhile=HeaderRecover}
 
-private HeaderRecover::= !('---'|'%output'|'%type'|'%function'|'%namespace'|'%var'|'%dw'|'%input')
+private HeaderRecover::= !('---'|OUTPUT_DIRECTIVE_KEYWORD|'%type'|'%function'|'%namespace'|'%var'|'%dw'|'%input'|IMPORT_DIRECTIVE_KEYWORD)
 
 VersionDirective::= '%dw'  DOUBLE_LITERAL
+
+ImportDirective::= IMPORT_DIRECTIVE_KEYWORD (ImportedElement (',' ImportedElement)* 'from')? FqnIdentifier
+
+ImportedElement::= Identifier ('as' Identifier)?
 
 NamespaceDirective::= '%namespace' Identifier NAMESPACE_URI
 
 VariableDirective::= '%var' VariableDefinition
 
-OutputDirective::= '%output' DataType Options?
+OutputDirective::= OUTPUT_DIRECTIVE_KEYWORD (":" Type)? DataFormat Options?
 
 TypeDirective::= '%type' TypeDefinition
 
@@ -124,7 +126,7 @@ TypeDefinition::=Identifier '=' TypeLiteral
 
 FunctionDirective::= '%function' FunctionDefinition
 
-FunctionDefinition::=Identifier L_PARREN ( FunctionParameter ( ',' FunctionParameter )* )? R_PARREN Expression {
+FunctionDefinition::=Identifier L_PARREN ( FunctionParameter ( ',' FunctionParameter )* )? R_PARREN ( ":" Type "=" | "=")? Expression {
      methods = [getName setName getNameIdentifier]
      implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
      mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
@@ -134,9 +136,7 @@ Schema::= '{' ( SchemaElement ( ',' SchemaElement )* )? '}'
 
 SchemaElement::= Identifier ':' LiteralExpression
 
-InputDirective::= '%input' Identifier DataType Options?
-
-DebugDirective::= '%debug' Options?
+InputDirective::= '%input' Identifier (":" Type)? DataFormat Options?
 
 Options::= OptionElement ( ',' OptionElement )*
 
@@ -186,10 +186,9 @@ Attribute::= KeyExpression ':' Expression
 ConditionalAttribute::= '(' KeyExpression ':' Expression ')' 'when' Expression
 
 Expression::= ConditionalExpression|
-            BinaryClojureExpression|
-            TernaryExpression|
             MatchExpression|
             BinaryExpression|
+            ClojureExpression|
             AsExpression|
             DefaultValueExpression|
             OrExpression|
@@ -207,48 +206,52 @@ Expression::= ConditionalExpression|
             DynamicSelectorExpression|
             RangeSelectorExpression|
             UsingExpression|
-            UnaryExpression|
             ValueExpression
 
-MatchExpression ::= Expression RULE_MATCH_LITERAL (PatternMatcherExpression | Expression)
+MatchExpression ::= Expression RULE_MATCH_LITERAL (PatternMatcherExpression )
 
-PatternMatcherExpression ::= '{' PatternWithComma+ '}'
+PatternMatcherExpression ::= '{' Pattern+ '}'
 
-private PatternWithComma ::= (Pattern) (',' | &'}')
+Pattern ::= RegexPattern 
+          | NamedRegexPattern 
+          | TypePattern 
+          | NamedTypePattern 
+          | LiteralPattern 
+          | NamedLiteralPattern 
+          | ExpressionPattern 
+          | DefaultPattern
 
-Pattern ::= RegexPattern | NamedRegexPattern | TypePattern | NamedTypePattern | LiteralPattern | NamedLiteralPattern | ExpressionPattern | DefaultPattern
+LiteralPattern ::= CASE_KEYWORD LiteralExpression '->' Expression
 
-LiteralPattern ::= LiteralExpression '->' Expression
-
-ExpressionPattern ::= Identifier 'when' Expression '->' Expression {
+ExpressionPattern ::= CASE_KEYWORD Identifier 'when' Expression '->' Expression {
      methods = [getName setName getNameIdentifier]
      implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
      mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
 }
 
-NamedLiteralPattern ::= Identifier ':' LiteralExpression '->' Expression {
+NamedLiteralPattern ::= CASE_KEYWORD Identifier ':' LiteralExpression '->' Expression {
      methods = [getName setName getNameIdentifier]
      implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
      mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
 }
 
-TypePattern ::= TypeLiteral '->' Expression
+TypePattern ::= CASE_KEYWORD Type '->' Expression
 
-NamedTypePattern ::= Identifier "is" TypeLiteral '->' Expression {
+NamedTypePattern ::= CASE_KEYWORD Identifier "is" TypeLiteral '->' Expression {
     methods = [getName setName getNameIdentifier]
     implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
     mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
 }
 
-RegexPattern ::= RULE_ANY_REGEX '->' Expression
+RegexPattern ::= CASE_KEYWORD RULE_ANY_REGEX '->' Expression
 
-NamedRegexPattern ::= Identifier ":" AnyRegexLiteral '->' Expression {
+NamedRegexPattern ::= CASE_KEYWORD Identifier ":" AnyRegexLiteral '->' Expression {
     methods = [getName setName getNameIdentifier]
     implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
     mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
 }
 
-DefaultPattern ::= DEFAULT '->' Expression
+DefaultPattern ::= OTHERWISE '->' Expression
 
 ValueExpression::= ObjectExpression
                   |LiteralExpression
@@ -260,21 +263,11 @@ ValueExpression::= ObjectExpression
 ConditionalExpression
          ::= Expression  ( WHEN | UNLESS ) Expression OTHERWISE Expression {pin=2}
 
-BinaryClojureExpression
-         ::= Expression RULE_BINARY_CLOJURE_OPERATORS ClojureExpression
-          {
-             pin=2
-             methods=[ getLeft  getRight]
-         }
-
-BinaryExpression ::= Expression RULE_BINARY_OPERATORS Expression
+BinaryExpression ::= Expression Identifier Expression
     {
         pin=2
         methods=[ getLeft  getRight]
     }
-
-TernaryExpression
-         ::= Expression REPLACE Expression WITH ClojureExpression {pin=2}
 
 AsExpression
          ::= Expression  AS TypeLiteral {pin=2}
@@ -310,8 +303,6 @@ FunctionCallExpression ::= Expression '(' ( Expression ( ',' Expression )* )? ')
 
 UsingExpression ::=USING '(' VariableDefinition ( ',' VariableDefinition )* ')' Expression {pin=1}
 
-UnaryExpression ::= RULE_UNARY_OPERATOS Expression {pin=1}
-
 EnclosedExpression ::= '(' Expression ')'
 
 //Selectors
@@ -339,21 +330,16 @@ SchemaSelector ::='^'(DeclaredNamespace? (StringLiteral|Identifier))?
 
 MultiValueSelector ::= '*'(DeclaredNamespace? (StringLiteral|Identifier))
 
-private ClojureExpression ::= ClojureLiteralExpression
-           | ClojureWithOneParametersExpression
-           | ClojureWithoutParametersExpression
+ClojureExpression ::=  '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression
 
-ClojureWithoutParametersExpression ::= Expression
-ClojureWithOneParametersExpression ::= FunctionParameter '->' Expression
-ClojureLiteralExpression ::= '(' '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression ')'
+VariableReferenceExpression ::= FqnIdentifier
+//{
+//        methods = [getVariableName getReference getName setName getNameIdentifier]
+//        implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
+//        mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+//   }
 
-VariableReferenceExpression ::= Identifier {
-        methods = [getVariableName getReference getName setName getNameIdentifier]
-        implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
-        mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
-   }
-
-VariableDefinition ::= Identifier '='  Expression  {
+VariableDefinition ::= Identifier (":" Type)? '='  Expression  {
             methods=[getVariableName getVariableValue getName setName getNameIdentifier]
             mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
             implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
@@ -373,7 +359,7 @@ LiteralExpression
 
 LambdaLiteral ::= '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression
 
-FunctionParameter ::= Identifier ( '=' Expression )? {
+FunctionParameter ::= Identifier (":" Type)? ( '=' Expression )? {
         methods=[getVariableName getVariableValue getName setName getNameIdentifier]
         mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
         implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
@@ -411,10 +397,45 @@ SimpleArrayElement::=Expression
 
 ConditionalArrayElement ::= '(' Expression ')' 'when' Expression
 
-TypeLiteral ::= RULE_TYPE_ID Schema?
+TypeLiteral ::= Type Schema?
 
-DataType ::= RULE_MIME_TYPE
+Type ::=
+        UnionType |
+        ObjectType |
+        ArrayType |
+        TypeType |
+        ReferenceType |
+        SimpleType
 
-NumberLiteral ::= DOUBLE_LITERAL|INTEGER_LITERAL
 
-Identifier ::= '$$'| ID | '$' | "true" | "false" | "null"  {methods = [getName] }
+UnionType ::= Type '|' Type
+
+ObjectType ::= OBJECT_KEYWORD ('(' ((KeyValuePairType) (',' KeyValuePairType)*)? ')')?
+
+KeyValuePairType ::= '(' KeyType ":" Type ')'
+
+KeyType ::= NameType AttributesType?
+
+AttributesType ::= "@(" NameType ":" Type ")"
+
+NameType ::= (Identifier"#")?Identifier | StringLiteral
+
+ArrayType ::= ARRAY_KEYWORD ('(' Type ')')?
+
+TypeType ::= TYPE_KEYWORD ('(' Type ')')?
+
+ReferenceType ::= FqnIdentifier
+
+SimpleType ::= SIMPLE_TYPE_LITERAL
+
+DataFormat ::= RULE_MIME_TYPE
+
+NumberLiteral ::= DOUBLE_LITERAL | INTEGER_LITERAL
+
+FqnIdentifier ::= CustomLoader? IdentifierPackage Identifier
+
+IdentifierPackage ::= (Identifier "::")*
+
+CustomLoader ::= Identifier"!"
+
+Identifier ::= DOLLAR_VARIABLE | ID   {methods = [getName] }

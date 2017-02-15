@@ -1,0 +1,12 @@
+%dw 1.0
+%input payload application/xml
+%output application/xml
+%function mapKeys(element, func)
+  element match {
+    case obj is Object -> obj mapObject {
+      (func($$)) @(($$.@ when $.@? otherwise {}) ): mapKeys($, func)
+    }
+    otherwise -> element
+  }
+---
+mapKeys(payload, ((key) -> (lower(key))))

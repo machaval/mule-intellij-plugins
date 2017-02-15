@@ -1,5 +1,5 @@
 {
-  a: a groupBy $.firstName,
-  b: b groupBy ((value) -> value.firstName),
-  c: c map $.firstName filter $.lastName == "Emiliano" groupBy $.salary
+  a: in1 groupBy $.firstName,
+  b: in1 groupBy ((value) -> value.firstName),
+  c: in1 map $.firstName filter $.lastName == "Emiliano" groupBy $.salary
 }

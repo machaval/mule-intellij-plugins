@@ -14,32 +14,32 @@ import java.util.Collection;
 import java.util.List;
 
 public class WeavePropertyView extends PsiTreeElementBase<WeaveSimpleKeyValuePair> {
-    protected WeavePropertyView(WeaveSimpleKeyValuePair psiElement) {
-        super(psiElement);
-    }
+  protected WeavePropertyView(WeaveSimpleKeyValuePair psiElement) {
+    super(psiElement);
+  }
 
-    @NotNull
-    @Override
-    public Collection<StructureViewTreeElement> getChildrenBase() {
-        final List<StructureViewTreeElement> result = new ArrayList<>();
-        final WeaveExpression expression = getElement().getExpression();
-        final StructureViewTreeElement treeElement = WeaveStructureElementFactory.create(expression);
-        if (treeElement != null) {
-            result.add(treeElement);
-        }else{
-            //
-        }
-        return result;
+  @NotNull
+  @Override
+  public Collection<StructureViewTreeElement> getChildrenBase() {
+    final List<StructureViewTreeElement> result = new ArrayList<>();
+    final WeaveExpression expression = getElement().getExpression();
+    final StructureViewTreeElement treeElement = WeaveStructureElementFactory.create(expression);
+    if (treeElement != null) {
+      result.add(treeElement);
+    } else {
+      //
     }
+    return result;
+  }
 
-    @Nullable
-    @Override
-    public String getPresentableText() {
-        return getElement().getPresentation().getPresentableText();
-    }
+  @Nullable
+  @Override
+  public String getPresentableText() {
+    return getElement().getPresentation().getPresentableText();
+  }
 
-    @Override
-    public Icon getIcon(boolean open) {
-        return getElement().getPresentation().getIcon(open);
-    }
+  @Override
+  public Icon getIcon(boolean open) {
+    return getElement().getPresentation().getIcon(open);
+  }
 }

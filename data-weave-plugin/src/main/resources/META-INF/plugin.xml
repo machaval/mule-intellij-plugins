@@ -57,7 +57,7 @@
 
         <programRunner id="WeaveDebug" implementation="org.mule.tooling.lang.dw.debug.WeaveDebuggerRunner" order="last"/>
 
-        <fileEditorProvider implementation="org.mule.tooling.lang.dw.editor.WeaveEditorProvider"/>
+        <!--<fileEditorProvider implementation="org.mule.tooling.lang.dw.editor.WeaveEditorProvider"/>-->
 
         <lang.substitutor implementationClass="org.mule.tooling.lang.dw.editor.WeaveEditor$WeaveIOSubstitutor" language="JSON"/>
         <lang.substitutor implementationClass="org.mule.tooling.lang.dw.editor.WeaveEditor$WeaveIOSubstitutor" language="XML"/>

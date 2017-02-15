@@ -10,34 +10,29 @@ import com.mulesoft.weave.engine.debugger.DebuggerValue;
 import com.mulesoft.weave.engine.debugger.OperatorDebuggerValue;
 import org.jetbrains.annotations.NotNull;
 
-public class OperatorWeaveValue extends XValue
-{
+public class OperatorWeaveValue extends XValue {
 
-    private OperatorDebuggerValue debuggerValue;
+  private OperatorDebuggerValue debuggerValue;
 
-    public OperatorWeaveValue(OperatorDebuggerValue debuggerValue)
-    {
-        this.debuggerValue = debuggerValue;
+  public OperatorWeaveValue(OperatorDebuggerValue debuggerValue) {
+    this.debuggerValue = debuggerValue;
+  }
+
+  @Override
+  public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace) {
+    xValueNode.setPresentation(PlatformIcons.FUNCTION_ICON, null, debuggerValue.name(), true);
+  }
+
+  @Override
+  public void computeChildren(@NotNull XCompositeNode node) {
+    final XValueChildrenList list = new XValueChildrenList();
+    final DebuggerValue[] innerElements = debuggerValue.params();
+    for (int i = 0; i < innerElements.length; i++) {
+      DebuggerValue innerElement = innerElements[i];
+      list.add("Param[" + i + "]", WeaveValueFactory.create(innerElement));
     }
-
-    @Override
-    public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
-    {
-        xValueNode.setPresentation(PlatformIcons.FUNCTION_ICON, null, debuggerValue.name(), true);
-    }
-
-    @Override
-    public void computeChildren(@NotNull XCompositeNode node)
-    {
-        final XValueChildrenList list = new XValueChildrenList();
-        final DebuggerValue[] innerElements = debuggerValue.params();
-        for (int i = 0; i < innerElements.length; i++)
-        {
-            DebuggerValue innerElement = innerElements[i];
-            list.add("Param[" + i + "]", WeaveValueFactory.create(innerElement));
-        }
-        node.addChildren(list, false);
-        super.computeChildren(node);
-    }
+    node.addChildren(list, false);
+    super.computeChildren(node);
+  }
 
 }

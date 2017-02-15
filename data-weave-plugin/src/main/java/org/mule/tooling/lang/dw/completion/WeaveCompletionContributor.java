@@ -7,10 +7,10 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public class WeaveCompletionContributor extends CompletionContributor {
 
-    public WeaveCompletionContributor() {
-        extend(
-                CompletionType.BASIC,
-                psiElement(),
-                new WeaveExpressionCompletionProvider());
-    }
+  public WeaveCompletionContributor() {
+    extend(
+            CompletionType.BASIC,
+            psiElement(),
+            new WeaveExpressionCompletionProvider());
+  }
 }

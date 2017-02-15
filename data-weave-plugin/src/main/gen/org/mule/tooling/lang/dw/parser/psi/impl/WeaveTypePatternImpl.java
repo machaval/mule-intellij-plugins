@@ -27,8 +27,14 @@ public class WeaveTypePatternImpl extends WeavePatternImpl implements WeaveTypeP
 
   @Override
   @NotNull
-  public List<WeaveExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveExpression.class);
+  public WeaveExpression getExpression() {
+    return findNotNullChildByClass(WeaveExpression.class);
+  }
+
+  @Override
+  @NotNull
+  public WeaveType getType() {
+    return findNotNullChildByClass(WeaveType.class);
   }
 
 }

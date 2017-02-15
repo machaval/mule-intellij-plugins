@@ -1,5 +1,5 @@
 {
-  a: a orderBy $.firstName,
-  b: b orderBy ((value) -> value.firstName),
-  c: c map $.firstName filter $.lastName == "Emiliano" orderBy $.salary
+  a: in0 orderBy $.firstName,
+  b: in1 orderBy ((value) -> value.firstName),
+  c: in1 map $.firstName filter $.lastName == "Emiliano" orderBy $.salary
 }

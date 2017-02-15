@@ -10,6 +10,9 @@ public interface WeaveBinaryExpression extends WeaveExpression {
   @NotNull
   List<WeaveExpression> getExpressionList();
 
+  @NotNull
+  WeaveIdentifier getIdentifier();
+
   @Nullable
   WeaveExpression getLeft();
 

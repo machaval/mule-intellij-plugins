@@ -31,6 +31,12 @@ public class WeaveBinaryExpressionImpl extends WeaveExpressionImpl implements We
     return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveExpression.class);
   }
 
+  @Override
+  @NotNull
+  public WeaveIdentifier getIdentifier() {
+    return findNotNullChildByClass(WeaveIdentifier.class);
+  }
+
   @Nullable
   public WeaveExpression getLeft() {
     return WeavePsiImplUtils.getLeft(this);

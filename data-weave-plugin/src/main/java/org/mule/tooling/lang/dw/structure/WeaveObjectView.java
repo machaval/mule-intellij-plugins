@@ -16,45 +16,45 @@ import java.util.Collection;
 import java.util.List;
 
 public class WeaveObjectView extends PsiTreeElementBase<WeaveObjectExpression> {
-    protected WeaveObjectView(WeaveObjectExpression psiElement) {
-        super(psiElement);
-    }
+  protected WeaveObjectView(WeaveObjectExpression psiElement) {
+    super(psiElement);
+  }
 
-    @NotNull
-    @Override
-    public Collection<StructureViewTreeElement> getChildrenBase() {
-        List<StructureViewTreeElement> result = new ArrayList<>();
-        final WeaveObjectExpression weaveObjectExpression = getElement();
-        final WeaveMultipleKeyValuePairObj keyValuePairObj = weaveObjectExpression.getMultipleKeyValuePairObj();
-        if (keyValuePairObj != null) {
-            final List<WeaveKeyValuePair> valuePairList = keyValuePairObj.getKeyValuePairList();
-            for (WeaveKeyValuePair weaveKeyValuePair : valuePairList) {
-                addKeyValuePair(result, weaveKeyValuePair);
-            }
-        }
-        final WeaveSingleKeyValuePairObj singleKeyValuePairObj = weaveObjectExpression.getSingleKeyValuePairObj();
-        if (singleKeyValuePairObj != null) {
-            final WeaveKeyValuePair keyValuePair = singleKeyValuePairObj.getKeyValuePair();
-            addKeyValuePair(result, keyValuePair);
-        }
-        return result;
+  @NotNull
+  @Override
+  public Collection<StructureViewTreeElement> getChildrenBase() {
+    List<StructureViewTreeElement> result = new ArrayList<>();
+    final WeaveObjectExpression weaveObjectExpression = getElement();
+    final WeaveMultipleKeyValuePairObj keyValuePairObj = weaveObjectExpression.getMultipleKeyValuePairObj();
+    if (keyValuePairObj != null) {
+      final List<WeaveKeyValuePair> valuePairList = keyValuePairObj.getKeyValuePairList();
+      for (WeaveKeyValuePair weaveKeyValuePair : valuePairList) {
+        addKeyValuePair(result, weaveKeyValuePair);
+      }
     }
-
-    private void addKeyValuePair(List<StructureViewTreeElement> result, WeaveKeyValuePair weaveKeyValuePair) {
-        if (weaveKeyValuePair.getSimpleKeyValuePair() != null) {
-            result.add(new WeavePropertyView(weaveKeyValuePair.getSimpleKeyValuePair()));
-        }
+    final WeaveSingleKeyValuePairObj singleKeyValuePairObj = weaveObjectExpression.getSingleKeyValuePairObj();
+    if (singleKeyValuePairObj != null) {
+      final WeaveKeyValuePair keyValuePair = singleKeyValuePairObj.getKeyValuePair();
+      addKeyValuePair(result, keyValuePair);
     }
+    return result;
+  }
 
-
-    @Nullable
-    @Override
-    public String getPresentableText() {
-        return "";
+  private void addKeyValuePair(List<StructureViewTreeElement> result, WeaveKeyValuePair weaveKeyValuePair) {
+    if (weaveKeyValuePair.getSimpleKeyValuePair() != null) {
+      result.add(new WeavePropertyView(weaveKeyValuePair.getSimpleKeyValuePair()));
     }
+  }
 
-    @Override
-    public Icon getIcon(boolean open) {
-        return getElement().getPresentation().getIcon(open);
-    }
+
+  @Nullable
+  @Override
+  public String getPresentableText() {
+    return "";
+  }
+
+  @Override
+  public Icon getIcon(boolean open) {
+    return getElement().getPresentation().getIcon(open);
+  }
 }

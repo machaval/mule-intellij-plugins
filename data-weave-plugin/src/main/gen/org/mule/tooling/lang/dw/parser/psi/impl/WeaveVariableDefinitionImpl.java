@@ -38,4 +38,10 @@ public class WeaveVariableDefinitionImpl extends WeaveVariableImpl implements We
     return findNotNullChildByClass(WeaveIdentifier.class);
   }
 
+  @Override
+  @Nullable
+  public WeaveType getType() {
+    return findChildByClass(WeaveType.class);
+  }
+
 }

@@ -8,23 +8,20 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 import com.mulesoft.weave.engine.debugger.client.DebuggerClient;
 import com.mulesoft.weave.engine.debugger.server.event.OnFrameEvent;
 
-public class WeaveSuspendContext extends XSuspendContext
-{
+public class WeaveSuspendContext extends XSuspendContext {
 
-    public static final String WEAVE_STACK = "Weave Thread";
+  public static final String WEAVE_STACK = "Weave Thread";
 
-    private WeaveExecutionStack weaveExecutionStack;
+  private WeaveExecutionStack weaveExecutionStack;
 
-    public WeaveSuspendContext(DebuggerClient client, OnFrameEvent frame, XDebugSession session, VirtualFile file)
-    {
+  public WeaveSuspendContext(DebuggerClient client, OnFrameEvent frame, XDebugSession session, VirtualFile file) {
 
-        weaveExecutionStack = new WeaveExecutionStack(client, frame, WEAVE_STACK, session, file);
-    }
+    weaveExecutionStack = new WeaveExecutionStack(client, frame, WEAVE_STACK, session, file);
+  }
 
-    @Override
-    public XExecutionStack getActiveExecutionStack()
-    {
-        return weaveExecutionStack;
-    }
+  @Override
+  public XExecutionStack getActiveExecutionStack() {
+    return weaveExecutionStack;
+  }
 
 }

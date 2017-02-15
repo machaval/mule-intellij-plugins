@@ -1,0 +1,5 @@
+%dw 1.0
+---
+{
+  a: using (groupedByFirstName = in0 map $.firstName) groupedByFirstName
+}

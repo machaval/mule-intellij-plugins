@@ -1,0 +1,9 @@
+%dw 1.0
+%var number = 1234
+%function foo(fun,name="Mariano") fun(name)
+%input payload application/test arg="value"
+%output application/json
+---
+{
+  foo: "bar"
+}

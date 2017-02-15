@@ -1,0 +1,12 @@
+using (a = "something", b = 1, c = true) {
+  a: "Shoki-a",
+  b: "Shoki-b",
+  c: "Shoki-c",
+  d: "start-a-end",
+  e: "start-$(a)-end",
+  f: "start-$(in0.b)-end",
+  g: "start-$(in0.c)-end",
+  h: "Shoki-\$a",
+  i: "Shoki-\"a\"",
+  j: ["Mariano","Shoki"]  reduce "$$, $"
+}

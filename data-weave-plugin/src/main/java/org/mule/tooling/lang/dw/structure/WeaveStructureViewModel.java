@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class WeaveStructureViewModel extends StructureViewModelBase {
 
-    public WeaveStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor, @NotNull StructureViewTreeElement root) {
-        super(psiFile, editor, root);
-    }
+  public WeaveStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor, @NotNull StructureViewTreeElement root) {
+    super(psiFile, editor, root);
+  }
 
 }

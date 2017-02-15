@@ -10,14 +10,14 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class IntroduceConstantHandler implements RefactoringActionHandler {
-    @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile psiFile, DataContext dataContext) {
-        final int selectionStart = editor.getSelectionModel().getSelectionStart();
-        final int selectionEnd = editor.getSelectionModel().getSelectionEnd();
-    }
+  @Override
+  public void invoke(@NotNull Project project, Editor editor, PsiFile psiFile, DataContext dataContext) {
+    final int selectionStart = editor.getSelectionModel().getSelectionStart();
+    final int selectionEnd = editor.getSelectionModel().getSelectionEnd();
+  }
 
-    @Override
-    public void invoke(@NotNull Project project, @NotNull PsiElement[] psiElements, DataContext dataContext) {
+  @Override
+  public void invoke(@NotNull Project project, @NotNull PsiElement[] psiElements, DataContext dataContext) {
 
-    }
+  }
 }

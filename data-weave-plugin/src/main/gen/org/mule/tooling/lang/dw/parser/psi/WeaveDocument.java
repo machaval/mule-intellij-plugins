@@ -9,7 +9,7 @@ import com.intellij.navigation.ItemPresentation;
 
 public interface WeaveDocument extends NavigatablePsiElement {
 
-  @NotNull
+  @Nullable
   WeaveBody getBody();
 
   @Nullable

@@ -16,18 +16,18 @@ import org.mule.tooling.lang.dw.WeaveFileType;
 
 
 public class WeaveDebuggerEditorsProvider extends XDebuggerEditorsProvider {
-    @NotNull
-    @Override
-    public FileType getFileType() {
-        return WeaveFileType.getInstance();
-    }
+  @NotNull
+  @Override
+  public FileType getFileType() {
+    return WeaveFileType.getInstance();
+  }
 
-    @NotNull
-    @Override
-    public Document createDocument(@NotNull Project project, @NotNull String text, @Nullable XSourcePosition xSourcePosition, @NotNull EvaluationMode evaluationMode) {
+  @NotNull
+  @Override
+  public Document createDocument(@NotNull Project project, @NotNull String text, @Nullable XSourcePosition xSourcePosition, @NotNull EvaluationMode evaluationMode) {
 
-        final PsiFile psiFile = PsiFileFactory.getInstance(project)
-                .createFileFromText("muleExpr." + getFileType().getDefaultExtension(), getFileType(), text, LocalTimeCounter.currentTime(), true);
-        return PsiDocumentManager.getInstance(project).getDocument(psiFile);
-    }
+    final PsiFile psiFile = PsiFileFactory.getInstance(project)
+            .createFileFromText("muleExpr." + getFileType().getDefaultExtension(), getFileType(), text, LocalTimeCounter.currentTime(), true);
+    return PsiDocumentManager.getInstance(project).getDocument(psiFile);
+  }
 }
