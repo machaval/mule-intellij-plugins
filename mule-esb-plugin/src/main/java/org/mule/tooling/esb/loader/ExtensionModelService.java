@@ -29,7 +29,7 @@ public class ExtensionModelService {
   }
 
   private void load(String jsonResource) {
-    final URL resource = Thread.currentThread().getContextClassLoader().getResource(jsonResource);
+    final URL resource = getClass().getClassLoader().getResource(jsonResource);
     if (resource == null){
       throw new RuntimeException(String.format("There was an issue looking for the [%s] resource", jsonResource));
     }

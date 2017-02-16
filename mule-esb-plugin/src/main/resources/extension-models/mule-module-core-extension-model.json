@@ -1,16 +1,16 @@
 {
-  "name": "module-core",
+  "name": "core",
   "description": "Core components elements",
   "version": "4.0",
   "vendor": "MuleSoft",
   "category": "COMMUNITY",
   "minMuleVersion": "4.0.0",
   "xmlDsl": {
-    "namespace": "module-core",
-    "namespaceUri": "http://www.mulesoft.org/schema/mule/module-core",
-    "schemaLocation": "http://www.mulesoft.org/schema/mule/module-core/current/module-core.xsd",
+    "namespace": "core",
+    "namespaceUri": "http://www.mulesoft.org/schema/mule/core",
+    "schemaLocation": "http://www.mulesoft.org/schema/mule/core/current/mule.xsd",
     "schemaVersion": "4.0",
-    "xsdFileName": "module-core.xsd"
+    "xsdFileName": "mule.xsd"
   },
   "resources": [],
   "subTypes": [],

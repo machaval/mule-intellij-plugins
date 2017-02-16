@@ -21,8 +21,15 @@ import com.intellij.psi.impl.source.xml.XmlFileImpl;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mule.runtime.api.meta.model.ComponentModel;
+import org.mule.runtime.api.meta.model.ExtensionModel;
+import org.mule.runtime.api.meta.model.operation.OperationModel;
+import org.mule.runtime.api.meta.model.source.SourceModel;
+import org.mule.runtime.api.meta.model.util.IdempotentExtensionWalker;
+import org.mule.runtime.api.util.Reference;
+import org.mule.tooling.esb.loader.ExtensionModelService;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +47,14 @@ public class MuleConfigEditor implements FileEditor {
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
 
         Multimap<String, MuleXMLComponent> flowsDescriptor = getMuleConfigFlowsDescriptor(project, virtualFile);
+        final ExtensionModelService modelService = ExtensionModelService.getInstance();
+        flowsDescriptor.entries().forEach(entry -> {
+            final ExtensionModel extensionModel = modelService.get(entry.getValue().getNamespace());
+            System.out.println(extensionModel);
+        });
+
+
+
     }
 
     @NotNull
@@ -143,16 +158,59 @@ public class MuleConfigEditor implements FileEditor {
      * Parses the XML and returns a brief description of each flow and the components inside it
      */
     private Multimap<String, MuleXMLComponent> getMuleConfigFlowsDescriptor(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+        final ExtensionModelService modelService = ExtensionModelService.getInstance();
         PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
         XmlTag[] flows = ((XmlFileImpl) file).getRootTag().findSubTags("flow");
         Multimap<String, MuleXMLComponent> map = ArrayListMultimap.create();
-        Stream.of(flows).forEach(flow -> Stream.of(flow.getSubTags()).forEach(operationTag -> {
-            MuleXMLComponent component = new MuleXMLComponent(operationTag.getNamespace(), operationTag.getLocalName());
-            Stream.of(operationTag.getAttributes()).forEach(xmlAttribute -> component.addParameter(xmlAttribute.getName(), xmlAttribute.getValue()));
-            map.put(flow.getAttribute("name").getValue(), component);
+
+        Stream
+          .of(flows)
+          .forEach(flow ->
+                     Stream
+                       .of(flow.getSubTags())
+                       .forEach(componentTag -> {
+                         final ExtensionModel extensionModel = modelService.get(componentTag.getNamespace());
+                         final String componentName = componentTag.getLocalName();
+                         MuleXMLComponent component = new MuleXMLComponent(componentName, componentTag.getNamespace(),
+                                                              getComponentModel(componentName, extensionModel));
+
+                         Stream
+                           .of(componentTag.getAttributes())
+                           .forEach(xmlAttribute -> component.addParameter(xmlAttribute.getName(), xmlAttribute.getValue()));
+
+                         map.put(flow.getAttribute("name").getValue(), component);
         }));
 
         return map;
+    }
+
+    private ComponentModel getComponentModel(String componentName, ExtensionModel extensionModel) {
+        final Reference<ComponentModel> reference = new Reference<>();
+        final IdempotentExtensionWalker idempotentExtensionWalker = new IdempotentExtensionWalker() {
+
+            @Override
+            protected void onSource(SourceModel model) {
+                if(model.getName().equals(componentName)){
+                    reference.set(model);
+                }
+                stop();
+            }
+
+            @Override
+            protected void onOperation(OperationModel model) {
+                if(model.getName().equals(componentName)){
+                    reference.set(model);
+                }
+                stop();
+            }
+        };
+        idempotentExtensionWalker.walk(extensionModel);
+
+        final ComponentModel componentModel = reference.get();
+        if (componentModel == null){
+            throw new RuntimeException(String.format("The component name [%s] cannot be found in the ExtensionModel [%s]", componentName, extensionModel.getName()));
+        }
+        return componentModel;
     }
 
 }

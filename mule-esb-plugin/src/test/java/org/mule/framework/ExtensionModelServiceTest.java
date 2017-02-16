@@ -14,10 +14,10 @@ public class ExtensionModelServiceTest {
   @Test
   public void loadCoreExtensionModel() throws IOException {
     final ExtensionModel extensionModel =
-      ExtensionModelService.getInstance().get("http://www.mulesoft.org/schema/mule/module-core");
+      ExtensionModelService.getInstance().get("http://www.mulesoft.org/schema/mule/core");
 
     assertThat(extensionModel, is(notNullValue()));
-    assertThat(extensionModel.getName(), is("module-core"));
+    assertThat(extensionModel.getName(), is("core"));
     assertThat(extensionModel.getOperationModels().size(), is(3));
 
   }
