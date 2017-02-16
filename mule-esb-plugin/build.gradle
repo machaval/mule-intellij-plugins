@@ -10,6 +10,9 @@ dependencies {
                   'lib/mule-module-apikit-soap-xml-generator-1.0.0.jar',
     )
 
+    compile (group: 'org.mule.extensions', name: 'mule-extensions-api', version: '1.0.0-SNAPSHOT')
+    compile (group: 'org.mule.extensions', name: 'mule-extensions-api-persistence', version: '1.0.0-SNAPSHOT')
+
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
 

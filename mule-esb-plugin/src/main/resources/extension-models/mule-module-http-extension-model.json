@@ -1,0 +1,5943 @@
+{
+  "name": "HTTP",
+  "description": "Connector to handle and perform HTTP requests",
+  "version": "4.0-SNAPSHOT",
+  "vendor": "Mulesoft",
+  "category": "COMMUNITY",
+  "minMuleVersion": "4.0.0",
+  "xmlDsl": {
+    "namespace": "httpn",
+    "namespaceUri": "http://www.mulesoft.org/schema/mule/httpn",
+    "schemaLocation": "http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd",
+    "schemaVersion": "4.0-SNAPSHOT",
+    "xsdFileName": "mule-httpn.xsd"
+  },
+  "resources": [],
+  "subTypes": [
+    {
+      "baseType": {
+        "format": "java",
+        "type": "@ref:org.mule.extension.http.api.request.authentication.HttpAuthentication"
+      },
+      "subTypes": [
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.authentication.BasicAuthentication"
+        },
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.authentication.DigestAuthentication"
+        },
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.authentication.NtlmAuthentication"
+        }
+      ]
+    },
+    {
+      "baseType": {
+        "format": "java",
+        "type": "@ref:org.mule.service.http.api.client.proxy.ProxyConfig"
+      },
+      "subTypes": [
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.proxy.DefaultProxyConfig"
+        },
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.proxy.DefaultNtlmProxyConfig"
+        }
+      ]
+    },
+    {
+      "baseType": {
+        "format": "java",
+        "type": "@ref:org.mule.extension.http.api.request.validator.ResponseValidator"
+      },
+      "subTypes": [
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.validator.SuccessStatusCodeValidator"
+        },
+        {
+          "format": "java",
+          "type": "@ref:org.mule.extension.http.api.request.validator.FailureStatusCodeValidator"
+        }
+      ]
+    }
+  ],
+  "externalLibraries": [],
+  "importedTypes": [
+    {
+      "type": {
+        "format": "java",
+        "type": "@ref:org.mule.extension.socket.api.socket.tcp.TcpClientSocketProperties"
+      },
+      "extension": "Sockets"
+    },
+    {
+      "type": {
+        "format": "java",
+        "type": "Object",
+        "annotations": {
+          "typeId": "org.mule.extension.socket.api.socket.tcp.TcpServerSocketProperties",
+          "classInformation": {
+            "hasDefaultConstructor": true,
+            "isInterface": false,
+            "isInstantiable": true,
+            "isAbstract": false,
+            "isFinal": false,
+            "implementedInterfaces": [],
+            "parent": "org.mule.extension.socket.api.socket.tcp.AbstractTcpSocketProperties",
+            "genericTypes": []
+          },
+          "xmlHints": {
+            "allowInlineDefinition": true,
+            "allowTopLevelDefinition": true,
+            "allowReferences": true
+          },
+          "typeAlias": {
+            "value": "TcpServerSocketProperties"
+          }
+        },
+        "fields": [
+          {
+            "key": {
+              "name": "serverTimeout"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "typeId": "java.lang.Integer"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "layout": {
+                "layoutModel": {
+                  "password": false,
+                  "text": false,
+                  "query": false,
+                  "tabName": "Timeout Configuration"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "receiveBacklog"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "int": {},
+                "typeId": "int"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "default": "50",
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "layout": {
+                "layoutModel": {
+                  "password": false,
+                  "text": false,
+                  "query": false,
+                  "tabName": "Advanced"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "sendTcpNoDelay"
+            },
+            "model": {
+              "type": "Boolean",
+              "annotations": {
+                "typeId": "boolean"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "default": "true",
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "displayName": "Send TCP With No Delay",
+                  "summary": "Indicates whether the transmitted data should not be collected together for greater efficiency, and sent immediately"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "linger"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "typeId": "java.lang.Integer"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "summary": "This indicates for how long, in milliseconds, the socket will take to close so any remaining data istransmitted correctly"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "keepAlive"
+            },
+            "model": {
+              "type": "Boolean",
+              "annotations": {
+                "typeId": "boolean"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "default": "false",
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "summary": "Indicates whether the open socket connections unused for a long period and with an unavailable connection should be closed"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "failOnUnresolvedHost"
+            },
+            "model": {
+              "type": "Boolean",
+              "annotations": {
+                "typeId": "boolean"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "default": "true",
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "summary": "Whether the socket should fail during its creation if the host set on the endpoint cannot be resolved"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "sendBufferSize"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "typeId": "java.lang.Integer"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "layout": {
+                "layoutModel": {
+                  "password": false,
+                  "text": false,
+                  "query": false,
+                  "tabName": "Buffer Configuration"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "receiveBufferSize"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "typeId": "java.lang.Integer"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "layout": {
+                "layoutModel": {
+                  "password": false,
+                  "text": false,
+                  "query": false,
+                  "tabName": "Buffer Configuration"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "clientTimeout"
+            },
+            "model": {
+              "type": "Number",
+              "annotations": {
+                "typeId": "java.lang.Integer"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "layout": {
+                "layoutModel": {
+                  "password": false,
+                  "text": false,
+                  "query": false,
+                  "tabName": "Timeout Configuration"
+                }
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "summary": "Time, in milliseconds, that the socket will wait in a blocking operation before failing"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "name": "reuseAddress"
+            },
+            "model": {
+              "type": "Boolean",
+              "annotations": {
+                "typeId": "boolean"
+              }
+            },
+            "annotations": {
+              "parameterPurpose": {
+                "role": "BEHAVIOUR"
+              },
+              "default": "true",
+              "expressionSupport": {
+                "value": "SUPPORTED"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+                "displayModel": {
+                  "summary": "Indicates whether if the configured socket could be reused or fail at when trying to bind it"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "extension": "Sockets"
+    }
+  ],
+  "configurations": [
+    {
+      "parameterGroupModels": [
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 1
+              },
+              "name": "basePath",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "Boolean",
+                "annotations": {
+                  "typeId": "java.lang.Boolean"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "defaultValue": "true",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 2,
+                "tabName": "Advanced"
+              },
+              "name": "parseRequest",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "Boolean",
+                "annotations": {
+                  "typeId": "java.lang.Boolean"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "defaultValue": "false",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 3,
+                "tabName": "Advanced"
+              },
+              "name": "interpretRequestErrors",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "showInDsl": false,
+          "name": "General",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "externalLibraryModels": [],
+      "operations": [],
+      "connectionProviders": [
+        {
+          "connectionManagementType": "CACHED",
+          "externalLibraryModels": [],
+          "parameterGroupModels": [
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Object",
+                    "annotations": {
+                      "typeId": "org.mule.runtime.api.tls.TlsContextFactory",
+                      "typeAlias": {
+                        "value": "Tls"
+                      }
+                    },
+                    "fields": [
+                      {
+                        "key": {
+                          "name": "enabledProtocols"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "A comma separated list of protocols enabled for this context."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "enabledCipherSuites"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "A comma separated list of cipher suites enabled for this context."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "trust-store"
+                        },
+                        "model": {
+                          "type": "Object",
+                          "annotations": {
+                            "typeId": "java.lang.Object",
+                            "typeAlias": {
+                              "value": "TrustStore"
+                            },
+                            "description": {
+                              "value": "Trust store configuration. If used client side, the trust store contains the certificates of the trusted servers. If used server side, it contains the certificates of the trusted clients."
+                            }
+                          },
+                          "fields": [
+                            {
+                              "key": {
+                                "name": "path"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The location (which will be resolved relative to the current classpath and file system, if possible) of the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "password"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "type"
+                              },
+                              "model": {
+                                "type": "Union",
+                                "of": [
+                                  {
+                                    "type": "String",
+                                    "annotations": {
+                                      "typeId": "java.lang.String",
+                                      "enum": {
+                                        "type": "[Ljava.lang.String;",
+                                        "values": [
+                                          "jks",
+                                          "jceks",
+                                          "pkcs12"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "String"
+                                  }
+                                ]
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The type of store used."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "algorithm"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The algorithm used by the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "insecure"
+                              },
+                              "model": {
+                                "type": "Boolean",
+                                "annotations": {
+                                  "typeId": "java.lang.Boolean",
+                                  "default": "false"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "If true, no certificate validations will be performed."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "key-store"
+                        },
+                        "model": {
+                          "type": "Object",
+                          "annotations": {
+                            "typeId": "java.lang.Object",
+                            "typeAlias": {
+                              "value": "KeyStore"
+                            },
+                            "description": {
+                              "value": "Key store configuration. The key store contains the keys of this server/client."
+                            }
+                          },
+                          "fields": [
+                            {
+                              "key": {
+                                "name": "path"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The location (which will be resolved relative to the current classpath and file system, if possible) of the key store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "type"
+                              },
+                              "model": {
+                                "type": "Union",
+                                "of": [
+                                  {
+                                    "type": "String",
+                                    "annotations": {
+                                      "typeId": "java.lang.String",
+                                      "enum": {
+                                        "type": "[Ljava.lang.String;",
+                                        "values": [
+                                          "jks",
+                                          "jceks",
+                                          "pkcs12"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "String"
+                                  }
+                                ]
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The type of store used."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "alias"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "When the key store contains many private keys, this attribute indicates the alias of the key that should be used. If not defined, the first key in the file will be used by default."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "keyPassword"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the private key."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "password"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the key store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "algorithm"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The algorithm used by the key store."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 4,
+                    "tabName": "Security"
+                  },
+                  "name": "tlsContext",
+                  "displayModel": {
+                    "displayName": "TLS Configuration"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "General",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.service.http.api.HttpConstants.Protocols",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "HTTP",
+                          "HTTPS"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "HTTP",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "General"
+                  },
+                  "name": "protocol",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": true,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "General"
+                  },
+                  "name": "host",
+                  "displayModel": {
+                    "example": "0.0.0.0"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": true,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 3,
+                    "tabName": "General"
+                  },
+                  "name": "port",
+                  "displayModel": {
+                    "example": "8081"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "true",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "Advanced"
+                  },
+                  "name": "usePersistentConnections",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "30000",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "Advanced"
+                  },
+                  "name": "connectionIdleTimeout",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Union",
+                    "annotations": {
+                      "typeId": "java.lang.Object",
+                      "typeAlias": {
+                        "value": "ReconnectionStrategy"
+                      }
+                    },
+                    "of": [
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "count"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Integer",
+                                "default": "2"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How many reconnection attempts to make"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "blocking"
+                            },
+                            "model": {
+                              "type": "Boolean",
+                              "annotations": {
+                                "typeId": "java.lang.Boolean",
+                                "default": "true"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "If false, the reconnection strategy will run in a separate, non-blocking thread"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect-forever"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "reconnectionStrategy",
+                  "description": "A retry strategy in case of connectivity errors",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "disableValidation",
+                  "description": "Disables connection validation",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Connection",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "name": "listener-connection",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "messageSources": [
+        {
+          "hasResponse": true,
+          "successCallback": {
+            "parameterGroupModels": [
+              {
+                "parameters": [
+                  {
+                    "type": {
+                      "format": "java",
+                      "type": "@ref:org.mule.extension.http.api.listener.builder.HttpListenerResponseBuilder"
+                    },
+                    "hasDynamicType": false,
+                    "required": false,
+                    "expressionSupport": "SUPPORTED",
+                    "role": "BEHAVIOUR",
+                    "dslConfiguration": {
+                      "allowsInlineDefinition": true,
+                      "allowsReferences": true,
+                      "allowTopLevelDefinition": false
+                    },
+                    "layoutModel": {
+                      "password": false,
+                      "text": false,
+                      "query": false,
+                      "order": 6,
+                      "tabName": "Response Settings"
+                    },
+                    "name": "response",
+                    "description": "",
+                    "modelProperties": {}
+                  }
+                ],
+                "exclusiveParametersModels": [],
+                "showInDsl": false,
+                "name": "General",
+                "description": "",
+                "modelProperties": {}
+              }
+            ],
+            "name": "onSuccess",
+            "description": "",
+            "modelProperties": {}
+          },
+          "errorCallback": {
+            "parameterGroupModels": [
+              {
+                "parameters": [
+                  {
+                    "type": {
+                      "format": "java",
+                      "type": "@ref:org.mule.extension.http.api.listener.builder.HttpListenerResponseBuilder"
+                    },
+                    "hasDynamicType": false,
+                    "required": false,
+                    "expressionSupport": "SUPPORTED",
+                    "role": "BEHAVIOUR",
+                    "dslConfiguration": {
+                      "allowsInlineDefinition": true,
+                      "allowsReferences": true,
+                      "allowTopLevelDefinition": false
+                    },
+                    "layoutModel": {
+                      "password": false,
+                      "text": false,
+                      "query": false,
+                      "order": 7,
+                      "tabName": "Error Response Settings"
+                    },
+                    "name": "errorResponse",
+                    "description": "",
+                    "modelProperties": {}
+                  }
+                ],
+                "exclusiveParametersModels": [],
+                "showInDsl": false,
+                "name": "General",
+                "description": "",
+                "modelProperties": {}
+              }
+            ],
+            "name": "onError",
+            "description": "",
+            "modelProperties": {}
+          },
+          "output": {
+            "type": {
+              "format": "java",
+              "type": "Object",
+              "annotations": {
+                "typeId": "java.lang.Object",
+                "classInformation": {
+                  "hasDefaultConstructor": true,
+                  "isInterface": false,
+                  "isInstantiable": true,
+                  "isAbstract": false,
+                  "isFinal": false,
+                  "implementedInterfaces": [],
+                  "parent": "",
+                  "genericTypes": []
+                },
+                "typeAlias": {
+                  "value": "Object"
+                }
+              },
+              "fields": []
+            },
+            "hasDynamicType": true,
+            "description": "",
+            "modelProperties": {}
+          },
+          "outputAttributes": {
+            "type": {
+              "format": "java",
+              "type": "@ref:org.mule.extension.http.api.HttpRequestAttributes"
+            },
+            "hasDynamicType": false,
+            "description": "",
+            "modelProperties": {}
+          },
+          "transactional": false,
+          "requiresConnection": true,
+          "parameterGroupModels": [
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": true,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "General"
+                  },
+                  "name": "path",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "General"
+                  },
+                  "name": "allowedMethods",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.extension.http.api.HttpStreamingType",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "AUTO",
+                          "ALWAYS",
+                          "NEVER"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "AUTO",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 5,
+                    "tabName": "Advanced"
+                  },
+                  "name": "responseStreamingMode",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Object",
+                    "annotations": {
+                      "typeId": "java.lang.Object",
+                      "typeAlias": {
+                        "value": "RedeliveryPolicy"
+                      }
+                    },
+                    "fields": [
+                      {
+                        "key": {
+                          "name": "maxRedeliveryCount"
+                        },
+                        "model": {
+                          "type": "Number",
+                          "annotations": {
+                            "int": {},
+                            "typeId": "java.lang.Integer",
+                            "default": "5"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "The maximum number of times a message can be redelivered and processed unsuccessfully before triggering process-failed-message"
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "useSecureHash"
+                        },
+                        "model": {
+                          "type": "Boolean",
+                          "annotations": {
+                            "typeId": "java.lang.Boolean",
+                            "default": "true"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "Whether to use a secure hash algorithm to identify a redelivered message"
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "messageDigestAlgorithm"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "The secure hashing algorithm to use. If not set, the default is SHA-256."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "idExpression"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "Defines one or more expressions to use to determine when a message has been redelivered. This property may only be set if useSecureHash is false."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "object-store-ref"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "The object store where the redelivery counter for each message is going to be stored."
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "redeliveryPolicy",
+                  "description": "Defines a policy for processing the redelivery of the same message",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "General",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 3
+                  },
+                  "name": "parseRequest",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 4
+                  },
+                  "name": "interpretRequestErrors",
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Configuration Overrides",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Union",
+                    "annotations": {
+                      "typeId": "java.lang.Object",
+                      "typeAlias": {
+                        "value": "ReconnectionStrategy"
+                      }
+                    },
+                    "of": [
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "count"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Integer",
+                                "default": "2"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How many reconnection attempts to make"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "blocking"
+                            },
+                            "model": {
+                              "type": "Boolean",
+                              "annotations": {
+                                "typeId": "java.lang.Boolean",
+                                "default": "true"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "If false, the reconnection strategy will run in a separate, non-blocking thread"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect-forever"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "reconnectionStrategy",
+                  "description": "A retry strategy in case of connectivity errors",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "Connection",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "name": "listener",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "name": "listener-config",
+      "description": "",
+      "modelProperties": {}
+    },
+    {
+      "parameterGroupModels": [
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "@ref:org.mule.extension.http.api.request.RamlApiConfiguration"
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 5,
+                "tabName": "API Specification"
+              },
+              "name": "apiConfiguration",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "showInDsl": false,
+          "name": "General",
+          "description": "",
+          "modelProperties": {}
+        },
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "Boolean",
+                "annotations": {
+                  "typeId": "java.lang.Boolean"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "true",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 1,
+                "tabName": "Advanced"
+              },
+              "name": "followRedirects",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "org.mule.extension.http.api.HttpSendBodyMode",
+                  "enum": {
+                    "type": "[Ljava.lang.String;",
+                    "values": [
+                      "ALWAYS",
+                      "AUTO",
+                      "NEVER"
+                    ]
+                  }
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "AUTO",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 2,
+                "tabName": "Advanced"
+              },
+              "name": "sendBodyMode",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "org.mule.extension.http.api.HttpStreamingType",
+                  "enum": {
+                    "type": "[Ljava.lang.String;",
+                    "values": [
+                      "AUTO",
+                      "ALWAYS",
+                      "NEVER"
+                    ]
+                  }
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "AUTO",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 3,
+                "tabName": "Advanced"
+              },
+              "name": "requestStreamingMode",
+              "displayModel": {
+                "summary": "Defines if the request should be sent using streaming or not. If this attribute is not present, the behavior will depend on the type of the payload (it will stream only for InputStream)."
+              },
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "layoutModel": {
+            "password": false,
+            "text": false,
+            "query": false
+          },
+          "showInDsl": false,
+          "name": "Request Settings",
+          "description": "",
+          "modelProperties": {}
+        },
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "Boolean",
+                "annotations": {
+                  "typeId": "boolean"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "defaultValue": "true",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 4,
+                "tabName": "Advanced"
+              },
+              "name": "enableCookies",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "layoutModel": {
+            "password": false,
+            "text": false,
+            "query": false
+          },
+          "showInDsl": false,
+          "name": "Other Settings",
+          "description": "",
+          "modelProperties": {}
+        },
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "Boolean",
+                "annotations": {
+                  "typeId": "java.lang.Boolean"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "true",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 1,
+                "tabName": "Advanced"
+              },
+              "name": "parseResponse",
+              "displayModel": {
+                "summary": "Indicates if the HTTP response should be parsed, or directly receive the raw content"
+              },
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "Number",
+                "annotations": {
+                  "typeId": "java.lang.Integer"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 2,
+                "tabName": "Advanced"
+              },
+              "name": "responseTimeout",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "layoutModel": {
+            "password": false,
+            "text": false,
+            "query": false,
+            "tabName": "Response Settings"
+          },
+          "showInDsl": false,
+          "name": "Response Settings",
+          "description": "",
+          "modelProperties": {}
+        },
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "/",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 6
+              },
+              "name": "basePath",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "layoutModel": {
+            "password": false,
+            "text": false,
+            "query": false
+          },
+          "showInDsl": false,
+          "name": "URL Configuration",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "externalLibraryModels": [],
+      "operations": [
+        {
+          "blocking": false,
+          "executionType": "CPU_LITE",
+          "errors": [
+            {
+              "type": "CONNECTIVITY",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "CONNECTIVITY",
+                "namespace": "MULE",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "METHOD_NOT_ALLOWED",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "TRANSFORMATION",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "TRANSFORMATION",
+                "namespace": "MULE",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "NOT_FOUND",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "PARSING",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "ANY",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "SERVICE_UNAVAILABLE",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "SECURITY",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "SECURITY",
+                "namespace": "MULE",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "RESPONSE_VALIDATION",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "ANY",
+                "namespace": "MULE"
+              }
+            },
+            {
+              "type": "BAD_REQUEST",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "UNAUTHORIZED",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "INTERNAL_SERVER_ERROR",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "UNSUPPORTED_MEDIA_TYPE",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "RETRY_EXHAUSTED",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RETRY_EXHAUSTED",
+                "namespace": "MULE",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "TOO_MANY_REQUESTS",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "FORBIDDEN",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "TIMEOUT",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "ANY",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            },
+            {
+              "type": "NOT_ACCEPTABLE",
+              "namespace": "HTTPN",
+              "parent": {
+                "type": "RESPONSE_VALIDATION",
+                "namespace": "HTTPN",
+                "parent": {
+                  "type": "ANY",
+                  "namespace": "MULE"
+                }
+              }
+            }
+          ],
+          "output": {
+            "type": {
+              "format": "java",
+              "type": "Object",
+              "annotations": {
+                "typeId": "java.lang.Object",
+                "classInformation": {
+                  "hasDefaultConstructor": true,
+                  "isInterface": false,
+                  "isInstantiable": true,
+                  "isAbstract": false,
+                  "isFinal": false,
+                  "implementedInterfaces": [],
+                  "parent": "",
+                  "genericTypes": []
+                },
+                "typeAlias": {
+                  "value": "Object"
+                }
+              },
+              "fields": []
+            },
+            "hasDynamicType": true,
+            "description": "",
+            "modelProperties": {}
+          },
+          "outputAttributes": {
+            "type": {
+              "format": "java",
+              "type": "@ref:org.mule.extension.http.api.HttpResponseAttributes"
+            },
+            "hasDynamicType": false,
+            "description": "",
+            "modelProperties": {}
+          },
+          "transactional": false,
+          "requiresConnection": true,
+          "parameterGroupModels": [
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "defaultValue": "/",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 13
+                  },
+                  "name": "path",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "defaultValue": "GET",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 14
+                  },
+                  "name": "method",
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "General",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Object",
+                    "annotations": {
+                      "typeId": "java.lang.Object",
+                      "classInformation": {
+                        "hasDefaultConstructor": true,
+                        "isInterface": false,
+                        "isInstantiable": true,
+                        "isAbstract": false,
+                        "isFinal": false,
+                        "implementedInterfaces": [],
+                        "parent": "",
+                        "genericTypes": []
+                      },
+                      "typeAlias": {
+                        "value": "Object"
+                      }
+                    },
+                    "fields": []
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "defaultValue": "#[payload]",
+                  "role": "PRIMARY_CONTENT",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 8
+                  },
+                  "name": "body",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:java.util.Map"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "CONTENT",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 9
+                  },
+                  "name": "headers",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:java.util.Map"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "CONTENT",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 10
+                  },
+                  "name": "uriParams",
+                  "displayModel": {
+                    "displayName": "URI Parameters"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:java.util.Map"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "CONTENT",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 11
+                  },
+                  "name": "queryParams",
+                  "displayModel": {
+                    "displayName": "Query Parameters"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Request Settings",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "host",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "port",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 3,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "followRedirects",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.extension.http.api.HttpSendBodyMode",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "ALWAYS",
+                          "AUTO",
+                          "NEVER"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 4,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "sendBodyMode",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.extension.http.api.HttpStreamingType",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "AUTO",
+                          "ALWAYS",
+                          "NEVER"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 5,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "requestStreamingMode",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 6,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "parseResponse",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 7,
+                    "tabName": "Configuration Overrides"
+                  },
+                  "name": "responseTimeout",
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Configuration Overrides",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.extension.http.api.HttpMetadataKey",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "STREAM",
+                          "MULTIPART",
+                          "FORM",
+                          "ANY"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "defaultValue": "ANY",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 12,
+                    "tabName": "Advanced"
+                  },
+                  "name": "outputType",
+                  "description": "",
+                  "modelProperties": {
+                    "org.mule.runtime.extension.internal.property.MetadataKeyPartModelProperty": {
+                      "order": 1
+                    }
+                  }
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Other Settings",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "target",
+                  "description": "The name of a variable on which the operation\u0027s output will be placed",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "Output",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:org.mule.extension.http.api.request.validator.ResponseValidator"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 15,
+                    "tabName": "Response Settings"
+                  },
+                  "name": "responseValidator",
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Response Validation Settings",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "name": "request",
+          "displayModel": {
+            "summary": "Executes a HTTP Request"
+          },
+          "description": "",
+          "modelProperties": {
+            "org.mule.runtime.extension.internal.property.MetadataKeyIdModelProperty": {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "org.mule.extension.http.api.HttpMetadataKey",
+                  "enum": {
+                    "type": "[Ljava.lang.String;",
+                    "values": [
+                      "STREAM",
+                      "MULTIPART",
+                      "FORM",
+                      "ANY"
+                    ]
+                  }
+                }
+              },
+              "parameterName": "outputType"
+            }
+          }
+        }
+      ],
+      "connectionProviders": [
+        {
+          "connectionManagementType": "CACHED",
+          "externalLibraryModels": [],
+          "parameterGroupModels": [
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:org.mule.service.http.api.client.proxy.ProxyConfig"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 6,
+                    "tabName": "Proxy"
+                  },
+                  "name": "proxyConfig",
+                  "displayModel": {
+                    "summary": "Reusable configuration element for outbound connections through a proxy"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:org.mule.extension.http.api.request.authentication.HttpAuthentication"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 7,
+                    "tabName": "Authentication"
+                  },
+                  "name": "authentication",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Object",
+                    "annotations": {
+                      "typeId": "org.mule.runtime.api.tls.TlsContextFactory",
+                      "typeAlias": {
+                        "value": "Tls"
+                      }
+                    },
+                    "fields": [
+                      {
+                        "key": {
+                          "name": "enabledProtocols"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "A comma separated list of protocols enabled for this context."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "enabledCipherSuites"
+                        },
+                        "model": {
+                          "type": "String",
+                          "annotations": {
+                            "typeId": "java.lang.String"
+                          }
+                        },
+                        "annotations": {
+                          "description": {
+                            "value": "A comma separated list of cipher suites enabled for this context."
+                          }
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "trust-store"
+                        },
+                        "model": {
+                          "type": "Object",
+                          "annotations": {
+                            "typeId": "java.lang.Object",
+                            "typeAlias": {
+                              "value": "TrustStore"
+                            },
+                            "description": {
+                              "value": "Trust store configuration. If used client side, the trust store contains the certificates of the trusted servers. If used server side, it contains the certificates of the trusted clients."
+                            }
+                          },
+                          "fields": [
+                            {
+                              "key": {
+                                "name": "path"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The location (which will be resolved relative to the current classpath and file system, if possible) of the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "password"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "type"
+                              },
+                              "model": {
+                                "type": "Union",
+                                "of": [
+                                  {
+                                    "type": "String",
+                                    "annotations": {
+                                      "typeId": "java.lang.String",
+                                      "enum": {
+                                        "type": "[Ljava.lang.String;",
+                                        "values": [
+                                          "jks",
+                                          "jceks",
+                                          "pkcs12"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "String"
+                                  }
+                                ]
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The type of store used."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "algorithm"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The algorithm used by the trust store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "insecure"
+                              },
+                              "model": {
+                                "type": "Boolean",
+                                "annotations": {
+                                  "typeId": "java.lang.Boolean",
+                                  "default": "false"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "If true, no certificate validations will be performed."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "key": {
+                          "name": "key-store"
+                        },
+                        "model": {
+                          "type": "Object",
+                          "annotations": {
+                            "typeId": "java.lang.Object",
+                            "typeAlias": {
+                              "value": "KeyStore"
+                            },
+                            "description": {
+                              "value": "Key store configuration. The key store contains the keys of this server/client."
+                            }
+                          },
+                          "fields": [
+                            {
+                              "key": {
+                                "name": "path"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The location (which will be resolved relative to the current classpath and file system, if possible) of the key store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "type"
+                              },
+                              "model": {
+                                "type": "Union",
+                                "of": [
+                                  {
+                                    "type": "String",
+                                    "annotations": {
+                                      "typeId": "java.lang.String",
+                                      "enum": {
+                                        "type": "[Ljava.lang.String;",
+                                        "values": [
+                                          "jks",
+                                          "jceks",
+                                          "pkcs12"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "String"
+                                  }
+                                ]
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The type of store used."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "alias"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "When the key store contains many private keys, this attribute indicates the alias of the key that should be used. If not defined, the first key in the file will be used by default."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "keyPassword"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the private key."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "password"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The password used to protect the key store."
+                                }
+                              }
+                            },
+                            {
+                              "key": {
+                                "name": "algorithm"
+                              },
+                              "model": {
+                                "type": "String",
+                                "annotations": {
+                                  "typeId": "java.lang.String"
+                                }
+                              },
+                              "annotations": {
+                                "description": {
+                                  "value": "The algorithm used by the key store."
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 5,
+                    "tabName": "Security"
+                  },
+                  "name": "tlsContext",
+                  "displayModel": {
+                    "displayName": "TLS Configuration"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "showInDsl": false,
+              "name": "General",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "parameters": [
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "org.mule.service.http.api.HttpConstants.Protocols",
+                      "enum": {
+                        "type": "[Ljava.lang.String;",
+                        "values": [
+                          "HTTP",
+                          "HTTPS"
+                        ]
+                      }
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "HTTP",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "General"
+                  },
+                  "name": "protocol",
+                  "displayModel": {
+                    "summary": "Protocol to use for communication. Valid values are HTTP and HTTPS"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "String",
+                    "annotations": {
+                      "typeId": "java.lang.String"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "General"
+                  },
+                  "name": "host",
+                  "displayModel": {
+                    "example": "www.somehost.com"
+                  },
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 3,
+                    "tabName": "General"
+                  },
+                  "name": "port",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "java.lang.Boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "true",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 1,
+                    "tabName": "Advanced"
+                  },
+                  "name": "usePersistentConnections",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "-1",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 2,
+                    "tabName": "Advanced"
+                  },
+                  "name": "maxConnections",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Number",
+                    "annotations": {
+                      "typeId": "java.lang.Integer"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "defaultValue": "30000",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 3,
+                    "tabName": "Advanced"
+                  },
+                  "name": "connectionIdleTimeout",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "@ref:org.mule.extension.socket.api.socket.tcp.TcpClientSocketProperties"
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "order": 4,
+                    "tabName": "Advanced"
+                  },
+                  "name": "clientSocketProperties",
+                  "description": "",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Union",
+                    "annotations": {
+                      "typeId": "java.lang.Object",
+                      "typeAlias": {
+                        "value": "ReconnectionStrategy"
+                      }
+                    },
+                    "of": [
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "count"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Integer",
+                                "default": "2"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How many reconnection attempts to make"
+                              }
+                            }
+                          },
+                          {
+                            "key": {
+                              "name": "blocking"
+                            },
+                            "model": {
+                              "type": "Boolean",
+                              "annotations": {
+                                "typeId": "java.lang.Boolean",
+                                "default": "true"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "If false, the reconnection strategy will run in a separate, non-blocking thread"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Object",
+                        "annotations": {
+                          "typeId": "java.lang.Object",
+                          "typeAlias": {
+                            "value": "reconnect-forever"
+                          }
+                        },
+                        "fields": [
+                          {
+                            "key": {
+                              "name": "frequency"
+                            },
+                            "model": {
+                              "type": "Number",
+                              "annotations": {
+                                "int": {},
+                                "typeId": "java.lang.Long",
+                                "default": "2000"
+                              }
+                            },
+                            "annotations": {
+                              "description": {
+                                "value": "How often (in ms) to reconnect"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": false,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "reconnectionStrategy",
+                  "description": "A retry strategy in case of connectivity errors",
+                  "modelProperties": {}
+                },
+                {
+                  "type": {
+                    "format": "java",
+                    "type": "Boolean",
+                    "annotations": {
+                      "typeId": "boolean"
+                    }
+                  },
+                  "hasDynamicType": false,
+                  "required": false,
+                  "expressionSupport": "NOT_SUPPORTED",
+                  "role": "BEHAVIOUR",
+                  "dslConfiguration": {
+                    "allowsInlineDefinition": true,
+                    "allowsReferences": true,
+                    "allowTopLevelDefinition": false
+                  },
+                  "layoutModel": {
+                    "password": false,
+                    "text": false,
+                    "query": false,
+                    "tabName": "Advanced"
+                  },
+                  "name": "disableValidation",
+                  "description": "Disables connection validation",
+                  "modelProperties": {}
+                }
+              ],
+              "exclusiveParametersModels": [],
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false
+              },
+              "showInDsl": false,
+              "name": "Connection",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "name": "request-connection",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "messageSources": [],
+      "name": "request-config",
+      "description": "",
+      "modelProperties": {}
+    }
+  ],
+  "operations": [
+    {
+      "blocking": true,
+      "executionType": "CPU_LITE",
+      "errors": [
+        {
+          "type": "SECURITY",
+          "namespace": "HTTPN",
+          "parent": {
+            "type": "SECURITY",
+            "namespace": "MULE",
+            "parent": {
+              "type": "ANY",
+              "namespace": "MULE"
+            }
+          }
+        }
+      ],
+      "output": {
+        "type": {
+          "format": "java",
+          "type": "Void"
+        },
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {}
+      },
+      "outputAttributes": {
+        "type": {
+          "format": "java",
+          "type": "Void"
+        },
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {}
+      },
+      "transactional": false,
+      "requiresConnection": false,
+      "parameterGroupModels": [
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": true,
+              "expressionSupport": "SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 1
+              },
+              "name": "realm",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 2
+              },
+              "name": "securityProviders",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "@ref:org.mule.extension.http.api.HttpRequestAttributes"
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "#[attributes]",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 3
+              },
+              "name": "attributes",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "showInDsl": false,
+          "name": "General",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "name": "basicSecurityFilter",
+      "description": "",
+      "modelProperties": {}
+    },
+    {
+      "blocking": true,
+      "executionType": "CPU_LITE",
+      "errors": [
+        {
+          "type": "NOT_FOUND",
+          "namespace": "HTTPN",
+          "parent": {
+            "type": "RESPONSE_VALIDATION",
+            "namespace": "HTTPN",
+            "parent": {
+              "type": "ANY",
+              "namespace": "MULE"
+            }
+          }
+        }
+      ],
+      "output": {
+        "type": {
+          "format": "java",
+          "type": "Any"
+        },
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {}
+      },
+      "outputAttributes": {
+        "type": {
+          "format": "java",
+          "type": "Void"
+        },
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {}
+      },
+      "transactional": false,
+      "requiresConnection": false,
+      "parameterGroupModels": [
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "NOT_SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "tabName": "Advanced"
+              },
+              "name": "target",
+              "description": "The name of a variable on which the operation\u0027s output will be placed",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "showInDsl": false,
+          "name": "Output",
+          "description": "",
+          "modelProperties": {}
+        },
+        {
+          "parameters": [
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": true,
+              "expressionSupport": "SUPPORTED",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 1
+              },
+              "name": "resourceBasePath",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "String",
+                "annotations": {
+                  "typeId": "java.lang.String"
+                }
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "index.html",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 2
+              },
+              "name": "defaultFile",
+              "description": "",
+              "modelProperties": {}
+            },
+            {
+              "type": {
+                "format": "java",
+                "type": "@ref:org.mule.extension.http.api.HttpRequestAttributes"
+              },
+              "hasDynamicType": false,
+              "required": false,
+              "expressionSupport": "SUPPORTED",
+              "defaultValue": "#[attributes]",
+              "role": "BEHAVIOUR",
+              "dslConfiguration": {
+                "allowsInlineDefinition": true,
+                "allowsReferences": true,
+                "allowTopLevelDefinition": false
+              },
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "order": 3
+              },
+              "name": "attributes",
+              "description": "",
+              "modelProperties": {}
+            }
+          ],
+          "exclusiveParametersModels": [],
+          "layoutModel": {
+            "password": false,
+            "text": false,
+            "query": false
+          },
+          "showInDsl": false,
+          "name": "Resource",
+          "description": "",
+          "modelProperties": {}
+        }
+      ],
+      "name": "loadStaticResource",
+      "description": "",
+      "modelProperties": {}
+    }
+  ],
+  "connectionProviders": [],
+  "messageSources": [],
+  "errors": [
+    {
+      "type": "METHOD_NOT_ALLOWED",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "CONNECTIVITY",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "CONNECTIVITY",
+        "namespace": "MULE",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "TRANSFORMATION",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "TRANSFORMATION",
+        "namespace": "MULE",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "CONNECTIVITY",
+      "namespace": "MULE",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    },
+    {
+      "type": "ANY",
+      "namespace": "MULE"
+    },
+    {
+      "type": "NOT_FOUND",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "PARSING",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "ANY",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "SERVICE_UNAVAILABLE",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "SECURITY",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "SECURITY",
+        "namespace": "MULE",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "BAD_REQUEST",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "RESPONSE_VALIDATION",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    },
+    {
+      "type": "INTERNAL_SERVER_ERROR",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "UNAUTHORIZED",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "RETRY_EXHAUSTED",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RETRY_EXHAUSTED",
+        "namespace": "MULE",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "UNSUPPORTED_MEDIA_TYPE",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "SECURITY",
+      "namespace": "MULE",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    },
+    {
+      "type": "TOO_MANY_REQUESTS",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "RETRY_EXHAUSTED",
+      "namespace": "MULE",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    },
+    {
+      "type": "FORBIDDEN",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "TIMEOUT",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "ANY",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "NOT_ACCEPTABLE",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "RESPONSE_VALIDATION",
+        "namespace": "HTTPN",
+        "parent": {
+          "type": "ANY",
+          "namespace": "MULE"
+        }
+      }
+    },
+    {
+      "type": "ANY",
+      "namespace": "HTTPN",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    },
+    {
+      "type": "TRANSFORMATION",
+      "namespace": "MULE",
+      "parent": {
+        "type": "ANY",
+        "namespace": "MULE"
+      }
+    }
+  ],
+  "modelProperties": {},
+  "types": [
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.internal.request.client.HttpExtensionClient",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": false,
+          "isInstantiable": false,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [
+            "org.mule.runtime.api.lifecycle.Startable",
+            "org.mule.runtime.api.lifecycle.Stoppable"
+          ],
+          "parent": "",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpExtensionClient"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "defaultAuthentication"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.extension.http.api.request.authentication.HttpAuthentication",
+              "classInformation": {
+                "hasDefaultConstructor": false,
+                "isInterface": true,
+                "isInstantiable": false,
+                "isAbstract": true,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": []
+              },
+              "typeAlias": {
+                "value": "HttpAuthentication"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "defaultUriParameters"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.extension.http.api.request.client.UriParameters",
+              "classInformation": {
+                "hasDefaultConstructor": false,
+                "isInterface": true,
+                "isInstantiable": false,
+                "isAbstract": true,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": []
+              },
+              "typeAlias": {
+                "value": "UriParameters"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": false,
+          "isInstantiable": false,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.BaseHttpRequestAttributes",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpRequestAttributes"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "clientCertificate"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "java.security.cert.Certificate",
+              "classInformation": {
+                "hasDefaultConstructor": false,
+                "isInterface": false,
+                "isInstantiable": false,
+                "isAbstract": true,
+                "isFinal": false,
+                "implementedInterfaces": [
+                  "java.io.Serializable"
+                ],
+                "parent": "",
+                "genericTypes": []
+              },
+              "typeAlias": {
+                "value": "Certificate"
+              }
+            },
+            "fields": [
+              {
+                "key": {
+                  "name": "encoded"
+                },
+                "model": {
+                  "type": "Binary",
+                  "annotations": {
+                    "typeId": "byte[]"
+                  }
+                },
+                "annotations": {
+                  "visibility": "READ_ONLY"
+                }
+              },
+              {
+                "key": {
+                  "name": "publicKey"
+                },
+                "model": {
+                  "type": "Object",
+                  "annotations": {
+                    "typeId": "java.security.PublicKey",
+                    "classInformation": {
+                      "hasDefaultConstructor": false,
+                      "isInterface": true,
+                      "isInstantiable": false,
+                      "isAbstract": true,
+                      "isFinal": false,
+                      "implementedInterfaces": [
+                        "java.security.Key"
+                      ],
+                      "parent": "",
+                      "genericTypes": []
+                    },
+                    "typeAlias": {
+                      "value": "PublicKey"
+                    }
+                  },
+                  "fields": []
+                },
+                "annotations": {
+                  "visibility": "READ_ONLY"
+                }
+              },
+              {
+                "key": {
+                  "name": "type"
+                },
+                "model": {
+                  "type": "String",
+                  "annotations": {
+                    "typeId": "java.lang.String"
+                  }
+                },
+                "annotations": {
+                  "visibility": "READ_ONLY"
+                }
+              }
+            ]
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "headers"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.service.http.api.domain.ParameterMap",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [
+                  "java.util.Map",
+                  "java.io.Serializable"
+                ],
+                "parent": "",
+                "genericTypes": []
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "listenerPath"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "method"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "queryParams"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.service.http.api.domain.ParameterMap",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [
+                  "java.util.Map",
+                  "java.io.Serializable"
+                ],
+                "parent": "",
+                "genericTypes": []
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "queryString"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "relativePath"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "remoteAddress"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "requestPath"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "requestUri"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "scheme"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "uriParams"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.service.http.api.domain.ParameterMap",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [
+                  "java.util.Map",
+                  "java.io.Serializable"
+                ],
+                "parent": "",
+                "genericTypes": []
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "version"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.listener.builder.HttpListenerResponseBuilder",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.HttpMessageBuilder",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpListenerResponseBuilder"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "statusCode"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "reasonPhrase"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "body"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "java.lang.Object",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": []
+              },
+              "typeAlias": {
+                "value": "Object"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.TypedValueTypeAnnotation": {}
+            },
+            "fields": []
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "PRIMARY_CONTENT"
+            },
+            "default": "#[payload]",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "headers"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "java.util.Map",
+              "classInformation": {
+                "hasDefaultConstructor": false,
+                "isInterface": true,
+                "isInstantiable": false,
+                "isAbstract": true,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": [
+                  "java.lang.String",
+                  "java.lang.String"
+                ]
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "CONTENT"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.listener.builder.HttpListenerResponseBuilder",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.HttpMessageBuilder",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpListenerResponseBuilder"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "statusCode"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "reasonPhrase"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "body"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "java.lang.Object",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": []
+              },
+              "typeAlias": {
+                "value": "Object"
+              },
+              "org.mule.runtime.extension.api.declaration.type.annotation.TypedValueTypeAnnotation": {}
+            },
+            "fields": []
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "PRIMARY_CONTENT"
+            },
+            "default": "#[payload]",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "headers"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "java.util.Map",
+              "classInformation": {
+                "hasDefaultConstructor": false,
+                "isInterface": true,
+                "isInstantiable": false,
+                "isAbstract": true,
+                "isFinal": false,
+                "implementedInterfaces": [],
+                "parent": "",
+                "genericTypes": [
+                  "java.lang.String",
+                  "java.lang.String"
+                ]
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "CONTENT"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.socket.api.socket.tcp.TcpClientSocketProperties",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.socket.api.socket.tcp.AbstractTcpSocketProperties",
+          "genericTypes": []
+        },
+        "extensibleType": {},
+        "xmlHints": {
+          "allowInlineDefinition": true,
+          "allowTopLevelDefinition": true,
+          "allowReferences": true
+        },
+        "typeAlias": {
+          "value": "TcpClientSocketProperties"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "connectionTimeout"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "int": {},
+              "typeId": "int"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "30000",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "tabName": "Timeout Configuration"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "sendTcpNoDelay"
+          },
+          "model": {
+            "type": "Boolean",
+            "annotations": {
+              "typeId": "boolean"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "true",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "displayName": "Send TCP With No Delay",
+                "summary": "Indicates whether the transmitted data should not be collected together for greater efficiency, and sent immediately"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "linger"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "summary": "This indicates for how long, in milliseconds, the socket will take to close so any remaining data istransmitted correctly"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "keepAlive"
+          },
+          "model": {
+            "type": "Boolean",
+            "annotations": {
+              "typeId": "boolean"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "false",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "summary": "Indicates whether the open socket connections unused for a long period and with an unavailable connection should be closed"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "failOnUnresolvedHost"
+          },
+          "model": {
+            "type": "Boolean",
+            "annotations": {
+              "typeId": "boolean"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "true",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "summary": "Whether the socket should fail during its creation if the host set on the endpoint cannot be resolved"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "sendBufferSize"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "tabName": "Buffer Configuration"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "receiveBufferSize"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "tabName": "Buffer Configuration"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "clientTimeout"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "typeId": "java.lang.Integer"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": false,
+                "text": false,
+                "query": false,
+                "tabName": "Timeout Configuration"
+              }
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "summary": "Time, in milliseconds, that the socket will wait in a blocking operation before failing"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "reuseAddress"
+          },
+          "model": {
+            "type": "Boolean",
+            "annotations": {
+              "typeId": "boolean"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "true",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "summary": "Indicates whether if the configured socket could be reused or fail at when trying to bind it"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.service.http.api.client.proxy.ProxyConfig",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": true,
+          "isInstantiable": false,
+          "isAbstract": true,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "ProxyConfig"
+        }
+      },
+      "fields": []
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.authentication.HttpAuthentication",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": true,
+          "isInstantiable": false,
+          "isAbstract": true,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpAuthentication"
+        }
+      },
+      "fields": []
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.RamlApiConfiguration",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "",
+          "genericTypes": []
+        },
+        "extensibleType": {},
+        "typeAlias": {
+          "value": "RamlApiConfiguration"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "location"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "NOT_SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "displayName": "RAML Location"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.HttpResponseAttributes",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": false,
+          "isInstantiable": false,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.HttpAttributes",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "HttpResponseAttributes"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "headers"
+          },
+          "model": {
+            "type": "Object",
+            "annotations": {
+              "typeId": "org.mule.service.http.api.domain.ParameterMap",
+              "classInformation": {
+                "hasDefaultConstructor": true,
+                "isInterface": false,
+                "isInstantiable": true,
+                "isAbstract": false,
+                "isFinal": false,
+                "implementedInterfaces": [
+                  "java.util.Map",
+                  "java.io.Serializable"
+                ],
+                "parent": "",
+                "genericTypes": []
+              }
+            },
+            "open": {
+              "type": "String",
+              "annotations": {
+                "typeId": "java.lang.String"
+              }
+            },
+            "fields": []
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "reasonPhrase"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        },
+        {
+          "key": {
+            "name": "statusCode"
+          },
+          "model": {
+            "type": "Number",
+            "annotations": {
+              "int": {},
+              "typeId": "int"
+            }
+          },
+          "annotations": {
+            "visibility": "READ_ONLY"
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "java.util.Map",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": true,
+          "isInstantiable": false,
+          "isAbstract": true,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "",
+          "genericTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      },
+      "open": {
+        "type": "String",
+        "annotations": {
+          "typeId": "java.lang.String"
+        }
+      },
+      "fields": []
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.validator.ResponseValidator",
+        "classInformation": {
+          "hasDefaultConstructor": false,
+          "isInterface": true,
+          "isInstantiable": false,
+          "isAbstract": true,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "ResponseValidator"
+        }
+      },
+      "fields": []
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.authentication.BasicAuthentication",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.request.authentication.UsernamePasswordAuthentication",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "BasicAuthentication"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "preemptive"
+          },
+          "model": {
+            "type": "Boolean",
+            "annotations": {
+              "typeId": "boolean"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "default": "true",
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "username"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "password"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": true,
+                "text": false,
+                "query": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.authentication.DigestAuthentication",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.request.authentication.UsernamePasswordAuthentication",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "DigestAuthentication"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "username"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "password"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": true,
+                "text": false,
+                "query": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.authentication.NtlmAuthentication",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.request.authentication.UsernamePasswordAuthentication",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "NtlmAuthentication"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "domain"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "workstation"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "username"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "password"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": true,
+                "text": false,
+                "query": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.proxy.DefaultProxyConfig",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [
+            "org.mule.service.http.api.client.proxy.ProxyConfig"
+          ],
+          "parent": "",
+          "genericTypes": []
+        },
+        "xmlHints": {
+          "allowInlineDefinition": true,
+          "allowTopLevelDefinition": true,
+          "allowReferences": true
+        },
+        "typeAlias": {
+          "value": "proxy"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "host"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "port"
+          },
+          "model": {
+            "required": "true",
+            "type": "Number",
+            "annotations": {
+              "int": {},
+              "typeId": "int"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "username"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "password"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": true,
+                "text": false,
+                "query": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.proxy.DefaultNtlmProxyConfig",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [
+            "org.mule.service.http.api.client.proxy.NtlmProxyConfig"
+          ],
+          "parent": "org.mule.extension.http.api.request.proxy.DefaultProxyConfig",
+          "genericTypes": []
+        },
+        "xmlHints": {
+          "allowInlineDefinition": true,
+          "allowTopLevelDefinition": true,
+          "allowReferences": true
+        },
+        "typeAlias": {
+          "value": "ntlm-proxy"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "ntlmDomain"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "org.mule.runtime.extension.api.declaration.type.annotation.DisplayTypeAnnotation": {
+              "displayModel": {
+                "displayName": "NTLM Domain"
+              }
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "host"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "port"
+          },
+          "model": {
+            "required": "true",
+            "type": "Number",
+            "annotations": {
+              "int": {},
+              "typeId": "int"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "username"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        },
+        {
+          "key": {
+            "name": "password"
+          },
+          "model": {
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            },
+            "layout": {
+              "layoutModel": {
+                "password": true,
+                "text": false,
+                "query": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.validator.SuccessStatusCodeValidator",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.request.validator.RangeStatusCodeValidator",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "SuccessStatusCodeValidator"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "values"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "format": "java",
+      "type": "Object",
+      "annotations": {
+        "typeId": "org.mule.extension.http.api.request.validator.FailureStatusCodeValidator",
+        "classInformation": {
+          "hasDefaultConstructor": true,
+          "isInterface": false,
+          "isInstantiable": true,
+          "isAbstract": false,
+          "isFinal": false,
+          "implementedInterfaces": [],
+          "parent": "org.mule.extension.http.api.request.validator.RangeStatusCodeValidator",
+          "genericTypes": []
+        },
+        "typeAlias": {
+          "value": "FailureStatusCodeValidator"
+        }
+      },
+      "fields": [
+        {
+          "key": {
+            "name": "values"
+          },
+          "model": {
+            "required": "true",
+            "type": "String",
+            "annotations": {
+              "typeId": "java.lang.String"
+            }
+          },
+          "annotations": {
+            "parameterPurpose": {
+              "role": "BEHAVIOUR"
+            },
+            "expressionSupport": {
+              "value": "SUPPORTED"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
