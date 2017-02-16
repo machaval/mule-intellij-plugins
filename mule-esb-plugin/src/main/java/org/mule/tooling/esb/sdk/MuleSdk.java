@@ -55,6 +55,7 @@ public class MuleSdk {
     private static final String BIN_DIR = "/bin";
     private static final Logger LOG = Logger.getInstance("#com.intellij.appengine.sdk.impl.MuleSdk");
     private static final Pattern VERSION_NUMBER = Pattern.compile("([0-9]\\.[0-9]\\.[0-9])");
+    private static final Pattern VERSION_NUMBER_MULE_4 = Pattern.compile("([0-9]\\.[0-9]-SNAPSHOT)");
 
     @Tag("mule-home")
     private String muleHome;
@@ -78,7 +79,11 @@ public class MuleSdk {
     public String getVersion() {
         final File file = new File(getMuleHome());
         final String distroName = file.getName();
-        final Matcher matcher = VERSION_NUMBER.matcher(distroName);
+        Matcher matcher = VERSION_NUMBER.matcher(distroName);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        matcher = VERSION_NUMBER_MULE_4.matcher(distroName);
         if (matcher.find()) {
             return matcher.group(1);
         }

@@ -22,7 +22,7 @@ import java.util.List;
 public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleRunner {
 
     //Mule Main Class
-    public static final String MAIN_CLASS = "org.mule.module.launcher.MuleContainer";
+    public static final String MAIN_CLASS = "org.mule.runtime.module.launcher.MuleContainer";
 
     private MuleConfiguration model;
 

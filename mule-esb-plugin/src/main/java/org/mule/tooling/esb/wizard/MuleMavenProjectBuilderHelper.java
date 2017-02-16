@@ -28,12 +28,12 @@ public class MuleMavenProjectBuilderHelper
         try
         {
             //Create mule folders.
-            final VirtualFile appDirectory = VfsUtil.createDirectories(root.getPath() + "/src/main/app");
+            final VirtualFile appDirectory = VfsUtil.createDirectories(root.getPath() + "/src/main/mule");
             final VirtualFile resources = VfsUtil.createDirectories(root.getPath() + "/src/main/resources");
             createLog4J(project, projectId, resources);
             final VirtualFile muleConfigFile = createMuleConfigFile(project, projectId, appDirectory);
-            createMuleDeployPropertiesFile(project, projectId, appDirectory);
-            createMuleAppPropertiesFiles(project, appDirectory);
+            createMuleDeployPropertiesFile(project, projectId, root);
+            createMuleAppPropertiesFiles(project, root);
             VfsUtil.createDirectories(root.getPath() + "/src/main/api");
             //MUnit support
             VfsUtil.createDirectories(root.getPath() + "/src/test/munit");

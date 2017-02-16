@@ -13,27 +13,18 @@
     <mule.version>${MULE_VERSION}</mule.version>
     <munit.version>1.2.1</munit.version>
     <munit.support.version>${MULE_VERSION}</munit.support.version>
-    <mule.tools.version>1.1</mule.tools.version>
+    <mule.tools.version>3.0.0-SNAPSHOT</mule.tools.version>
   </properties>
   
   <build>
     <plugins>
       <plugin>
         <groupId>org.mule.tools.maven</groupId>
-        <artifactId>mule-app-maven-plugin</artifactId>
+        <artifactId>mule-maven-plugin</artifactId>
         <version>${mule.tools.version}</version>
         <extensions>true</extensions>
         <configuration>
           <copyToAppsDirectory>true</copyToAppsDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>project</descriptorRef>
-          </descriptorRefs>
         </configuration>
       </plugin>
       <plugin>
@@ -91,50 +82,26 @@
   
   <!-- Mule Dependencies -->
   <dependencies>
-    <!-- Xml configuration -->
-    <dependency>
-      <groupId>com.mulesoft.muleesb</groupId>
-      <artifactId>mule-core-ee</artifactId>
-      <version>${mule.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- Xml configuration -->
-    <dependency>
-      <groupId>com.mulesoft.muleesb.modules</groupId>
-      <artifactId>mule-module-spring-config-ee</artifactId>
-      <version>${mule.version}</version>
-      <scope>provided</scope>
-    </dependency>
     <!-- Mule Modules -->
     <dependency>
       <groupId>org.mule.modules</groupId>
-      <artifactId>mule-module-http</artifactId>
+      <artifactId>mule-module-http-ext</artifactId>
       <version>${mule.version}</version>
       <scope>provided</scope>
+      <classifier>mule-plugin</classifier>
     </dependency>
     <dependency>
       <groupId>org.mule.modules</groupId>
-      <artifactId>mule-module-scripting</artifactId>
+      <artifactId>mule-module-sockets</artifactId>
       <version>${mule.version}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mule.modules</groupId>
-      <artifactId>mule-module-xml</artifactId>
-      <version>${mule.version}</version>
-      <scope>provided</scope>
+      <classifier>mule-plugin</classifier>
     </dependency>
     <!-- for testing -->
     <dependency>
       <groupId>org.mule.tests</groupId>
       <artifactId>mule-tests-functional</artifactId>
       <version>${mule.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.mulesoft.munit</groupId>
-      <artifactId>mule-munit-support</artifactId>
-      <version>${munit.support.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

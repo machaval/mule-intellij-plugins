@@ -13,4 +13,11 @@ public class MuleSdkImplTest {
         final String version = muleSdk.getVersion();
         Assert.assertThat(version, CoreMatchers.is("3.8.0"));
     }
+
+    @Test
+    public void detectCorrectVersionForMule4(){
+        final MuleSdk muleSdk = new MuleSdk("/tmp/mule-distro/mule-standalone-4.0-SNAPSHOT");
+        final String version = muleSdk.getVersion();
+        Assert.assertThat(version, CoreMatchers.is("4.0-SNAPSHOT"));
+    }
 }
