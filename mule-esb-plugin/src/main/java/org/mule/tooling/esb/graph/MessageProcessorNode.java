@@ -5,17 +5,16 @@ import org.mule.tooling.esb.util.MuleIcons;
 
 import javax.swing.*;
 
-public class MessageProcessorPresentationNode {
+public class MessageProcessorNode {
 
   private XmlTag tag;
 
-  public MessageProcessorPresentationNode(XmlTag tag) {
+  public MessageProcessorNode(XmlTag tag) {
     this.tag = tag;
   }
 
   public String getName() {
-    String attributeValue = tag.getAttributeValue("doc:name");
-    return attributeValue == null ? tag.getName() : attributeValue;
+    return tag.getName();
   }
 
   public Icon getIcon() {

@@ -12,6 +12,8 @@ import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.base.Node;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.GraphBuilderFactory;
+import com.intellij.openapi.graph.builder.dnd.GraphDnDUtils;
+import com.intellij.openapi.graph.builder.dnd.SimpleDnDPanel;
 import com.intellij.openapi.graph.builder.util.GraphViewUtil;
 import com.intellij.openapi.graph.geom.YRectangle;
 import com.intellij.openapi.graph.view.Graph2D;
@@ -25,9 +27,13 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomElementNavigationProvider;
+import com.intellij.util.xml.DomEventAdapter;
+import com.intellij.util.xml.DomManager;
+import com.intellij.util.xml.events.DomEvent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import org.mule.tooling.esb.graph.MessageProcessorPresentationNode;
+import org.mule.tooling.esb.editor.dnd.MuleConfigDndSupport;
+import org.mule.tooling.esb.graph.MessageProcessorNode;
 import org.mule.tooling.esb.graph.MuleConfigDataModel;
 import org.mule.tooling.esb.graph.MuleConfigPresentationModel;
 import org.mule.tooling.esb.graph.TransitionPresentationNode;
@@ -50,7 +56,7 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
   @NonNls
   private final SeamProcessDesignerNavigationProvider myNavigationProvider = new SeamProcessDesignerNavigationProvider();
 
-  private final GraphBuilder<MessageProcessorPresentationNode, TransitionPresentationNode> myBuilder;
+  private final GraphBuilder<MessageProcessorNode, TransitionPresentationNode> myBuilder;
   private final XmlFile myXmlFile;
   private final MuleConfigDataModel myDataModel;
 
@@ -71,10 +77,10 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
 
     setLayout(new BorderLayout());
 
-//        final SimpleDnDPanel simpleDnDPanel = GraphDnDUtils.createDnDActions(project, myBuilder, new JpdlDnDSupport(myDataModel));
+    final SimpleDnDPanel simpleDnDPanel = GraphDnDUtils.createDnDActions(project, myBuilder, new MuleConfigDndSupport(myDataModel));
     final JComponent graphComponent = myBuilder.getView().getJComponent();
 
-//        splitter.setSecondComponent(simpleDnDPanel.getTree());
+    splitter.setSecondComponent(simpleDnDPanel.getTree());
 
     splitter.setFirstComponent(graphComponent);
     splitter.setDividerWidth(5);
@@ -86,14 +92,14 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
 
     myBuilder.initialize();
 
-//        DomManager.getDomManager(myBuilder.getProject()).addDomEventListener(new DomEventAdapter() {
-//            public void eventOccured(final DomEvent event) {
-//                if (isShowing()) {
-//                    simpleDnDPanel.getBuilder().updateFromRoot();
-//                    myBuilder.queueUpdate();
-//                }
-//            }
-//        }, this);
+    DomManager.getDomManager(myBuilder.getProject()).addDomEventListener(new DomEventAdapter() {
+      public void eventOccured(final DomEvent event) {
+        if (isShowing()) {
+          simpleDnDPanel.getBuilder().updateFromRoot();
+          myBuilder.queueUpdate();
+        }
+      }
+    }, this);
   }
 
   private JComponent createToolbarPanel() {
@@ -112,7 +118,7 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
     final Graph2D graph = myBuilder.getGraph();
     for (Node n : graph.getNodeArray()) {
       if (graph.isSelected(n)) {
-        final MessageProcessorPresentationNode nodeObject = myBuilder.getNodeObject(n);
+        final MessageProcessorNode nodeObject = myBuilder.getNodeObject(n);
         if (nodeObject != null) {
           ContainerUtil.addIfNotNull(nodeObject.getIdentifyingElement(), selected);
         }
@@ -149,8 +155,8 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
   private Node findNode(@Nullable XmlTag activity) {
     if (activity == null) return null;
 
-    final Collection<MessageProcessorPresentationNode> nodeObjects = myBuilder.getNodeObjects();
-    for (MessageProcessorPresentationNode jpdlNode : nodeObjects) {
+    final Collection<MessageProcessorNode> nodeObjects = myBuilder.getNodeObjects();
+    for (MessageProcessorNode jpdlNode : nodeObjects) {
       if (activity.equals(jpdlNode.getIdentifyingElement())) {
         return myBuilder.getNode(jpdlNode);
       }
@@ -208,7 +214,7 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
     private final Project myProject;
     private final Graph2D myGraph;
 
-    public MyDataProvider(final GraphBuilder<MessageProcessorPresentationNode, TransitionPresentationNode> builder) {
+    public MyDataProvider(final GraphBuilder<MessageProcessorNode, TransitionPresentationNode> builder) {
       myProject = builder.getProject();
       myGraph = builder.getGraph();
     }
@@ -220,7 +226,7 @@ public class MuleConfigDesignerComponent extends JPanel implements DataProvider,
       } else if (dataId.equals(DataConstants.PSI_ELEMENT)) {
         for (Node node : myGraph.getNodeArray()) {
           if (myGraph.getRealizer(node).isSelected()) {
-            final MessageProcessorPresentationNode jpdlNode = myBuilder.getNodeObject(node);
+            final MessageProcessorNode jpdlNode = myBuilder.getNodeObject(node);
             if (jpdlNode != null) {
               return jpdlNode.getIdentifyingElement();
             }

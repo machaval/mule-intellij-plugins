@@ -9,9 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class DefaultMPPresentationNodeRenderer extends BasicGraphNodeRenderer<MessageProcessorPresentationNode, TransitionPresentationNode> {
+public class DefaultMPPresentationNodeRenderer extends BasicGraphNodeRenderer<MessageProcessorNode, TransitionPresentationNode> {
 
-  public DefaultMPPresentationNodeRenderer(GraphBuilder<MessageProcessorPresentationNode, TransitionPresentationNode> builder) {
+  public DefaultMPPresentationNodeRenderer(GraphBuilder<MessageProcessorNode, TransitionPresentationNode> builder) {
     super(builder, ModificationTracker.EVER_CHANGED);
   }
 
@@ -19,15 +19,15 @@ public class DefaultMPPresentationNodeRenderer extends BasicGraphNodeRenderer<Me
     return super.getPresenationComponent(text);
   }
 
-  protected Icon getIcon(final MessageProcessorPresentationNode node) {
+  protected Icon getIcon(final MessageProcessorNode node) {
     return node.getIcon();
   }
 
-  protected String getNodeName(final MessageProcessorPresentationNode node) {
+  protected String getNodeName(final MessageProcessorNode node) {
     return node.getName();
   }
 
-  protected Color getBackground(final MessageProcessorPresentationNode node) {
+  protected Color getBackground(final MessageProcessorNode node) {
     return Color.LIGHT_GRAY.brighter();
   }
 

@@ -3,19 +3,19 @@ package org.mule.tooling.esb.graph;
 
 public class TransitionPresentationNode {
 
-  private MessageProcessorPresentationNode source;
-  private MessageProcessorPresentationNode target;
+  private MessageProcessorNode source;
+  private MessageProcessorNode target;
 
-  public TransitionPresentationNode(MessageProcessorPresentationNode source, MessageProcessorPresentationNode target) {
+  public TransitionPresentationNode(MessageProcessorNode source, MessageProcessorNode target) {
     this.source = source;
     this.target = target;
   }
 
-  public MessageProcessorPresentationNode getSource() {
+  public MessageProcessorNode getSource() {
     return source;
   }
 
-  public MessageProcessorPresentationNode getTarget() {
+  public MessageProcessorNode getTarget() {
     return target;
   }
 }

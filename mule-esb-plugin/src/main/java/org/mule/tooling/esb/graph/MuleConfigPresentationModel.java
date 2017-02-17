@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class MuleConfigPresentationModel extends BasicGraphPresentationModel<MessageProcessorPresentationNode, TransitionPresentationNode> {
+public class MuleConfigPresentationModel extends BasicGraphPresentationModel<MessageProcessorNode, TransitionPresentationNode> {
   private final Project myProject;
   private BasicGraphNodeRenderer myRenderer;
 
@@ -48,7 +48,7 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
   }
 
   @NotNull
-  public NodeRealizer getNodeRealizer(final MessageProcessorPresentationNode node) {
+  public NodeRealizer getNodeRealizer(final MessageProcessorNode node) {
 
     return GraphViewUtil.createNodeRealizer("MPPresentationNodeRenderer", getRenderer());
   }
@@ -71,7 +71,7 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
     return edgeRealizer;
   }
 
-  public boolean editNode(final MessageProcessorPresentationNode node) {
+  public boolean editNode(final MessageProcessorNode node) {
     return super.editNode(node);
   }
 
@@ -89,7 +89,7 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
   }
 
 
-  public String getNodeTooltip(final MessageProcessorPresentationNode node) {
+  public String getNodeTooltip(final MessageProcessorNode node) {
       return node.getName();
   }
 
@@ -110,8 +110,8 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
   }
 
 //  public DeleteProvider getDeleteProvider() {
-//    return new DeleteProvider<MessageProcessorPresentationNode, TransitionPresentationNode>() {
-//      public boolean canDeleteNode(@NotNull final MessageProcessorPresentationNode node) {
+//    return new DeleteProvider<MessageProcessorNode, TransitionPresentationNode>() {
+//      public boolean canDeleteNode(@NotNull final MessageProcessorNode node) {
 //        return !((CellEditorMode)getGraphBuilder().getEditMode().getEditNodeMode()).isCellEditing();
 //      }
 //
@@ -119,7 +119,7 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
 //        return true;
 //      }
 //
-//      public boolean deleteNode(@NotNull final MessageProcessorPresentationNode node) {
+//      public boolean deleteNode(@NotNull final MessageProcessorNode node) {
 //        new WriteCommandAction(getProject()) {
 //          protected void run(final Result result) throws Throwable {
 //             node.getIdentifyingElement().undefine();
@@ -141,14 +141,14 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
 //    };
 //  }
 //
-//  public NodeCellEditor getCustomNodeCellEditor(final MessageProcessorPresentationNode jpdlNode) {
-//    return new SimpleNodeCellEditor<MessageProcessorPresentationNode>(jpdlNode, getProject()) {
-//      protected String getEditorValue(final MessageProcessorPresentationNode value) {
+//  public NodeCellEditor getCustomNodeCellEditor(final MessageProcessorNode jpdlNode) {
+//    return new SimpleNodeCellEditor<MessageProcessorNode>(jpdlNode, getProject()) {
+//      protected String getEditorValue(final MessageProcessorNode value) {
 //        final String s = value.getName();
 //        return s == null ? "" : s;
 //      }
 //
-//      protected void setEditorValue(final MessageProcessorPresentationNode value, final String newValue) {
+//      protected void setEditorValue(final MessageProcessorNode value, final String newValue) {
 //        final DomElement element = value.getIdentifyingElement();
 //        if (element instanceof JpdlNamedActivity) {
 //          new WriteCommandAction(myProject) {
@@ -163,7 +163,7 @@ public class MuleConfigPresentationModel extends BasicGraphPresentationModel<Mes
 //    };
 //  }
 
-  public DefaultActionGroup getNodeActionGroup(final MessageProcessorPresentationNode jpdlNode) {
+  public DefaultActionGroup getNodeActionGroup(final MessageProcessorNode jpdlNode) {
     final DefaultActionGroup group = super.getNodeActionGroup(jpdlNode);
 
     group.add(ActionManager.getInstance().getAction("Jpdl.Designer"), Constraints.FIRST);

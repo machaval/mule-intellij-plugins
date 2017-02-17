@@ -1,17 +1,21 @@
 package org.mule.tooling.esb.graph;
 
 import com.intellij.openapi.graph.builder.GraphDataModel;
+import com.intellij.openapi.graph.builder.NodesGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mule.security.utils.XMLUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresentationNode, TransitionPresentationNode> {
-  private final List<MessageProcessorPresentationNode> myNodes = new ArrayList<>();
+public class MuleConfigDataModel extends GraphDataModel<MessageProcessorNode, TransitionPresentationNode> {
+  private final List<MessageProcessorNode> myNodes = new ArrayList<>();
   private final List<TransitionPresentationNode> myEdges = new ArrayList<>();
 
 
@@ -24,12 +28,16 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresenta
     myProject = file.getProject();
   }
 
+  public XmlFile getMyFile() {
+    return myFile;
+  }
+
   public Project getProject() {
     return myProject;
   }
 
   @NotNull
-  public Collection<MessageProcessorPresentationNode> getNodes() {
+  public Collection<MessageProcessorNode> getNodes() {
     refreshDataModel();
     return myNodes;
   }
@@ -40,17 +48,17 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresenta
   }
 
   @NotNull
-  public MessageProcessorPresentationNode getSourceNode(final TransitionPresentationNode jpdlBasicEdge) {
+  public MessageProcessorNode getSourceNode(final TransitionPresentationNode jpdlBasicEdge) {
     return jpdlBasicEdge.getSource();
   }
 
   @NotNull
-  public MessageProcessorPresentationNode getTargetNode(final TransitionPresentationNode jpdlBasicEdge) {
+  public MessageProcessorNode getTargetNode(final TransitionPresentationNode jpdlBasicEdge) {
     return jpdlBasicEdge.getTarget();
   }
 
   @NotNull
-  public String getNodeName(final MessageProcessorPresentationNode jpdlBasicNode) {
+  public String getNodeName(final MessageProcessorNode jpdlBasicNode) {
     return jpdlBasicNode.getName();
   }
 
@@ -59,8 +67,15 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresenta
     return "";
   }
 
-  public TransitionPresentationNode createEdge(@NotNull final MessageProcessorPresentationNode from, @NotNull final MessageProcessorPresentationNode to) {
+  public TransitionPresentationNode createEdge(@NotNull final MessageProcessorNode from, @NotNull final MessageProcessorNode to) {
     return null;
+  }
+
+
+  @Nullable
+  @Override
+  public NodesGroup getGroup(MessageProcessorNode messageProcessorNode) {
+    return super.getGroup(messageProcessorNode);
   }
 
   public void dispose() {
@@ -84,7 +99,7 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresenta
       XmlTag[] subTags = flow.getSubTags();
       for (int i = 0; i < subTags.length; i++) {
         XmlTag subTag = subTags[i];
-        myNodes.add(new MessageProcessorPresentationNode(subTag));
+        myNodes.add(new MessageProcessorNode(subTag));
         if (i > 0) {
           myEdges.add(new TransitionPresentationNode(myNodes.get(i - 1), myNodes.get(i)));
         }
@@ -103,4 +118,15 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorPresenta
     return flows;
   }
 
+//  public static XmlTag createChildTag(final XmlTag xmlTag,
+//                                      String localName,
+//                                      String namespace,
+//                                      @Nullable String bodyText,
+//                                      boolean enforceNamespacesDeep)
+
+  public void addMessageProcessor(MessageProcessorNode messageProcessorNode) {
+    XmlTag identifyingElement = messageProcessorNode.getIdentifyingElement();
+    XmlTag targetFlow = getFlows(myFile.getRootTag()).get(0);
+    targetFlow.addSubTag(XmlUtil.createChildTag(targetFlow, identifyingElement.getLocalName(), "", null, false), true);
+  }
 }
