@@ -19,7 +19,7 @@ public class MuleConfigEditorProvider extends TextEditorProvider { //implements 
   @NotNull
   @Override
   public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile virtualFile) {
-    return new MuleConfigEditor(project, virtualFile, this);
+    return new MuleConfigDesignerFileEditor(project, virtualFile);
   }
 
   @NotNull

@@ -16,18 +16,20 @@ dependencies {
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
 
-    compile ('org.mule.tools:apikit-scaffolder:3.8.2') {
-        exclude module: 'xml-apis'
-        exclude module: 'commons-logging'
-        exclude group: "org.slf4j"
-    }
+compile ('org.mule:mule-api:1.0.0-SNAPSHOT')
+
+//    compile ('org.mule.tools:apikit-scaffolder:3.8.2') {
+//        exclude module: 'xml-apis'
+//        exclude module: 'commons-logging'
+//        exclude group: "org.slf4j"
+//    }
 
 //    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {
 //        exclude group: 'org.mule.modules'
 //        exclude group: 'org.mule.transports'
 //    }
 
-    compile (group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55')
+//    compile (group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55')
     compile (group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3')
 }
 
@@ -41,7 +43,7 @@ sourceSets {
 }
 
 intellij {
-    plugins = ["maven", "groovy", 'properties', 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
+    plugins = ["maven", 'properties', 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
     pluginName = 'mule-esb-plugin'
     publish {
         pluginId '8212'
