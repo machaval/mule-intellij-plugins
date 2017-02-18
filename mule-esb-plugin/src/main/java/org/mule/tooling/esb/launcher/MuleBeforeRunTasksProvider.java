@@ -47,6 +47,11 @@ public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBefore
     }
 
     @Override
+    public Icon getTaskIcon(MuleBeforeRunTask task) {
+        return MuleIcons.MuleIcon;
+    }
+
+    @Override
     public String getName()
     {
         return "MuleApp Builder";
@@ -55,7 +60,7 @@ public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBefore
     @Override
     public String getDescription(MuleBeforeRunTask beforeRunTask)
     {
-        return "Builds the mule application.";
+        return "Build the Mule Application";
     }
 
     @Override
