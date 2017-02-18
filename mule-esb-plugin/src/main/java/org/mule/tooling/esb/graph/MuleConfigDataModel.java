@@ -128,5 +128,7 @@ public class MuleConfigDataModel extends GraphDataModel<MessageProcessorNode, Tr
     XmlTag identifyingElement = messageProcessorNode.getIdentifyingElement();
     XmlTag targetFlow = getFlows(myFile.getRootTag()).get(0);
     targetFlow.addSubTag(XmlUtil.createChildTag(targetFlow, identifyingElement.getLocalName(), "", null, false), true);
+    myNodes.clear();
+    myEdges.clear();
   }
 }
