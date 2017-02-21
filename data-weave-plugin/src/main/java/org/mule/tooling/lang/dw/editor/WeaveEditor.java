@@ -369,6 +369,31 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
+    private List<String> getMELFiles(VirtualFile subDirectory) {
+        List<String> melFiles = new ArrayList<>();
+
+        VirtualFile[] children = subDirectory.getChildren();
+        for (VirtualFile nextFile : children) {
+            if (nextFile.isDirectory()) {
+                melFiles.addAll(getMELFiles(nextFile));
+            } else {
+                FileType type = nextFile.getFileType();
+                if ("Mel".equals(type.getName())) {
+                    try {
+                        byte[] contents = nextFile.contentsToByteArray();
+                        String melScript = new String(contents);
+                        melFiles.add(melScript);
+                    } catch (Exception e) {
+                        logger.debug(e);
+                    }
+                }
+            }
+
+        }
+
+        return melFiles;
+    }
+
     protected void runPreview() {
         Map <String, Object> payload = new HashMap<String, Object>();
         Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
@@ -395,8 +420,14 @@ public class WeaveEditor implements FileEditor {
             }
         }
 
+        List<String> melFunctions = getMELFiles(getProject().getBaseDir());
+
+//        //TODO Test Only
+//        String melFunction = "def xxx() { return \"Hello\" } ";
+//        melFunctions.add(melFunction);
+
         String dwScript = this.textEditor.getEditor().getDocument().getText();
-        String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, new ArrayList<>());
+        String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
         editors.get("output").getDocument().setText(output);
     }
 
