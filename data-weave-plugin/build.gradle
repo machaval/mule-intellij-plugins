@@ -12,10 +12,6 @@ configurations {
 }
 
 dependencies {
-//    compile files('lib/weave/core-1.1.2.jar')
-//    compile files('lib/weave/parser-1.1.2.jar')
-//    compile files('lib/weave/scala-library-2.11.7.jar')gradle cle
-//    compile files('lib/weave/mule-plugin-weave-3.8.2.jar')
     compile files('lib/weave/core-1.1.3.jar')
     compile files('lib/weave/parser-1.1.3.jar')
     compile files('lib/weave/scala-library-2.11.8.jar')
