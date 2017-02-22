@@ -2,6 +2,7 @@ package org.mule.tooling.lang.dw.editor;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.ide.scratch.RootType;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.lang.Language;
@@ -31,10 +32,15 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.util.FileTypeUtils;
+import com.intellij.psi.xml.XmlDocument;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.JBTabsPaneImpl;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.FileContentUtilCore;
+import com.intellij.util.xml.DomManager;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.WeaveFile;
@@ -374,7 +380,7 @@ public class WeaveEditor implements FileEditor {
 
         VirtualFile[] children = subDirectory.getChildren();
         for (VirtualFile nextFile : children) {
-            if (nextFile.isDirectory()) {
+            if (nextFile.isDirectory() && !".idea".equals(nextFile.getName())) {
                 melFiles.addAll(getMELFiles(nextFile));
             } else {
                 FileType type = nextFile.getFileType();
@@ -386,13 +392,38 @@ public class WeaveEditor implements FileEditor {
                     } catch (Exception e) {
                         logger.debug(e);
                     }
+                } else if (type instanceof XmlFileType) {
+                    melFiles.addAll(getGlobalDefinitions(nextFile));
                 }
             }
-
         }
 
         return melFiles;
     }
+
+    private List<String> getGlobalDefinitions(VirtualFile file) {
+        List<String> globalDefs = new ArrayList<>();
+
+        final DomManager manager = DomManager.getDomManager(project);
+        final XmlFile xmlFile = (XmlFile)PsiManager.getInstance(project).findFile(file);
+        final XmlDocument document = xmlFile.getDocument();
+        final XmlTag rootTag = document.getRootTag();
+
+        try {
+            final XmlTag globalFunctions = rootTag.findFirstSubTag("configuration")
+                                                  .findFirstSubTag("expression-language")
+                                                  .findFirstSubTag("global-functions");
+            String nextFunction = globalFunctions.getValue().getText();
+            if (nextFunction != null && StringUtils.isNotEmpty(nextFunction)) {
+                globalDefs.add(nextFunction);
+            }
+
+        } catch (Exception e) {//If the global functions config does not exist, we get NPE - but it's expected :)
+            //Do nothing for now
+        }
+        return globalDefs;
+    }
+
 
     protected void runPreview() {
         Map <String, Object> payload = new HashMap<String, Object>();
@@ -421,10 +452,6 @@ public class WeaveEditor implements FileEditor {
         }
 
         List<String> melFunctions = getMELFiles(getProject().getBaseDir());
-
-//        //TODO Test Only
-//        String melFunction = "def xxx() { return \"Hello\" } ";
-//        melFunctions.add(melFunction);
 
         String dwScript = this.textEditor.getEditor().getDocument().getText();
         String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
