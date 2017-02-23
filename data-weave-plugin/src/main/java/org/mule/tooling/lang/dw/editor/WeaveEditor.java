@@ -23,6 +23,9 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
@@ -63,6 +66,8 @@ import java.util.List;
 public class WeaveEditor implements FileEditor {
 
     private Project project;
+    private Module module;
+
     private PsiAwareTextEditorImpl textEditor;
 
     private Map<String, Editor> editors = new HashMap<String, Editor>();
@@ -81,6 +86,8 @@ public class WeaveEditor implements FileEditor {
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
         this.project = project;
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
+
+        this.module = ModuleUtilCore.findModuleForFile(virtualFile, project);
 
         gui = new WeaveEditorUI(textEditor);
 
@@ -454,7 +461,7 @@ public class WeaveEditor implements FileEditor {
         List<String> melFunctions = getMELFiles(getProject().getBaseDir());
 
         String dwScript = this.textEditor.getEditor().getDocument().getText();
-        String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
+        String output = WeavePreview.runPreview(module, dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
         editors.get("output").getDocument().setText(output);
     }
 

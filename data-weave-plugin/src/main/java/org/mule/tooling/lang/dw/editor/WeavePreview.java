@@ -1,8 +1,12 @@
 package org.mule.tooling.lang.dw.editor;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.mulesoft.weave.lang.PreviewRunner;
+import org.mule.tooling.lang.dw.util.PluginUtils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +26,8 @@ public class WeavePreview {
      * @param flowVars Key: Name; Value: Map of Key Content-Type ; Value: variable String. Other params are the same structure
      * @return Key: Content-Type ; Value: mapped payload String
      */
-    public static String runPreview(String dwDocument,
+    public static String runPreview(Module module,
+                                    String dwDocument,
                                     Map<String, Object> payload,
                                     Map<String, Map<String, Object>> flowVars,
                                     Map<String, Map<String, Object>> sessionVars,
@@ -33,9 +38,19 @@ public class WeavePreview {
                                     ) {
         String result = "";
 
-        try {
+        final Thread currentThread = Thread.currentThread();
+        final ClassLoader old = currentThread.getContextClassLoader();
 
-            final Map<String, Object> runPreview = PreviewRunner.runPreview(dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
+        try {
+            ClassLoader weaveClassLoader = PluginUtils.getModuleClassLoader(module, WeavePreview.class.getClassLoader());
+            currentThread.setContextClassLoader(weaveClassLoader);
+
+            Class<?> clazz = weaveClassLoader.loadClass("com.mulesoft.weave.lang.PreviewRunner");
+
+            Method method = clazz.getMethod("runPreview", String.class, Map.class, Map.class, Map.class, Map.class, Map.class, Map.class, List.class);
+            Map<String, Object> runPreview = (Map<String, Object>) method.invoke(null, dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
+
+//            final Map<String, Object> runPreview = PreviewRunner.runPreview(dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
             logger.debug("RunPreview is " + runPreview);
             if (runPreview.containsKey(PreviewRunner.result_key())) {
                 result = runPreview.get(PreviewRunner.result_key()).toString();
@@ -46,10 +61,14 @@ public class WeavePreview {
                 }
 
             }
+
         } catch (Exception e) {
             logger.debug(e);
-            result = e.toString();
+            result = e.getCause().getMessage();
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
         }
+
 
         return result;
     }
