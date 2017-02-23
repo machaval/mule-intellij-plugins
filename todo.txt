@@ -14,7 +14,7 @@ ModuleRootManager.getInstance(module).getCompilerOutputPath();
 
     - Persisting metadata set for DW: http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html
     - Find a way to specify the application/java for inputs;
-    - Find a way to pass the MEL global functions to the Preview;
+
     - Schemas/samples and autocompletion;
 
 

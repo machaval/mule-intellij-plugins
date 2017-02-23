@@ -8,6 +8,28 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.9</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
+    <h1>v0.8</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Properties encryption</li>
+            <li>APIKit Scaffolding action</li>
+            <li>SOAPKit Scaffolding action</li>
+            <li>Support for Mule Domain projects</li>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.7</h1>
       <ul>
        <li>
