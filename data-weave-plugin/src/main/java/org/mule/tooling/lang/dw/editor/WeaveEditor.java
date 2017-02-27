@@ -462,7 +462,8 @@ public class WeaveEditor implements FileEditor {
 
         String dwScript = this.textEditor.getEditor().getDocument().getText();
         String output = WeavePreview.runPreview(module, dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
-        editors.get("output").getDocument().setText(output);
+        if (output != null)
+            editors.get("output").getDocument().setText(output);
     }
 
     public Project getProject() {
