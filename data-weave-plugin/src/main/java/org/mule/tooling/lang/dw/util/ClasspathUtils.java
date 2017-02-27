@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by eberman on 2/22/17.
  */
-public class PluginUtils {
+public class ClasspathUtils {
 
     public static ClassLoader getProjectClassLoader(Project project, ClassLoader parent) throws Exception {
         ClassLoader fullClassLoader = null;

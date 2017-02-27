@@ -17,4 +17,6 @@ ModuleRootManager.getInstance(module).getCompilerOutputPath();
 
     - Schemas/samples and autocompletion;
 
+xml.implicitNamespaceDescriptorProvider
+xml.namespaceHelper
 

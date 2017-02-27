@@ -151,6 +151,9 @@
         <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
 
         <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.RenameXMLConfigProcessor"/>
+
+        <xml.schemaProvider implementation="org.mule.tooling.esb.config.completion.MuleSchemaProvider"/>
+
         <!--MEL Support-->
         <fileTypeFactory implementation="org.mule.tooling.esb.lang.mel.MelFileTypeFactory"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.parser.MelParserDefinition"/>

@@ -2,12 +2,10 @@ package org.mule.tooling.lang.dw.editor;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.mulesoft.weave.lang.PreviewRunner;
-import org.mule.tooling.lang.dw.util.PluginUtils;
+import org.mule.tooling.lang.dw.util.ClasspathUtils;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +40,7 @@ public class WeavePreview {
         final ClassLoader old = currentThread.getContextClassLoader();
 
         try {
-            ClassLoader weaveClassLoader = PluginUtils.getModuleClassLoader(module, WeavePreview.class.getClassLoader());
+            ClassLoader weaveClassLoader = ClasspathUtils.getModuleClassLoader(module, WeavePreview.class.getClassLoader());
             currentThread.setContextClassLoader(weaveClassLoader);
 
             Class<?> clazz = weaveClassLoader.loadClass("com.mulesoft.weave.lang.PreviewRunner");
