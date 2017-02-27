@@ -13,6 +13,7 @@
        <li>
           <p>Enhancements</p>
           <ul>
+            <li>Improved namespace and schema location handling</li>
             <li>Bug fixes</li>
           </ul>
         </li>
