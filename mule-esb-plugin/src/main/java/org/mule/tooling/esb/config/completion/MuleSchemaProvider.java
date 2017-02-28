@@ -1,6 +1,8 @@
 package org.mule.tooling.esb.config.completion;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -16,9 +18,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.meta.PsiMetaData;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
+import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlSchemaProvider;
 import com.intellij.xml.impl.schema.XmlNSDescriptorImpl;
@@ -81,20 +87,23 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
                 if (document != null) {
                     final PsiMetaData metaData = document.getMetaData();
                     if (metaData instanceof XmlNSDescriptorImpl) {
-                        XmlNSDescriptorImpl descriptor = (XmlNSDescriptorImpl)metaData;
-                        if (StringUtils.isNotEmpty(tagName)) {
-                            XmlElementDescriptor elementDescriptor = descriptor.getElementDescriptor(tagName, descriptor.getDefaultNamespace());
-                            if (elementDescriptor != null) {
-                                namespaces.add(descriptor.getDefaultNamespace());
+                        XmlNSDescriptorImpl descriptor = (XmlNSDescriptorImpl) metaData;
+                        String defaultNamespace = descriptor.getDefaultNamespace();
+                        if (StringUtils.isNotEmpty(defaultNamespace)) {
+                            if (StringUtils.isNotEmpty(tagName)) {
+                                XmlElementDescriptor elementDescriptor = descriptor.getElementDescriptor(tagName, defaultNamespace);
+                                if (elementDescriptor != null) {
+                                    namespaces.add(defaultNamespace);
+                                }
+                            } else {
+                                namespaces.add(defaultNamespace);
                             }
-                        } else {
-                            namespaces.add(descriptor.getDefaultNamespace());
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return namespaces;
     }
@@ -110,7 +119,7 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
             for (Map.Entry<String, XmlFile> entry : schemas.entrySet()) {
                 final String s = getNamespace(entry.getValue(), context.getProject());
                 if (s != null && s.equals(namespace)) {
-                    locations.add(entry.getKey());
+                    locations.add(entry.getKey()); //Observe the formatting rules
                 }
             }
         } catch (Exception e) {
@@ -151,24 +160,31 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
 
         Map<String, String> schemaUrlsAndFileNames = manager.getParameterizedCachedValue(module, SPRING_SCHEMA_NAMES_KEY, new SchemaFileNamesCachedProvider(), false, module);
 
-        //Iterate through the classpath
-        LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(LibraryTablesRegistrar.PROJECT_LEVEL, module.getProject());
-        for (Library lib : libraryTable.getLibraries()) {
-            VirtualFile[] files = lib.getFiles(OrderRootType.CLASSES);
-            for (VirtualFile jarFile : files) {
-                for (String url : schemaUrlsAndFileNames.keySet()) {
-                    String fileName = schemaUrlsAndFileNames.get(url);
-                    VirtualFile schemaFile = VfsUtil.findRelativeFile(fileName, jarFile);
-                    if (schemaFile != null) {
-                        //LOG.warn("Found " + fileName + " in " + jarFile.getUrl());
-                        PsiFile psiFile = PsiManager.getInstance(project).findFile(schemaFile);
-                        final XmlFile xmlFile = (XmlFile) psiFile.copy();
-                        if (xmlFile != null) {
-                            schemas.put(url, xmlFile);
-                        }
+        for (String url : schemaUrlsAndFileNames.keySet()) {
+            final String fileName = schemaUrlsAndFileNames.get(url);
+            final String relativePath = fileName.startsWith("/") ? fileName : "/" + fileName;
+
+            final Set<FileType> fileTypes = Collections.singleton(FileTypeManager.getInstance().getFileTypeByFileName(relativePath));
+
+            final List<VirtualFile> fileList = new ArrayList<>();
+            FileBasedIndex.getInstance().processFilesContainingAllKeys(FileTypeIndex.NAME, fileTypes, GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module), null, virtualFile -> {
+                if (virtualFile.getPath().endsWith(relativePath)) {
+                    fileList.add(virtualFile);
+                }
+                return true;
+            });
+
+            if (!fileList.isEmpty()) {
+                final VirtualFile virtualFile = fileList.get(0);
+                final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                if (psiFile != null) {
+                    final XmlFile xmlFile = (XmlFile) psiFile.copy();
+                    if (xmlFile != null) {
+                        schemas.put(url, xmlFile);
                     }
                 }
             }
+
         }
 
         return new CachedValueProvider.Result<Map<String, XmlFile>>(schemas, dependencies.toArray());
@@ -196,8 +212,6 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
             try {
                 ArrayList<Object> dependencies = new ArrayList<Object>();
                 dependencies.add(ProjectRootManager.getInstance(module.getProject()));
-
-                //final ClassLoader cl = ClasspathUtils.getModuleClassLoader(module, this.getClass().getClassLoader());
                 Map<String, String> schemas = getSchemasFromSpringSchemas(module);
                 return CachedValueProvider.Result.create(schemas, dependencies);
             } catch (Exception e) {
@@ -226,29 +240,20 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
         }
 
         private Map<String, String> getSchemasFromSpringSchemas(@NotNull Module module) throws Exception {
-            //LOG.warn("Loading schemas for module " + module.getName());
             Map<String, String> schemasMap = new HashMap<>();
 
-            LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(LibraryTablesRegistrar.PROJECT_LEVEL, module.getProject());
-            for (Library lib : libraryTable.getLibraries()) {
-                VirtualFile[] files = lib.getFiles(OrderRootType.CLASSES);
-                for (VirtualFile jarFile : files) {
-                    VirtualFile springSchemasFile = VfsUtil.findRelativeFile("META-INF/spring.schemas", jarFile);
-                    if (springSchemasFile != null) {
-                        String springSchemasContent = new String(springSchemasFile.contentsToByteArray());
-                        schemasMap.putAll(parseSpringSchemas(springSchemasContent));
-                    }
+            PsiFile[] psiFiles = FilenameIndex.getFilesByName(module.getProject(), "spring.schemas", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module));
+
+            for (PsiFile nextSpringS : psiFiles) {
+                VirtualFile springSchemasFile = nextSpringS.getVirtualFile();
+                if (springSchemasFile != null) {
+                    String springSchemasContent = new String(springSchemasFile.contentsToByteArray());
+                    schemasMap.putAll(parseSpringSchemas(springSchemasContent));
                 }
             }
-            //LOG.warn("Schemas map for module " + module.getName() + " is " + schemasMap);
 
             return schemasMap;
         }
     }
-
-    /*********************************************************************************************************************************************************
-     Provides cached XSD file
-     *********************************************************************************************************************************************************/
-    //private class SchemaFileCachedProvider implements
 
 }
