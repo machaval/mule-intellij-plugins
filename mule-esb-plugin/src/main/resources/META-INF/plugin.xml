@@ -47,7 +47,7 @@
           <p>Enhancements</p>
           <ul>
             <li>DataWeave Debugging</li>
-            <li>Use Mule Framework for setting up project and mule runtime.</li>
+            <li>Use Mule Framework for setting up project and Mule runtime.</li>
           </ul>
         </li>
         <li>
@@ -64,11 +64,11 @@
          <p>Enhancements</p>
           <ul>
             <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
-            <li>Basic Mel Support with code navigation.</li>
+            <li>Basic MEL Support with code navigation.</li>
             <li>Create Mule Apps from right click.</li>
-            <li>New mule project wizard.</li>
+            <li>New Mule project wizard.</li>
             <li>Very Basic MUnit support.</li>
-            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
+            <li>Improved XML auto-completion. Auto adds namespaces and location lookup</li>
           </ul>
          </li>
         <li>
@@ -84,9 +84,9 @@
         <li>
           <p>Enhancements</p>
           <ul>
-            <li>Xml Configuration Navigation</li>
-            <li>Xml script code injection.</li>
-            <li>Xml Outline</li>
+            <li>XML Configuration Navigation</li>
+            <li>XML script code injection.</li>
+            <li>XML Outline</li>
             <li>Data Weave editor</li>
             <li>Run Debug Mule App.</li>
           </ul>
