@@ -15,6 +15,7 @@
           <ul>
             <li>Improved namespace and schema location handling</li>
             <li>Improved live templates for Mule</li>
+            <li>Extract to Flow action</li>
             <li>Bug fixes</li>
           </ul>
         </li>
