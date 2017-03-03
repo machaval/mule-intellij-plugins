@@ -25,8 +25,9 @@
         </context>
     </template>
     <template id="mule-flow-ref" name="flowref" description="Flow Reference"
-              value="&lt;flow-ref name=&quot;&quot;/&gt;"
+              value="&lt;flow-ref name=&quot;$NAME$&quot;/&gt;"
               toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
         <context>
             <option name="MULE_FLOW_TAG" value="true"/>
         </context>

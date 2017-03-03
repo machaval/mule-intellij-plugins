@@ -14,6 +14,7 @@
           <p>Enhancements</p>
           <ul>
             <li>Improved namespace and schema location handling</li>
+            <li>Improved live templates for Mule</li>
             <li>Bug fixes</li>
           </ul>
         </li>
@@ -232,11 +233,12 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
 
-        <!--<action id="Mule.ExtractToFlow"-->
-                <!--class="org.mule.tooling.esb.actions.ExtractToFlowAction"-->
-                <!--text="Extract to Flow">-->
-            <!--<add-to-group group-id="RefactoringMenu" anchor="last"/>-->
-        <!--</action>-->
+        <action id="Mule.ExtractToFlow"
+                class="org.mule.tooling.esb.actions.ExtractToFlowAction"
+                text="Flow">
+            <add-to-group group-id="IntroduceActionsGroup" anchor="before" relative-to-action="ExtractMethod"/>
+            <keyboard-shortcut first-keystroke="ctrl shift F" keymap="$default"/>
+        </action>
     </actions>
 
 </idea-plugin>
