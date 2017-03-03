@@ -149,6 +149,9 @@
                                 order="first"/>
 
         <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplateContextType"/>
+        <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleFlowElementLiveTemplateContextType"/>
+        <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleTopElementLiveTemplateContextType"/>
+
         <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
 
         <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.RenameXMLConfigProcessor"/>
@@ -229,6 +232,11 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
 
+        <!--<action id="Mule.ExtractToFlow"-->
+                <!--class="org.mule.tooling.esb.actions.ExtractToFlowAction"-->
+                <!--text="Extract to Flow">-->
+            <!--<add-to-group group-id="RefactoringMenu" anchor="last"/>-->
+        <!--</action>-->
     </actions>
 
 </idea-plugin>

@@ -25,3 +25,16 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
     - Schemas/samples and autocompletion;
 
 
+Add actions to "Extract to" - extract to flow
+
+//-------------
+First, you need to get the PSI elements at the start and end of selection:
+
+psiFile.findElementAt(editor.getSelectionModel().getSelectionStart())
+
+psiFile.findElementAt(editor.getSelectionModel().getSelectionEnd())
+
+Then, in most languages an "Extract" refactoring cannot be applied to an arbitrary sequence of elements,
+so you probably need to find a common statement or expression to which the selected elements belong.
+PsiTreeUtil.getParentOfType() and PsiTreeUtil.findCommonParent() should help with this.
+//---------------
