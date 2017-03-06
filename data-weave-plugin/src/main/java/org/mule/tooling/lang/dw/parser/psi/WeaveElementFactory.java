@@ -15,7 +15,8 @@ public class WeaveElementFactory {
 
 
     public static WeaveDocument createFile(Project project, String text) {
-        String name = "dummy.wev";
+        //String name = "dummy.wev";
+        String name = "dummy.dwl";
         return (WeaveDocument) PsiFileFactory.getInstance(project).
                 createFileFromText(name, WeaveFileType.getInstance(), text).getChildren()[0];
     }

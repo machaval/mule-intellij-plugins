@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeaveFileType extends LanguageFileType {
 
@@ -18,7 +20,7 @@ public class WeaveFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "Weave";
+        return "DataWeave";
     }
 
     @NotNull
@@ -30,7 +32,7 @@ public class WeaveFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "wev";
+        return "dwl";
     }
 
     @Nullable
@@ -39,6 +41,14 @@ public class WeaveFileType extends LanguageFileType {
         return WeaveIcons.DataFileType;
     }
 
+    public List<String> getExtensions() {
+        List<String> extensions = new ArrayList<>();
+        extensions.add("dwl");
+        extensions.add("dw");
+        extensions.add("wev");
+
+        return extensions;
+    }
 
     public static WeaveFileType getInstance() {
         return instance;

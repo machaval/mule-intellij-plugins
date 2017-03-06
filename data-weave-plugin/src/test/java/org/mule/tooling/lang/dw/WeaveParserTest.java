@@ -9,7 +9,7 @@ public class WeaveParserTest extends ParsingTestCase
 {
     public WeaveParserTest()
     {
-        super("", "wev", new WeaveParserDefinition());
+        super("", "dwl", new WeaveParserDefinition());
     }
 
 
@@ -82,6 +82,6 @@ public class WeaveParserTest extends ParsingTestCase
     @Override
     protected String getTestDataPath()
     {
-        return new File(getClass().getResource("Simple.wev").getPath()).getParent();
+        return new File(getClass().getResource("Simple.dwl").getPath()).getParent();
     }
 }
