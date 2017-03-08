@@ -6,8 +6,11 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.mule.tooling.lang.dw.WeaveFile;
 import org.mule.tooling.lang.dw.WeaveFileType;
 
 import java.util.List;
@@ -18,9 +21,15 @@ import java.util.List;
 public class WeaveEditorProvider extends TextEditorProvider { //implements FileEditorProvider {
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile virtualFile) {
-        List<String> extensions = WeaveFileType.getInstance().getExtensions();
-
-        return (virtualFile.getExtension() != null && extensions.contains(virtualFile.getExtension().toLowerCase()));
+        boolean isWeaveFile = false;
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+        if (psiFile != null)
+            isWeaveFile = (psiFile instanceof WeaveFile);
+        else {
+            List<String> extensions = WeaveFileType.getInstance().getExtensions();
+            isWeaveFile = (virtualFile.getExtension() != null && extensions.contains(virtualFile.getExtension().toLowerCase()));
+        }
+        return isWeaveFile;
     }
 
     @NotNull
