@@ -18,6 +18,12 @@ public class MuleConfigurationReferenceContributor extends PsiReferenceContribut
                 new FlowRefProvider());
 
         registrar.registerReferenceProvider(
+                XmlPatterns.xmlAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE)
+                        .withAncestor(2, XmlPatterns.xmlTag().withLocalName(MuleConfigConstants.FLOW_TAG_NAME)
+                        ),
+                new FlowRefProvider());
+
+        registrar.registerReferenceProvider(
                 XmlPatterns.xmlAttributeValue(MuleConfigConstants.CONFIG_REF_ATTRIBUTE),
                 new ConfigRefProvider());
     }

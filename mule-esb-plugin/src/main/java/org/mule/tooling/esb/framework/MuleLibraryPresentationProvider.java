@@ -36,8 +36,7 @@ public class MuleLibraryPresentationProvider extends LibraryPresentationProvider
     }
 
     @Nullable
-    @Override
-    public Icon getIcon(@Nullable LibraryProperties properties) {
+    public Icon getIcon(@Nullable MuleLibraryProperties properties) {
         return MuleIcons.MuleIcon;
     }
 

@@ -782,9 +782,18 @@ public class MuleConfigUtils
         return result;
     }
 
-    private static boolean isGlobalElement(XmlTag subTag)
+    public static boolean isGlobalElement(XmlTag subTag)
     {
         return !(subTag.getName().equals("flow") || subTag.getName().equals("sub-flow") || subTag.getLocalName().equals("test"));
     }
 
+    @Nullable
+    public static XmlTag findParentXmlTag(PsiElement element) {
+        PsiElement psiElement = element;
+
+        while (psiElement != null && !(psiElement instanceof XmlTag))
+            psiElement = psiElement.getParent();
+
+        return (XmlTag)psiElement;
+    }
 }

@@ -31,5 +31,6 @@ public class FlowConstructReferenceContributor extends PsiReferenceContributor {
                         return PsiReference.EMPTY_ARRAY;
                     }
                 });
+
     }
 }

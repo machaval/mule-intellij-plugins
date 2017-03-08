@@ -147,7 +147,7 @@ public class ExtractToFlowAction extends AnAction {
             PsiElement muleFlowTagElement = null;
             XmlTag muleFlowTag = null;
 
-            if (editor.getSelectionModel().hasSelection()) {
+            if (editor != null && editor.getSelectionModel() != null && editor.getSelectionModel().hasSelection()) {
                 PsiElement startPsi = psiFile.findElementAt(editor.getSelectionModel().getSelectionStart());
                 PsiElement endPsi = psiFile.findElementAt(editor.getSelectionModel().getSelectionEnd());
 

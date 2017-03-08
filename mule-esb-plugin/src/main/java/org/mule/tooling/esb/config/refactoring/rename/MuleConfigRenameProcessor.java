@@ -14,7 +14,6 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.esb.launcher.configuration.project.MuleDeployProperties;
-import org.mule.tooling.esb.launcher.configuration.project.MuleProjectManager;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 import org.mule.tooling.esb.util.MulePathUtils;
 
@@ -23,12 +22,12 @@ import java.nio.file.Paths;
 /**
  * Created by eberman on 11/29/16.
  */
-public class RenameXMLConfigProcessor extends RenamePsiElementProcessor {
-    final static Logger logger = Logger.getInstance(RenameXMLConfigProcessor.class);
+public class MuleConfigRenameProcessor extends RenamePsiElementProcessor {
+    final static Logger logger = Logger.getInstance(MuleConfigRenameProcessor.class);
 
     @Override
     public boolean canProcessElement(@NotNull PsiElement psiElement) {
-        logger.debug("PSI Element is " + psiElement);
+//        logger.debug("PSI Element is " + psiElement);
         return (psiElement instanceof PsiFile && MuleConfigUtils.isMuleFile((PsiFile)psiElement));
     }
 

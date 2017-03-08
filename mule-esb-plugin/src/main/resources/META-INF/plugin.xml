@@ -156,7 +156,9 @@
 
         <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
 
-        <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.RenameXMLConfigProcessor"/>
+        <renameHandler implementation="org.mule.tooling.esb.config.refactoring.rename.FlowRenameHandler" order="first"/>
+
+        <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.MuleConfigRenameProcessor"/>
 
         <xml.schemaProvider implementation="org.mule.tooling.esb.config.completion.MuleSchemaProvider"/>
 
