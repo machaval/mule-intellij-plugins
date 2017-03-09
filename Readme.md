@@ -43,6 +43,7 @@ To import project into IntelliJ IDEA and run plugin from within the IDE, perform
     * <project home>/lib/mule-plugin-debugger-3.8.0.jar
     * Add gen to the project sources, add src/main/java to the project sources and remove the src
 
+Note, the version of gradle used to build the project is currently 2.14. If you experience build issues, check to make sure you are using this version of gradle. 
 
 # Note
 If you liked what the plugin please contribute either with code or issues.
