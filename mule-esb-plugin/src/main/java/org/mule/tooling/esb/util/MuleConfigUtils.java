@@ -6,18 +6,16 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NonNavigatable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
@@ -49,10 +47,7 @@ import org.mule.tooling.esb.config.model.SubFlow;
 import org.mule.tooling.lang.dw.parser.psi.WeavePsiUtils;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MuleConfigUtils
 {
@@ -795,5 +790,52 @@ public class MuleConfigUtils
             psiElement = psiElement.getParent();
 
         return (XmlTag)psiElement;
+    }
+
+    public static List<XmlTag> findFlowRefsForFlow(@NotNull XmlTag flow) {
+        List<XmlTag> flowRefs = new ArrayList<>();
+
+        final Project project = flow.getProject();
+        final String flowName = flow.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
+
+        Collection<VirtualFile> vFiles = FileTypeIndex.getFiles(StdFileTypes.XML, ProjectScope.getContentScope(project));
+        for (VirtualFile virtualFile : vFiles) {
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+            if (psiFile != null) {
+                XmlFile xmlFile = (XmlFile)psiFile;
+                XmlTag mule = xmlFile.getRootTag();
+
+                FlowRefsFinder finder = new FlowRefsFinder(flowName);
+                mule.accept(finder);
+                flowRefs.addAll(finder.getFlowRefs());
+            }
+        }
+        return flowRefs;
+    }
+
+    private static class FlowRefsFinder extends PsiRecursiveElementVisitor {
+        private List<XmlTag> flowRefs = new ArrayList<>();
+        private String flowName;
+
+        public FlowRefsFinder(@NotNull String flowName) {
+            this.flowName = flowName;
+        }
+
+        public void visitElement(PsiElement element) {
+            super.visitElement(element);
+
+            if (element != null && element instanceof XmlTag) {
+                XmlTag tag = (XmlTag) element;
+                if (MuleConfigConstants.FLOW_REF_TAG_NAME.equals(tag.getName())) {
+                    String fn = tag.getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE);
+                    if (flowName.equals(fn))
+                        flowRefs.add(tag);
+                }
+            }
+        }
+
+        public List<XmlTag> getFlowRefs() {
+            return flowRefs;
+        }
     }
 }

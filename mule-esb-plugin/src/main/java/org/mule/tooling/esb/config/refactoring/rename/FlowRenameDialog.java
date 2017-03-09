@@ -24,10 +24,13 @@ import com.intellij.xml.XmlBundle;
 import com.intellij.xml.refactoring.XmlTagRenameDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mule.tooling.esb.config.MuleConfigConstants;
+import org.mule.tooling.esb.util.MuleConfigUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * Created by eberman on 3/7/17.
@@ -107,7 +110,11 @@ public class FlowRenameDialog extends RefactoringDialog {
         CommandProcessor.getInstance().executeCommand(this.myProject, () -> {
             ApplicationManager.getApplication().runWriteAction(() -> {
                 try {
-                    this.myTag.getAttribute("name").setValue(this.getNewName());
+                    final List<XmlTag> refs = MuleConfigUtils.findFlowRefsForFlow(this.myTag);
+                    this.myTag.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE).setValue(this.getNewName());
+                    for (XmlTag ref : refs) {
+                        ref.getAttribute(MuleConfigConstants.NAME_ATTRIBUTE).setValue(this.getNewName());
+                    }
                 } catch (IncorrectOperationException var2) {
                     LOG.error(var2);
                 }
