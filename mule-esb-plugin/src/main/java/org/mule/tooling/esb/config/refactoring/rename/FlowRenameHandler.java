@@ -69,12 +69,12 @@ public class FlowRenameHandler extends XmlTagRenameHandler {
 
         FeatureUsageTracker.getInstance().triggerFeatureUsed("refactoring.rename");
 
-        if (isInplaceRenameAvailable(editor)) {
-            FlowInPlaceRenamer.rename(editor, (XmlTag)element);
-        }
-        else {
-            FlowRenameDialog.renameFlowTag(editor, element, (XmlTag)element);
-        }
+//        if (isInplaceRenameAvailable(editor)) {
+//            FlowInPlaceRenamer.rename(editor, (XmlTag)element);
+//        }
+//        else {
+        FlowRenameDialog.renameFlowTag(editor, element, (XmlTag)element);
+//        }
     }
 
     @Nullable
