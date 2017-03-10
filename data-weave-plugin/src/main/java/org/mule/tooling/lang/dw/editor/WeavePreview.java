@@ -62,7 +62,12 @@ public class WeavePreview {
 
         } catch (Exception e) {
             logger.debug(e);
-            result = e.getCause().getMessage();
+            if (e != null) {
+                if (e.getCause() != null)
+                    result = e.getCause().getMessage();
+                else
+                    result = e.getMessage();
+            }
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }

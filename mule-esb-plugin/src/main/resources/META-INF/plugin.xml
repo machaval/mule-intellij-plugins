@@ -16,6 +16,7 @@
             <li>Improved namespace and schema location handling</li>
             <li>Improved live templates for Mule</li>
             <li>Extract to Flow action</li>
+            <li>Rename and Find Usages for flow</li>
             <li>Bug fixes</li>
           </ul>
         </li>
@@ -117,7 +118,7 @@
         <stepsBeforeRunProvider implementation="org.mule.tooling.esb.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.tooling.esb.debugger.breakpoint.MuleBreakpointType"/>
 
-        <!--Mule Stand alone framework -->
+        <!--Mule Standalone framework -->
 
         <library.presentationProvider implementation="org.mule.tooling.esb.framework.MuleLibraryPresentationProvider" order="first"/>
         <framework.type implementation="org.mule.tooling.esb.framework.MuleFrameworkType"/>
@@ -220,6 +221,7 @@
 
         <action id="Mule.EncryptProperty" class="org.mule.tooling.esb.actions.EncryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+            <!--<add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
         </action>
         <action id="Mule.DecryptProperty" class="org.mule.tooling.esb.actions.DecryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>

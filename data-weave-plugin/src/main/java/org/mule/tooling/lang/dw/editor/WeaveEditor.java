@@ -34,6 +34,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.FileTypeUtils;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
@@ -150,6 +152,8 @@ public class WeaveEditor implements FileEditor {
                         String title = inputTabs.getTitleAt(index);
                         if (!identifierNames.contains(title)) {
                             itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
+                            Editor editor = editors.get(title);
+                            EditorFactory.getInstance().releaseEditor(editor);
                             editors.remove(title);
                             contentTypes.remove(title);
                             inputOutputFiles.remove(title);
