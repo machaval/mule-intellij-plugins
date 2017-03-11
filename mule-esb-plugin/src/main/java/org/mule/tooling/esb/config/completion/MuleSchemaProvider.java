@@ -168,7 +168,7 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
 
             final List<VirtualFile> fileList = new ArrayList<>();
             FileBasedIndex.getInstance().processFilesContainingAllKeys(FileTypeIndex.NAME, fileTypes, GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module), null, virtualFile -> {
-                if (virtualFile.getPath().endsWith(relativePath)) {
+                if (virtualFile.getPath().endsWith(relativePath) && !virtualFile.getCanonicalPath().contains("mule-transport-http")) {
                     fileList.add(virtualFile);
                 }
                 return true;
@@ -178,7 +178,8 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
                 final VirtualFile virtualFile = fileList.get(0);
                 final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
                 if (psiFile != null) {
-                    final XmlFile xmlFile = (XmlFile) psiFile.copy();
+                    //final XmlFile xmlFile = (XmlFile) psiFile.copy();
+                    final XmlFile xmlFile = (XmlFile) psiFile;
                     if (xmlFile != null) {
                         schemas.put(url, xmlFile);
                     }
@@ -251,6 +252,9 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
                     schemasMap.putAll(parseSpringSchemas(springSchemasContent));
                 }
             }
+
+            //Fix for HTTP module schema vs old HTTP transport schema
+            schemasMap.put("http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd", "META-INF/mule-httpn.xsd");
 
             return schemasMap;
         }
