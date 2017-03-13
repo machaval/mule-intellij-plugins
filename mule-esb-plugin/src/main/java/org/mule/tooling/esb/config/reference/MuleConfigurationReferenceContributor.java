@@ -17,6 +17,12 @@ public class MuleConfigurationReferenceContributor extends PsiReferenceContribut
                         ),
                 new FlowRefProvider());
 
+//        registrar.registerReferenceProvider(
+//                XmlPatterns.xmlAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE)
+//                        .withAncestor(2, XmlPatterns.xmlTag().withLocalName(MuleConfigConstants.FLOW_TAG_NAME)
+//                        ),
+//                new FlowProvider());
+
         registrar.registerReferenceProvider(
                 XmlPatterns.xmlAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE)
                         .withAncestor(2, XmlPatterns.xmlTag().withLocalName(MuleConfigConstants.FLOW_TAG_NAME)
@@ -44,6 +50,23 @@ public class MuleConfigurationReferenceContributor extends PsiReferenceContribut
             return value.startsWith("#[") && value.endsWith("]");
         }
     }
+
+//    private static class FlowProvider extends PsiReferenceProvider {
+//        @NotNull
+//        @Override
+//        public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull final ProcessingContext context) {
+//            if (element instanceof XmlAttributeValue && !isMelExpression((XmlAttributeValue) element)) {
+//                final XmlAttributeValue attribute = (XmlAttributeValue) element;
+//                return new PsiReference[]{new FlowPsiReference(attribute)};
+//            }
+//            return PsiReference.EMPTY_ARRAY;
+//        }
+//
+//        private boolean isMelExpression(@NotNull XmlAttributeValue element) {
+//            String value = element.getValue().trim();
+//            return value.startsWith("#[") && value.endsWith("]");
+//        }
+//    }
 
     private static class ConfigRefProvider extends PsiReferenceProvider {
         @NotNull
