@@ -43,4 +43,21 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
         final List<DomElement> flow = MuleConfigUtils.getFlows(getElement().getProject());
         return mapNotNull(flow, (Function<DomElement, Object>) domElement -> domElement.getXmlTag().getAttributeValue(MuleConfigConstants.NAME_ATTRIBUTE)).toArray();
     }
+
+    public boolean isReferenceTo(PsiElement element) {
+        if (element == null)
+            return false;
+
+        PsiElement parent = element.getParent(); //XmlAttribute
+        if (parent != null)
+            parent = parent.getParent(); //XmlTag
+        if (parent != null && parent instanceof XmlTag && MuleConfigConstants.FLOW_TAG_NAME.equals(((XmlTag)parent).getName())) { //It's a <flow> tag
+            if (element instanceof XmlAttributeValue && ((XmlAttributeValue)element).getValue().equals(getFlowName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
