@@ -2,6 +2,7 @@ package org.mule.tooling.esb.config.reference;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
@@ -48,9 +49,8 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
         if (element == null)
             return false;
 
-        PsiElement parent = element.getParent(); //XmlAttribute
-        if (parent != null)
-            parent = parent.getParent(); //XmlTag
+        PsiElement parent = PsiTreeUtil.getParentOfType(element, XmlTag.class);
+
         if (parent != null && parent instanceof XmlTag && MuleConfigConstants.FLOW_TAG_NAME.equals(((XmlTag)parent).getName())) { //It's a <flow> tag
             if (element instanceof XmlAttributeValue && ((XmlAttributeValue)element).getValue().equals(getFlowName())) {
                 return true;
