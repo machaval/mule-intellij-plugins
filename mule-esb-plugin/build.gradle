@@ -13,9 +13,10 @@ dependencies {
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
 
-    compile ('org.mule.tools:apikit-scaffolder:3.8.2') {
+    compile ('org.mule.tools:apikit-scaffolder:3.8.3') {
         exclude module: 'xml-apis'
         exclude module: 'commons-logging'
+        exclude module: 'raml-parser-2'
         exclude group: "org.slf4j"
     }
 
