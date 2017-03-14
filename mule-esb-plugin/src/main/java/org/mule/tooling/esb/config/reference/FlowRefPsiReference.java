@@ -51,7 +51,9 @@ public class FlowRefPsiReference extends PsiReferenceBase<XmlAttributeValue> {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(element, XmlTag.class);
 
-        if (parent != null && parent instanceof XmlTag && MuleConfigConstants.FLOW_TAG_NAME.equals(((XmlTag)parent).getName())) { //It's a <flow> tag
+        if (parent != null && parent instanceof XmlTag &&
+                (MuleConfigConstants.FLOW_TAG_NAME.equals(((XmlTag)parent).getName()) ||
+                 MuleConfigConstants.SUB_FLOW_TAG_NAME.equals(((XmlTag)parent).getName()))) { //It's a <flow> tag or <sub-flow> tag
             if (element instanceof XmlAttributeValue && ((XmlAttributeValue)element).getValue().equals(getFlowName())) {
                 return true;
             }

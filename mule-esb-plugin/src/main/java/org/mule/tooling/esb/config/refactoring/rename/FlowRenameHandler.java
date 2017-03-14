@@ -36,7 +36,7 @@ public class FlowRenameHandler extends XmlTagRenameHandler {
         final XmlTag flowTag = MuleConfigUtils.findParentXmlTag(element);
 
 //        return (flowTag != null && MuleConfigUtils.isFlowTag(flowTag) && isDeclarationOutOfProjectOrAbsent(element.getProject(), dataContext));
-        return (flowTag != null && MuleConfigUtils.isFlowTag(flowTag));
+        return (flowTag != null && (MuleConfigUtils.isFlowTag(flowTag) || MuleConfigUtils.isSubFlowTag(flowTag)));
     }
 
     @Override
