@@ -194,7 +194,29 @@ public class WeaveEditor implements FileEditor {
 
                     textEditor.getPreferredFocusedComponent().grabFocus();
 
-                    runPreview();
+                    //runPreview();
+                    try {
+                        previewTimer.cancel();
+                        previewTimer.purge();
+                    } catch (Throwable t) {
+                    }
+                    previewTimer = new Timer();
+                    previewTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                new WriteCommandAction.Simple(project, psiFile) {
+                                    @Override
+                                    protected void run() throws Throwable {
+                                        runPreview();
+                                    }
+                                }.execute();
+                            } catch (Exception e) {
+                                logger.error(e);
+                            }
+                        }
+                    }, 500);
+
                 }
             });
 
