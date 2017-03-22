@@ -2,6 +2,7 @@ package org.mule.tooling.lang.dw.editor;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.ide.scratch.RootType;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.lang.Language;
@@ -22,6 +23,9 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
@@ -30,11 +34,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.FileTypeUtils;
+import com.intellij.psi.xml.XmlDocument;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.JBTabsPaneImpl;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.FileContentUtilCore;
+import com.intellij.util.xml.DomManager;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.WeaveFile;
@@ -57,6 +69,8 @@ import java.util.List;
 public class WeaveEditor implements FileEditor {
 
     private Project project;
+    private Module module;
+
     private PsiAwareTextEditorImpl textEditor;
 
     private Map<String, Editor> editors = new HashMap<String, Editor>();
@@ -75,6 +89,8 @@ public class WeaveEditor implements FileEditor {
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
         this.project = project;
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
+
+        this.module = ModuleUtilCore.findModuleForFile(virtualFile, project);
 
         gui = new WeaveEditorUI(textEditor);
 
@@ -137,6 +153,8 @@ public class WeaveEditor implements FileEditor {
                         String title = inputTabs.getTitleAt(index);
                         if (!identifierNames.contains(title)) {
                             itemsToRemove.add(inputTabs.getTabs().getTabAt(index));
+                            Editor editor = editors.get(title);
+                            EditorFactory.getInstance().releaseEditor(editor);
                             editors.remove(title);
                             contentTypes.remove(title);
                             inputOutputFiles.remove(title);
@@ -369,6 +387,54 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
+    private List<String> getMELFiles(VirtualFile subDirectory) {
+
+        List<String> melFiles = new ArrayList<>();
+        FileType melType = FileTypeManager.getInstance().getStdFileType("Mel");
+
+        Collection<VirtualFile> melVF = (FileTypeIndex.getFiles(melType, GlobalSearchScope.projectScope(getProject())));
+        for (VirtualFile nextFile : melVF) {
+            try {
+                byte[] contents = nextFile.contentsToByteArray();
+                String melScript = new String(contents);
+                melFiles.add(melScript);
+            } catch (Exception e) {
+                logger.debug(e);
+            }
+        }
+
+        melVF = (FileTypeIndex.getFiles(XmlFileType.INSTANCE, GlobalSearchScope.projectScope(getProject())));
+        for (VirtualFile nextFile : melVF) {
+            melFiles.addAll(getGlobalDefinitions(nextFile));
+        }
+
+        return melFiles;
+    }
+
+    private List<String> getGlobalDefinitions(VirtualFile file) {
+        List<String> globalDefs = new ArrayList<>();
+
+        final DomManager manager = DomManager.getDomManager(project);
+        final XmlFile xmlFile = (XmlFile)PsiManager.getInstance(project).findFile(file);
+        final XmlDocument document = xmlFile.getDocument();
+        final XmlTag rootTag = document.getRootTag();
+
+        try {
+            final XmlTag globalFunctions = rootTag.findFirstSubTag("configuration")
+                                                  .findFirstSubTag("expression-language")
+                                                  .findFirstSubTag("global-functions");
+            String nextFunction = globalFunctions.getValue().getText();
+            if (nextFunction != null && StringUtils.isNotEmpty(nextFunction)) {
+                globalDefs.add(nextFunction);
+            }
+
+        } catch (Exception e) {//If the global functions config does not exist, we get NPE - but it's expected :)
+            //Do nothing for now
+        }
+        return globalDefs;
+    }
+
+
     protected void runPreview() {
         Map <String, Object> payload = new HashMap<String, Object>();
         Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
@@ -395,9 +461,12 @@ public class WeaveEditor implements FileEditor {
             }
         }
 
+        List<String> melFunctions = getMELFiles(getProject().getBaseDir());
+
         String dwScript = this.textEditor.getEditor().getDocument().getText();
-        String output = WeavePreview.runPreview(dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, new ArrayList<>());
-        editors.get("output").getDocument().setText(output);
+        String output = WeavePreview.runPreview(module, dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
+        if (output != null)
+            editors.get("output").getDocument().setText(output);
     }
 
     public Project getProject() {

@@ -11,11 +11,11 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NotNull;
+import org.mule.tooling.lang.dw.WeaveFileType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 public class WeaveRunnerConfPanel
 {
@@ -40,8 +40,10 @@ public class WeaveRunnerConfPanel
                 .withHideIgnored(true).withShowHiddenFiles(false).withFileFilter(new Condition<VirtualFile>() {
                     @Override
                     public boolean value(VirtualFile virtualFile) {
-                        String fn = virtualFile.getName().toLowerCase();
-                        return (fn.endsWith(".wev") || fn.endsWith(".dw"));
+//                        String fn = virtualFile.getName().toLowerCase();
+//                        return (fn.endsWith(".wev") || fn.endsWith(".dw"));
+                        java.util.List<String> extensions = WeaveFileType.getInstance().getExtensions();
+                        return (virtualFile.getExtension() != null && extensions.contains(virtualFile.getExtension().toLowerCase()));
                     }
                 });
         getWeaveFile().addBrowseFolderListener("Select Weave File", "Select Weave File", project, waveDescriptor);

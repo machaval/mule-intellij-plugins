@@ -4,7 +4,7 @@
               value="&lt;logger message=&quot;Payload = #[payload]&quot;/&gt;"
               toReformat="true" toShortenFQNames="false">
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_FLOW_TAG" value="true"/>
         </context>
     </template>
 
@@ -12,15 +12,24 @@
               value="&lt;logger message=&quot;String Payload = #[message.payloadAs(java.lang.String)]&quot;/&gt;"
               toReformat="true" toShortenFQNames="false">
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_FLOW_TAG" value="true"/>
         </context>
     </template>
 
-    <template id="mule-flow-ref" name="flr" description="Flow Reference"
-              value="&lt;flow-ref name=&quot;&quot;/&gt;"
+    <template id="mule-flow" name="flow" description="Mule Flow"
+              value="&lt;flow name=&quot;$NAME$.&quot;&gt;&lt;/flow&gt;"
               toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="fileNameWithoutExtension()" defaultValue="fileNameWithoutExtension()" alwaysStopAt="true" />
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_TAG" value="true"/>
+        </context>
+    </template>
+    <template id="mule-flow-ref" name="flowref" description="Flow Reference"
+              value="&lt;flow-ref name=&quot;$NAME$&quot;/&gt;"
+              toReformat="true" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="MULE_FLOW_TAG" value="true"/>
         </context>
     </template>
 
@@ -50,7 +59,7 @@
         <variable name="HOST" expression="" defaultValue="0.0.0.0" alwaysStopAt="true" />
         <variable name="PORT" expression="" defaultValue="8081" alwaysStopAt="true" />
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_TAG" value="true"/>
             <!--<option name="XML" value="true"/>-->
         </context>
     </template>
@@ -60,7 +69,7 @@
         <variable name="NAME" expression="complete()" defaultValue="" alwaysStopAt="true" />
         <variable name="PATH" expression="" defaultValue="" alwaysStopAt="true" />
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_FLOW_TAG" value="true"/>
             <!--<option name="XML" value="true"/>-->
         </context>
     </template>
@@ -72,7 +81,7 @@
         <variable name="HOST" expression="" defaultValue="0.0.0.0" alwaysStopAt="true" />
         <variable name="PORT" expression="" defaultValue="8081" alwaysStopAt="true" />
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_TAG" value="true"/>
             <!--<option name="XML" value="true"/>-->
         </context>
     </template>
@@ -84,7 +93,7 @@
         <variable name="METHOD" expression="enum(&quot;GET&quot;,&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;)" defaultValue="POST" alwaysStopAt="true" />
 
         <context>
-            <option name="MULE_CONFIG" value="true"/>
+            <option name="MULE_FLOW_TAG" value="true"/>
             <!--<option name="XML" value="true"/>-->
         </context>
     </template>

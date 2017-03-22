@@ -8,6 +8,32 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.9</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Improved namespace and schema location handling</li>
+            <li>Improved live templates for Mule</li>
+            <li>Extract to Flow action</li>
+            <li>Rename and Find Usages for flow</li>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
+    <h1>v0.8</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Properties encryption</li>
+            <li>APIKit Scaffolding action</li>
+            <li>SOAPKit Scaffolding action</li>
+            <li>Support for Mule Domain projects</li>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.7</h1>
       <ul>
        <li>
@@ -24,7 +50,7 @@
           <p>Enhancements</p>
           <ul>
             <li>DataWeave Debugging</li>
-            <li>Use Mule Framework for setting up project and mule runtime.</li>
+            <li>Use Mule Framework for setting up project and Mule runtime.</li>
           </ul>
         </li>
         <li>
@@ -41,11 +67,11 @@
          <p>Enhancements</p>
           <ul>
             <li>Basic RAML support. (Color Highlighting and scaffolding)</li>
-            <li>Basic Mel Support with code navigation.</li>
+            <li>Basic MEL Support with code navigation.</li>
             <li>Create Mule Apps from right click.</li>
-            <li>New mule project wizard.</li>
+            <li>New Mule project wizard.</li>
             <li>Very Basic MUnit support.</li>
-            <li>Improved xml auto-completion. Auto adds namespaces and location lookup</li>
+            <li>Improved XML auto-completion. Auto adds namespaces and location lookup</li>
           </ul>
          </li>
         <li>
@@ -61,9 +87,9 @@
         <li>
           <p>Enhancements</p>
           <ul>
-            <li>Xml Configuration Navigation</li>
-            <li>Xml script code injection.</li>
-            <li>Xml Outline</li>
+            <li>XML Configuration Navigation</li>
+            <li>XML script code injection.</li>
+            <li>XML Outline</li>
             <li>Data Weave editor</li>
             <li>Run Debug Mule App.</li>
           </ul>
@@ -92,7 +118,7 @@
         <stepsBeforeRunProvider implementation="org.mule.tooling.esb.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.tooling.esb.debugger.breakpoint.MuleBreakpointType"/>
 
-        <!--Mule Stand alone framework -->
+        <!--Mule Standalone framework -->
 
         <library.presentationProvider implementation="org.mule.tooling.esb.framework.MuleLibraryPresentationProvider" order="first"/>
         <framework.type implementation="org.mule.tooling.esb.framework.MuleFrameworkType"/>
@@ -126,9 +152,17 @@
                                 order="first"/>
 
         <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplateContextType"/>
+        <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleFlowElementLiveTemplateContextType"/>
+        <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleTopElementLiveTemplateContextType"/>
+
         <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>
 
-        <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.RenameXMLConfigProcessor"/>
+        <renameHandler implementation="org.mule.tooling.esb.config.refactoring.rename.FlowRenameHandler" order="first"/>
+
+        <renamePsiElementProcessor implementation="org.mule.tooling.esb.config.refactoring.rename.MuleConfigRenameProcessor"/>
+
+        <xml.schemaProvider implementation="org.mule.tooling.esb.config.completion.MuleSchemaProvider"/>
+
         <!--MEL Support-->
         <fileTypeFactory implementation="org.mule.tooling.esb.lang.mel.MelFileTypeFactory"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.parser.MelParserDefinition"/>
@@ -187,6 +221,7 @@
 
         <action id="Mule.EncryptProperty" class="org.mule.tooling.esb.actions.EncryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+            <!--<add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
         </action>
         <action id="Mule.DecryptProperty" class="org.mule.tooling.esb.actions.DecryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
@@ -203,6 +238,12 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
 
+        <action id="Mule.ExtractToFlow"
+                class="org.mule.tooling.esb.actions.ExtractToFlowAction"
+                text="Flow">
+            <add-to-group group-id="IntroduceActionsGroup" anchor="before" relative-to-action="ExtractMethod"/>
+            <keyboard-shortcut first-keystroke="ctrl shift F" keymap="$default"/>
+        </action>
     </actions>
 
 </idea-plugin>
