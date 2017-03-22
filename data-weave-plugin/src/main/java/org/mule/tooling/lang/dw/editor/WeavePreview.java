@@ -46,6 +46,7 @@ public class WeavePreview {
             Class<?> clazz = weaveClassLoader.loadClass("com.mulesoft.weave.lang.PreviewRunner");
 
             Method method = clazz.getMethod("runPreview", String.class, Map.class, Map.class, Map.class, Map.class, Map.class, Map.class, List.class);
+            Thread.yield();
             Map<String, Object> runPreview = (Map<String, Object>) method.invoke(null, dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
 
 //            final Map<String, Object> runPreview = PreviewRunner.runPreview(dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
@@ -57,7 +58,6 @@ public class WeavePreview {
                 if (runPreview.containsKey("exceptionMessage")) {
                     result = result + "\n" + runPreview.get("exceptionMessage").toString();
                 }
-
             }
 
         } catch (Exception e) {

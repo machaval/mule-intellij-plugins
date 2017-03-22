@@ -8,6 +8,8 @@ import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -27,6 +29,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -37,7 +40,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
-import com.intellij.psi.util.FileTypeUtils;
+import com.intellij.psi.util.*;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
@@ -62,6 +65,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * Created by eberman on 11/3/16.
@@ -72,6 +76,8 @@ public class WeaveEditor implements FileEditor {
     private Module module;
 
     private PsiAwareTextEditorImpl textEditor;
+
+    private PsiFile psiFile;
 
     private Map<String, Editor> editors = new HashMap<String, Editor>();
     private Map<String, String> contentTypes = new HashMap<String, String>();
@@ -85,6 +91,9 @@ public class WeaveEditor implements FileEditor {
     final static Logger logger = Logger.getInstance(WeaveEditor.class);
 
     final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
+    private static final Key<CachedValue<List<String>>> MEL_STRINGS_KEY = Key.create("MEL Strings");
+
+    private Timer previewTimer = new Timer();
 
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
         this.project = project;
@@ -95,17 +104,17 @@ public class WeaveEditor implements FileEditor {
         gui = new WeaveEditorUI(textEditor);
 
         inputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
-        ((JBTabsImpl)inputTabs.getTabs()).setSideComponentVertical(true);
+        ((JBTabsImpl) inputTabs.getTabs()).setSideComponentVertical(true);
         gui.getSourcePanel().add(inputTabs.getComponent(), BorderLayout.CENTER);
 
         outputTabs = new JBTabsPaneImpl(project, SwingConstants.TOP, this);
-        ((JBTabsImpl)outputTabs.getTabs()).setSideComponentVertical(true);
+        ((JBTabsImpl) outputTabs.getTabs()).setSideComponentVertical(true);
         gui.getOutputPanel().add(outputTabs.getComponent(), BorderLayout.CENTER);
         gui.getOutputPanel().setSize(1000, 1000);
 
-        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+        psiFile = PsiManager.getInstance(project).findFile(virtualFile);
         if (psiFile != null && psiFile.getFileType() == WeaveFileType.getInstance()) {
-            final WeaveFile weaveFile = (WeaveFile)psiFile;
+            final WeaveFile weaveFile = (WeaveFile) psiFile;
 
             PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeChangeAdapter() {
                 @Override
@@ -293,6 +302,7 @@ public class WeaveEditor implements FileEditor {
         }
         return -1;
     }
+
     private void addTab(@NotNull JBTabsPaneImpl tabsPane, WeaveIdentifier identifier, @NotNull WeaveDataType dataType) {
         Icon icon = iconsMap.containsKey(dataType.getText()) ? iconsMap.get(dataType.getText()) : AllIcons.FileTypes.Any_type;
 
@@ -300,14 +310,35 @@ public class WeaveEditor implements FileEditor {
 
         String title = identifier == null ? "output" : identifier.getName();
 
-        PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language,"");
+        PsiFile f = PsiFileFactory.getInstance(getProject()).createFileFromText(language, "");
         inputOutputFiles.put(title, f.getVirtualFile());
 
         if (identifier != null) {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override
                 public void documentChanged(DocumentEvent e) {
-                    runPreview();
+                    try {
+                        previewTimer.cancel();
+                        previewTimer.purge();
+                    } catch (Throwable t) {
+                    }
+                    previewTimer = new Timer();
+                    previewTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                new WriteCommandAction.Simple(project, psiFile) {
+                                    @Override
+                                    protected void run() throws Throwable {
+                                        runPreview();
+                                    }
+                                }.execute();
+                            } catch (Exception e) {
+                                logger.error(e);
+                            }
+                        }
+                    }, 500);
+
                 }
             });
         }
@@ -351,7 +382,7 @@ public class WeaveEditor implements FileEditor {
 
         Editor oldEditor = editors.get(title);
         FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
-        ((EditorEx)oldEditor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
+        ((EditorEx) oldEditor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, newType));
     }
 
     private void initTabs(WeaveFile weaveFile) {
@@ -387,6 +418,7 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
+/*
     private List<String> getMELFiles(VirtualFile subDirectory) {
 
         List<String> melFiles = new ArrayList<>();
@@ -410,19 +442,21 @@ public class WeaveEditor implements FileEditor {
 
         return melFiles;
     }
+*/
 
     private List<String> getGlobalDefinitions(VirtualFile file) {
+
         List<String> globalDefs = new ArrayList<>();
 
         final DomManager manager = DomManager.getDomManager(project);
-        final XmlFile xmlFile = (XmlFile)PsiManager.getInstance(project).findFile(file);
+        final XmlFile xmlFile = (XmlFile) PsiManager.getInstance(project).findFile(file);
         final XmlDocument document = xmlFile.getDocument();
         final XmlTag rootTag = document.getRootTag();
 
         try {
             final XmlTag globalFunctions = rootTag.findFirstSubTag("configuration")
-                                                  .findFirstSubTag("expression-language")
-                                                  .findFirstSubTag("global-functions");
+                    .findFirstSubTag("expression-language")
+                    .findFirstSubTag("global-functions");
             String nextFunction = globalFunctions.getValue().getText();
             if (nextFunction != null && StringUtils.isNotEmpty(nextFunction)) {
                 globalDefs.add(nextFunction);
@@ -436,10 +470,8 @@ public class WeaveEditor implements FileEditor {
 
 
     protected void runPreview() {
-        Map <String, Object> payload = new HashMap<String, Object>();
+        final Map<String, Object> payload = new HashMap<String, Object>();
         Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
-
-
         /*
         1. Get input from tabs - if payload exists, use payload, otherwise put in the Map
         2. Get text from DW
@@ -455,15 +487,106 @@ public class WeaveEditor implements FileEditor {
             String contentType = contentTypes.get(title);
             Map<String, Object> content = WeavePreview.createContent(contentType, text);
             if ("payload".equalsIgnoreCase(title)) {
-                payload = content;
+                payload.clear();
+                payload.putAll(content);
             } else {
                 flowVars.put(title, content);
             }
         }
 
-        List<String> melFunctions = getMELFiles(getProject().getBaseDir());
+        final CachedValuesManager manager = CachedValuesManager.getManager(project);
+        List<String> melFunctions = manager.getCachedValue(psiFile, MEL_STRINGS_KEY, new MelStringsCachedProvider());
 
-        String dwScript = this.textEditor.getEditor().getDocument().getText();
+/*
+        List<String> melFunctions = new ArrayList<>();
+        melFunctions.add("\n" +
+                "function t24ACKExpression() {\n" +
+                "    ackResult = true;\n" +
+                "\n" +
+                "\t//System.out.println(\"**** HTTP STATUS IS \" + message.inboundProperties[\"http.status\"]);\n" +
+                "    if (ackResult && exception != null) {\n" +
+                "        ackResult = ackResult && !(exception.causedBy(java.net.ConnectException));\n" +
+                "    }\n" +
+                "\n" +
+                "    //Check status code\n" +
+                "    if (ackResult && message.inboundProperties[\"http.status\"] != null) {\n" +
+                "        ackResult = ackResult &&  message.inboundProperties[\"http.status\"] < 299;\n" +
+                "    }\n" +
+                "\t//System.out.println(\"**** (1) ackResult is \" + ackResult);\n" +
+                "\n" +
+                "    //Check expression response\n" +
+                "    if (ackResult) {\n" +
+                "\t\tSystem.out.println(\"**** (t24ACKExpression()) Payload is \" + message.payload);\n" +
+                "        twsIsSuccessStr = xpath3(\"//successIndicator/text()\", message.payload, \"STRING\");\n" +
+                "\t\tSystem.out.println(\"**** (t24ACKExpression()) twsIsSuccessStr \" + twsIsSuccessStr);\n" +
+                "        twsIsSuccess = !(\"TWSError\".equals(twsIsSuccessStr) || \"T24Error\".equals(twsIsSuccessStr));\n" +
+                "\t\tSystem.out.println(\"**** (t24ACKExpression()) twsIsSuccess \" + twsIsSuccess);\n" +
+                "        ackResult = ackResult && twsIsSuccess;\n" +
+                "    }\n" +
+                "\tSystem.out.println(\"**** (t24ACKExpression()) ackResult is \" + ackResult);\n" +
+                "\treturn ackResult;\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "function isSystemException() {\n" +
+                "    return (exception.causedBy(java.net.ConnectException) || exception.causedBy(java.util.concurrent.TimeoutException));\n" +
+                "}\n" +
+                "\n" +
+                "function isRecoverableError() {\n" +
+                "    //TEST ONLY\n" +
+                "    return message.payload.contains(\"Error occurred constructing OFS message\");\n" +
+                "\n" +
+                "}");
+
+        melFunctions.add("\n" +
+                "function topasACKExpression() {\n" +
+                "    ackResult = true;\n" +
+                "\n" +
+                "//System.out.println(\"**** HTTP STATUS IS \" + message.inboundProperties[\"http.status\"]);\n" +
+                "    if (ackResult && exception != null) {\n" +
+                "        ackResult = ackResult && !(exception.causedBy(java.net.ConnectException));\n" +
+                "    }\n" +
+                "\n" +
+                "    //Check status code\n" +
+                "    if (ackResult && message.inboundProperties[\"http.status\"] != null) {\n" +
+                "        ackResult = ackResult &&  message.inboundProperties[\"http.status\"] < 299;\n" +
+                "    }\n" +
+                "//System.out.println(\"**** (1) ackResult is \" + ackResult);\n" +
+                "\n" +
+                "    //Check expression response\n" +
+                "    if (ackResult) {\n" +
+                "//System.out.println(\"**** Payload is \" + message.payload);\n" +
+                "        twsIsSuccessStr = xpath3(\"/crm:ClientResponse/IsSuccess/text()\", message.payload, \"STRING\");\n" +
+                "//System.out.println(\"**** twsIsSuccessStr \" + twsIsSuccessStr);\n" +
+                "        twsIsSuccess = !(\"TWSError\".equals(twsIsSuccessStr));\n" +
+                "//System.out.println(\"**** twsIsSuccess \" + twsIsSuccess);\n" +
+                "        ackResult = ackResult && twsIsSuccess;\n" +
+                "    }\n" +
+                "//System.out.println(\"**** (2) ackResult is \" + ackResult);\n" +
+                "    return ackResult;\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "function isSystemException() {\n" +
+                "    return (exception.causedBy(java.net.ConnectException) || exception.causedBy(java.util.concurrent.TimeoutException));\n" +
+                "}\n" +
+                "\n" +
+                "function isRecoverableError() {\n" +
+                "    //TODO:\n" +
+                "    // Check if it's XML - contains String \"<?xml\"\n" +
+                "    // Check if it has successIndicator and it's TWSError\n" +
+                "\n" +
+                "    //TEST ONLY\n" +
+                "    return message.payload.contains(\"Error occurred constructing OFS message\");\n" +
+                "\n" +
+                "}\n" +
+                "\n" +
+                "function subString(value,start,end) {\n" +
+                "\treturn org.apache.commons.lang3.StringUtils.substring(value,start,end);\n" +
+                "}");
+*/
+
+        String dwScript = textEditor.getEditor().getDocument().getText();
         String output = WeavePreview.runPreview(module, dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
         if (output != null)
             editors.get("output").getDocument().setText(output);
@@ -530,4 +653,46 @@ public class WeaveEditor implements FileEditor {
             return language;
         }
     }
+
+    private class MelStringsCachedProvider implements CachedValueProvider<List<String>> {
+        @Nullable
+        @Override
+        public CachedValueProvider.Result<List<String>> compute() {
+            try {
+                ArrayList<Object> dependencies = new ArrayList<Object>();
+                //dependencies.add(project);
+
+                List<String> melFiles = new ArrayList<>();
+                FileType melType = FileTypeManager.getInstance().getStdFileType("Mel");
+
+                Collection<VirtualFile> melVF = FileTypeIndex.getFiles(melType, GlobalSearchScope.projectScope(getProject()));
+                for (VirtualFile nextFile : melVF) {
+                    try {
+                        byte[] contents = nextFile.contentsToByteArray();
+                        String melScript = new String(contents);
+                        melFiles.add(melScript);
+                        dependencies.add(nextFile);
+                    } catch (Exception e) {
+                        logger.debug(e);
+                    }
+                }
+
+                melVF = FileTypeIndex.getFiles(XmlFileType.INSTANCE, GlobalSearchScope.projectScope(getProject()));
+                for (VirtualFile nextFile : melVF) {
+                    if (!nextFile.getUrl().contains(".idea")) {
+                        List<String> globalDefs = getGlobalDefinitions(nextFile);
+                        if (globalDefs != null && !globalDefs.isEmpty()) {
+                            melFiles.addAll(getGlobalDefinitions(nextFile));
+                            dependencies.add(nextFile);
+                        }
+                    }
+                }
+
+                return CachedValueProvider.Result.create(melFiles, dependencies);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+
 }
