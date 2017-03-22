@@ -1,4 +1,4 @@
-#Intellij Plugin For Mule ESB
+# Intellij Plugin For Mule ESB
 ![Build status](https://travis-ci.org/machaval/mule-esb-plugin.svg?branch=master)
 
 Join the chat at
