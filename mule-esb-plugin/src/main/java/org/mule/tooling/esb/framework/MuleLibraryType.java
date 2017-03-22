@@ -31,7 +31,7 @@ public class MuleLibraryType extends LibraryType<MuleLibraryProperties>
 
     @Nullable
     @Override
-    public Icon getIcon(@Nullable LibraryProperties properties)
+    public Icon getIcon(@Nullable MuleLibraryProperties properties)
     {
         return MuleIcons.MuleIcon;
     }

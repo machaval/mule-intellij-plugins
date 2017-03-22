@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.0.43'
+//        classpath 'gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.2.5'
     }
 }
 

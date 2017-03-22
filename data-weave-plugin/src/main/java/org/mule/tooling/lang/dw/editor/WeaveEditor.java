@@ -35,6 +35,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.FileTypeUtils;
 import com.intellij.psi.xml.XmlDocument;
@@ -387,26 +388,24 @@ public class WeaveEditor implements FileEditor {
     }
 
     private List<String> getMELFiles(VirtualFile subDirectory) {
-        List<String> melFiles = new ArrayList<>();
 
-        VirtualFile[] children = subDirectory.getChildren();
-        for (VirtualFile nextFile : children) {
-            if (nextFile.isDirectory() && !".idea".equals(nextFile.getName())) {
-                melFiles.addAll(getMELFiles(nextFile));
-            } else {
-                FileType type = nextFile.getFileType();
-                if ("Mel".equals(type.getName())) {
-                    try {
-                        byte[] contents = nextFile.contentsToByteArray();
-                        String melScript = new String(contents);
-                        melFiles.add(melScript);
-                    } catch (Exception e) {
-                        logger.debug(e);
-                    }
-                } else if (type instanceof XmlFileType) {
-                    melFiles.addAll(getGlobalDefinitions(nextFile));
-                }
+        List<String> melFiles = new ArrayList<>();
+        FileType melType = FileTypeManager.getInstance().getStdFileType("Mel");
+
+        Collection<VirtualFile> melVF = (FileTypeIndex.getFiles(melType, GlobalSearchScope.projectScope(getProject())));
+        for (VirtualFile nextFile : melVF) {
+            try {
+                byte[] contents = nextFile.contentsToByteArray();
+                String melScript = new String(contents);
+                melFiles.add(melScript);
+            } catch (Exception e) {
+                logger.debug(e);
             }
+        }
+
+        melVF = (FileTypeIndex.getFiles(XmlFileType.INSTANCE, GlobalSearchScope.projectScope(getProject())));
+        for (VirtualFile nextFile : melVF) {
+            melFiles.addAll(getGlobalDefinitions(nextFile));
         }
 
         return melFiles;
