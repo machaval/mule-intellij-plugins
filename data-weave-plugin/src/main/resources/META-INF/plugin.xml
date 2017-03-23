@@ -17,7 +17,7 @@
           <ul>
             <li>Support for global MEL functions</li>
             <li>Support for .dwl extension and any other extensions that can be associated with DataWeave files</li>
-            <li>Bug fixes</li>
+            <li>Bug fixes and performance improvements</li>
           </ul>
         </li>
       </ul>
