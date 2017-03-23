@@ -3,12 +3,8 @@ package org.mule.tooling.lang.dw.editor;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.ide.scratch.RootType;
-import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -26,21 +22,17 @@ import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.ProjectScope;
-import com.intellij.psi.util.*;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
@@ -61,12 +53,8 @@ import org.mule.tooling.lang.dw.util.WeaveUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.*;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Created by eberman on 11/3/16.
@@ -437,32 +425,6 @@ public class WeaveEditor implements FileEditor {
         }
     }
 
-/*
-    private List<String> getMELFiles(VirtualFile subDirectory) {
-
-        List<String> melFiles = new ArrayList<>();
-        FileType melType = FileTypeManager.getInstance().getStdFileType("Mel");
-
-        Collection<VirtualFile> melVF = (FileTypeIndex.getFiles(melType, GlobalSearchScope.projectScope(getProject())));
-        for (VirtualFile nextFile : melVF) {
-            try {
-                byte[] contents = nextFile.contentsToByteArray();
-                String melScript = new String(contents);
-                melFiles.add(melScript);
-            } catch (Exception e) {
-                logger.debug(e);
-            }
-        }
-
-        melVF = (FileTypeIndex.getFiles(XmlFileType.INSTANCE, GlobalSearchScope.projectScope(getProject())));
-        for (VirtualFile nextFile : melVF) {
-            melFiles.addAll(getGlobalDefinitions(nextFile));
-        }
-
-        return melFiles;
-    }
-*/
-
     private List<String> getGlobalDefinitions(VirtualFile file) {
 
         List<String> globalDefs = new ArrayList<>();
@@ -516,96 +478,8 @@ public class WeaveEditor implements FileEditor {
         final CachedValuesManager manager = CachedValuesManager.getManager(project);
         List<String> melFunctions = manager.getCachedValue(psiFile, MEL_STRINGS_KEY, new MelStringsCachedProvider());
 
-/*
-        List<String> melFunctions = new ArrayList<>();
-        melFunctions.add("\n" +
-                "function t24ACKExpression() {\n" +
-                "    ackResult = true;\n" +
-                "\n" +
-                "\t//System.out.println(\"**** HTTP STATUS IS \" + message.inboundProperties[\"http.status\"]);\n" +
-                "    if (ackResult && exception != null) {\n" +
-                "        ackResult = ackResult && !(exception.causedBy(java.net.ConnectException));\n" +
-                "    }\n" +
-                "\n" +
-                "    //Check status code\n" +
-                "    if (ackResult && message.inboundProperties[\"http.status\"] != null) {\n" +
-                "        ackResult = ackResult &&  message.inboundProperties[\"http.status\"] < 299;\n" +
-                "    }\n" +
-                "\t//System.out.println(\"**** (1) ackResult is \" + ackResult);\n" +
-                "\n" +
-                "    //Check expression response\n" +
-                "    if (ackResult) {\n" +
-                "\t\tSystem.out.println(\"**** (t24ACKExpression()) Payload is \" + message.payload);\n" +
-                "        twsIsSuccessStr = xpath3(\"//successIndicator/text()\", message.payload, \"STRING\");\n" +
-                "\t\tSystem.out.println(\"**** (t24ACKExpression()) twsIsSuccessStr \" + twsIsSuccessStr);\n" +
-                "        twsIsSuccess = !(\"TWSError\".equals(twsIsSuccessStr) || \"T24Error\".equals(twsIsSuccessStr));\n" +
-                "\t\tSystem.out.println(\"**** (t24ACKExpression()) twsIsSuccess \" + twsIsSuccess);\n" +
-                "        ackResult = ackResult && twsIsSuccess;\n" +
-                "    }\n" +
-                "\tSystem.out.println(\"**** (t24ACKExpression()) ackResult is \" + ackResult);\n" +
-                "\treturn ackResult;\n" +
-                "}\n" +
-                "\n" +
-                "\n" +
-                "function isSystemException() {\n" +
-                "    return (exception.causedBy(java.net.ConnectException) || exception.causedBy(java.util.concurrent.TimeoutException));\n" +
-                "}\n" +
-                "\n" +
-                "function isRecoverableError() {\n" +
-                "    //TEST ONLY\n" +
-                "    return message.payload.contains(\"Error occurred constructing OFS message\");\n" +
-                "\n" +
-                "}");
+        String dwScript = this.textEditor.getEditor().getDocument().getText();
 
-        melFunctions.add("\n" +
-                "function topasACKExpression() {\n" +
-                "    ackResult = true;\n" +
-                "\n" +
-                "//System.out.println(\"**** HTTP STATUS IS \" + message.inboundProperties[\"http.status\"]);\n" +
-                "    if (ackResult && exception != null) {\n" +
-                "        ackResult = ackResult && !(exception.causedBy(java.net.ConnectException));\n" +
-                "    }\n" +
-                "\n" +
-                "    //Check status code\n" +
-                "    if (ackResult && message.inboundProperties[\"http.status\"] != null) {\n" +
-                "        ackResult = ackResult &&  message.inboundProperties[\"http.status\"] < 299;\n" +
-                "    }\n" +
-                "//System.out.println(\"**** (1) ackResult is \" + ackResult);\n" +
-                "\n" +
-                "    //Check expression response\n" +
-                "    if (ackResult) {\n" +
-                "//System.out.println(\"**** Payload is \" + message.payload);\n" +
-                "        twsIsSuccessStr = xpath3(\"/crm:ClientResponse/IsSuccess/text()\", message.payload, \"STRING\");\n" +
-                "//System.out.println(\"**** twsIsSuccessStr \" + twsIsSuccessStr);\n" +
-                "        twsIsSuccess = !(\"TWSError\".equals(twsIsSuccessStr));\n" +
-                "//System.out.println(\"**** twsIsSuccess \" + twsIsSuccess);\n" +
-                "        ackResult = ackResult && twsIsSuccess;\n" +
-                "    }\n" +
-                "//System.out.println(\"**** (2) ackResult is \" + ackResult);\n" +
-                "    return ackResult;\n" +
-                "}\n" +
-                "\n" +
-                "\n" +
-                "function isSystemException() {\n" +
-                "    return (exception.causedBy(java.net.ConnectException) || exception.causedBy(java.util.concurrent.TimeoutException));\n" +
-                "}\n" +
-                "\n" +
-                "function isRecoverableError() {\n" +
-                "    //TODO:\n" +
-                "    // Check if it's XML - contains String \"<?xml\"\n" +
-                "    // Check if it has successIndicator and it's TWSError\n" +
-                "\n" +
-                "    //TEST ONLY\n" +
-                "    return message.payload.contains(\"Error occurred constructing OFS message\");\n" +
-                "\n" +
-                "}\n" +
-                "\n" +
-                "function subString(value,start,end) {\n" +
-                "\treturn org.apache.commons.lang3.StringUtils.substring(value,start,end);\n" +
-                "}");
-*/
-
-        String dwScript = textEditor.getEditor().getDocument().getText();
         String output = WeavePreview.runPreview(module, dwScript, payload, flowVars, flowVars, flowVars, flowVars, flowVars, melFunctions);
         if (output != null)
             editors.get("output").getDocument().setText(output);

@@ -48,7 +48,6 @@ public class WeavePreview {
             Method method = clazz.getMethod("runPreview", String.class, Map.class, Map.class, Map.class, Map.class, Map.class, Map.class, List.class);
             Thread.yield();
             Map<String, Object> runPreview = (Map<String, Object>) method.invoke(null, dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
-
 //            final Map<String, Object> runPreview = PreviewRunner.runPreview(dwDocument, payload, flowVars, sessionVars, inbound, outbound, recordVars, functions);
             logger.debug("RunPreview is " + runPreview);
             if (runPreview.containsKey(PreviewRunner.result_key())) {
