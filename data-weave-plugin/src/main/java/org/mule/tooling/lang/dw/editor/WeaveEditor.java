@@ -47,6 +47,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.JBTabsPaneImpl;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.Alarm;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.xml.DomManager;
 import org.apache.commons.lang.StringUtils;
@@ -90,10 +91,12 @@ public class WeaveEditor implements FileEditor {
 
     final static Logger logger = Logger.getInstance(WeaveEditor.class);
 
-    final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
-    private static final Key<CachedValue<List<String>>> MEL_STRINGS_KEY = Key.create("MEL Strings");
+    private final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
+    private final static Key<CachedValue<List<String>>> MEL_STRINGS_KEY = Key.create("MEL Strings");
 
-    private Timer previewTimer = new Timer();
+    private final static long PREVIEW_DELAY = 200;
+
+    Alarm myDocumentAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
 
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
         this.project = project;
@@ -194,14 +197,11 @@ public class WeaveEditor implements FileEditor {
 
                     textEditor.getPreferredFocusedComponent().grabFocus();
 
-                    //runPreview();
-                    try {
-                        previewTimer.cancel();
-                        previewTimer.purge();
-                    } catch (Throwable t) {
-                    }
-                    previewTimer = new Timer();
-                    previewTimer.schedule(new TimerTask() {
+                    if (myDocumentAlarm.isDisposed())
+                        return;
+
+                    myDocumentAlarm.cancelAllRequests();
+                    myDocumentAlarm.addRequest(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -214,9 +214,9 @@ public class WeaveEditor implements FileEditor {
                             } catch (Exception e) {
                                 logger.error(e);
                             }
-                        }
-                    }, 500);
 
+                        }
+                    }, PREVIEW_DELAY);
                 }
             });
 
@@ -339,13 +339,11 @@ public class WeaveEditor implements FileEditor {
             f.getViewProvider().getDocument().addDocumentListener(new DocumentAdapter() {
                 @Override
                 public void documentChanged(DocumentEvent e) {
-                    try {
-                        previewTimer.cancel();
-                        previewTimer.purge();
-                    } catch (Throwable t) {
-                    }
-                    previewTimer = new Timer();
-                    previewTimer.schedule(new TimerTask() {
+                    if (myDocumentAlarm.isDisposed())
+                        return;
+
+                    myDocumentAlarm.cancelAllRequests();
+                    myDocumentAlarm.addRequest(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -359,8 +357,7 @@ public class WeaveEditor implements FileEditor {
                                 logger.error(e);
                             }
                         }
-                    }, 500);
-
+                    }, PREVIEW_DELAY);
                 }
             });
         }
