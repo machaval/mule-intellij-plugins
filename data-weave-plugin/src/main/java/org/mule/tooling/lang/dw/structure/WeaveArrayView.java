@@ -5,10 +5,8 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mule.tooling.lang.dw.parser.psi.WeaveArrayElement;
 import org.mule.tooling.lang.dw.parser.psi.WeaveArrayExpression;
 import org.mule.tooling.lang.dw.parser.psi.WeaveExpression;
-import org.mule.tooling.lang.dw.parser.psi.WeaveSimpleArrayElement;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -24,15 +22,11 @@ public class WeaveArrayView extends PsiTreeElementBase<WeaveArrayExpression> {
   @Override
   public Collection<StructureViewTreeElement> getChildrenBase() {
     List<StructureViewTreeElement> result = new ArrayList<>();
-    final List<WeaveArrayElement> arrayElementList = getElement().getArrayElementList();
-    for (WeaveArrayElement weaveArrayElement : arrayElementList) {
-      final WeaveSimpleArrayElement simpleArrayElement = weaveArrayElement.getSimpleArrayElement();
-      if (simpleArrayElement != null) {
-        final WeaveExpression expression = simpleArrayElement.getExpression();
-        final StructureViewTreeElement structureViewTreeElement = WeaveStructureElementFactory.create(expression);
-        if (structureViewTreeElement != null) {
-          result.add(structureViewTreeElement);
-        }
+    final List<WeaveExpression> arrayElementList = getElement().getExpressionList();
+    for (WeaveExpression expression : arrayElementList) {
+      final StructureViewTreeElement structureViewTreeElement = WeaveStructureElementFactory.create(expression);
+      if (structureViewTreeElement != null) {
+        result.add(structureViewTreeElement);
       }
     }
     return result;

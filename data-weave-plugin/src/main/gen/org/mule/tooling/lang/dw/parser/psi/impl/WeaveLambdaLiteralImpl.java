@@ -37,4 +37,10 @@ public class WeaveLambdaLiteralImpl extends WeaveExpressionImpl implements Weave
     return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveFunctionParameter.class);
   }
 
+  @Override
+  @NotNull
+  public List<WeaveTypeParameter> getTypeParameterList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveTypeParameter.class);
+  }
+
 }

@@ -37,4 +37,10 @@ public class WeaveNameTypeImpl extends WeaveTypeImpl implements WeaveNameType {
     return findChildByClass(WeaveStringLiteral.class);
   }
 
+  @Override
+  @Nullable
+  public WeaveTypeParameter getTypeParameter() {
+    return findChildByClass(WeaveTypeParameter.class);
+  }
+
 }

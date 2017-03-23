@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface WeaveFunctionDefinition extends WeaveNamedElement {
 
-  @NotNull
+  @Nullable
   WeaveExpression getExpression();
 
   @NotNull
@@ -18,6 +18,9 @@ public interface WeaveFunctionDefinition extends WeaveNamedElement {
 
   @Nullable
   WeaveType getType();
+
+  @NotNull
+  List<WeaveTypeParameter> getTypeParameterList();
 
   String getName();
 

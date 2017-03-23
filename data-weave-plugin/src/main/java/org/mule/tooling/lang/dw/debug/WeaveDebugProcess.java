@@ -10,7 +10,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.mulesoft.weave.engine.debugger.client.DebuggerClient;
+import com.mulesoft.weave.debugger.client.DebuggerClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.lang.dw.debug.breakpoint.WeaveBreakpointHandler;

@@ -14,7 +14,6 @@ public interface WeaveTypes {
   IElementType AND_EXPRESSION = new WeaveElementType("AND_EXPRESSION");
   IElementType ANY_DATE_LITERAL = new WeaveElementType("ANY_DATE_LITERAL");
   IElementType ANY_REGEX_LITERAL = new WeaveElementType("ANY_REGEX_LITERAL");
-  IElementType ARRAY_ELEMENT = new WeaveElementType("ARRAY_ELEMENT");
   IElementType ARRAY_EXPRESSION = new WeaveElementType("ARRAY_EXPRESSION");
   IElementType ARRAY_TYPE = new WeaveElementType("ARRAY_TYPE");
   IElementType AS_EXPRESSION = new WeaveElementType("AS_EXPRESSION");
@@ -28,7 +27,6 @@ public interface WeaveTypes {
   IElementType BOOLEAN_LITERAL = new WeaveElementType("BOOLEAN_LITERAL");
   IElementType BRACKET_SELECTOR_EXPRESSION = new WeaveElementType("BRACKET_SELECTOR_EXPRESSION");
   IElementType CLOJURE_EXPRESSION = new WeaveElementType("CLOJURE_EXPRESSION");
-  IElementType CONDITIONAL_ARRAY_ELEMENT = new WeaveElementType("CONDITIONAL_ARRAY_ELEMENT");
   IElementType CONDITIONAL_ATTRIBUTE = new WeaveElementType("CONDITIONAL_ATTRIBUTE");
   IElementType CONDITIONAL_EXPRESSION = new WeaveElementType("CONDITIONAL_EXPRESSION");
   IElementType CONDITIONAL_KEY_VALUE_PAIR = new WeaveElementType("CONDITIONAL_KEY_VALUE_PAIR");
@@ -67,6 +65,8 @@ public interface WeaveTypes {
   IElementType KEY_VALUE_PAIR = new WeaveElementType("KEY_VALUE_PAIR");
   IElementType KEY_VALUE_PAIR_TYPE = new WeaveElementType("KEY_VALUE_PAIR_TYPE");
   IElementType LAMBDA_LITERAL = new WeaveElementType("LAMBDA_LITERAL");
+  IElementType LAMBDA_TYPE = new WeaveElementType("LAMBDA_TYPE");
+  IElementType LAMBDA_TYPE_PARAMETER = new WeaveElementType("LAMBDA_TYPE_PARAMETER");
   IElementType LITERAL_EXPRESSION = new WeaveElementType("LITERAL_EXPRESSION");
   IElementType LITERAL_PATTERN = new WeaveElementType("LITERAL_PATTERN");
   IElementType MATCH_EXPRESSION = new WeaveElementType("MATCH_EXPRESSION");
@@ -98,7 +98,6 @@ public interface WeaveTypes {
   IElementType SCHEMA_ELEMENT = new WeaveElementType("SCHEMA_ELEMENT");
   IElementType SCHEMA_SELECTOR = new WeaveElementType("SCHEMA_SELECTOR");
   IElementType SELECTOR = new WeaveElementType("SELECTOR");
-  IElementType SIMPLE_ARRAY_ELEMENT = new WeaveElementType("SIMPLE_ARRAY_ELEMENT");
   IElementType SIMPLE_KEY_VALUE_PAIR = new WeaveElementType("SIMPLE_KEY_VALUE_PAIR");
   IElementType SIMPLE_TYPE = new WeaveElementType("SIMPLE_TYPE");
   IElementType SINGLE_KEY_VALUE_PAIR_OBJ = new WeaveElementType("SINGLE_KEY_VALUE_PAIR_OBJ");
@@ -107,8 +106,10 @@ public interface WeaveTypes {
   IElementType TYPE_DEFINITION = new WeaveElementType("TYPE_DEFINITION");
   IElementType TYPE_DIRECTIVE = new WeaveElementType("TYPE_DIRECTIVE");
   IElementType TYPE_LITERAL = new WeaveElementType("TYPE_LITERAL");
+  IElementType TYPE_PARAMETER = new WeaveElementType("TYPE_PARAMETER");
   IElementType TYPE_PATTERN = new WeaveElementType("TYPE_PATTERN");
   IElementType TYPE_TYPE = new WeaveElementType("TYPE_TYPE");
+  IElementType UNDEFINED_LITERAL = new WeaveElementType("UNDEFINED_LITERAL");
   IElementType UNION_TYPE = new WeaveElementType("UNION_TYPE");
   IElementType USING_EXPRESSION = new WeaveElementType("USING_EXPRESSION");
   IElementType VALUE_EXPRESSION = new WeaveElementType("VALUE_EXPRESSION");
@@ -119,7 +120,6 @@ public interface WeaveTypes {
   IElementType VERSION_DIRECTIVE = new WeaveElementType("VERSION_DIRECTIVE");
 
   IElementType AND = new WeaveTokenType("&");
-  IElementType AND_AND = new WeaveTokenType("&&");
   IElementType AND_KEYWORD = new WeaveTokenType("and");
   IElementType ARRAY_KEYWORD = new WeaveTokenType("ARRAY_KEYWORD");
   IElementType ARROW_TOKEN = new WeaveTokenType("->");
@@ -138,6 +138,7 @@ public interface WeaveTypes {
   IElementType EQUAL = new WeaveTokenType("==");
   IElementType ESCLAMATION = new WeaveTokenType("!");
   IElementType FALSE_LITERAL = new WeaveTokenType("false");
+  IElementType FAT_ARROW = new WeaveTokenType("=>");
   IElementType FUNCTION_DIRECTIVE_KEYWORD = new WeaveTokenType("%function");
   IElementType GREATER = new WeaveTokenType(">");
   IElementType GREATER_EQUAL = new WeaveTokenType(">=");
@@ -162,7 +163,6 @@ public interface WeaveTypes {
   IElementType OBJECT_KEYWORD = new WeaveTokenType("OBJECT_KEYWORD");
   IElementType OR = new WeaveTokenType("|");
   IElementType OR_KEYWORD = new WeaveTokenType("or");
-  IElementType OR_OR = new WeaveTokenType("||");
   IElementType OTHERWISE = new WeaveTokenType("OTHERWISE");
   IElementType OUTPUT_DIRECTIVE_KEYWORD = new WeaveTokenType("OUTPUT_DIRECTIVE_KEYWORD");
   IElementType PLUS = new WeaveTokenType("+");
@@ -177,12 +177,10 @@ public interface WeaveTypes {
   IElementType R_BRACKET = new WeaveTokenType("]");
   IElementType R_CURLY = new WeaveTokenType("}");
   IElementType R_PARREN = new WeaveTokenType(")");
-  IElementType SHIFT_LEFT = new WeaveTokenType("<<");
-  IElementType SHIFT_RIGHT = new WeaveTokenType(">>");
-  IElementType SHIFT_RIGHT_LOGICAL = new WeaveTokenType(">>>");
   IElementType SIMILAR = new WeaveTokenType("~=");
   IElementType SIMPLE_TYPE_LITERAL = new WeaveTokenType("SIMPLE_TYPE_LITERAL");
   IElementType SINGLE_QUOTED_STRING = new WeaveTokenType("SINGLE_QUOTED_STRING");
+  IElementType SUB_TYPE = new WeaveTokenType("<:");
   IElementType TRUE_LITERAL = new WeaveTokenType("true");
   IElementType TYPE_DIRECTIVE_KEYWORD = new WeaveTokenType("%type");
   IElementType TYPE_KEYWORD = new WeaveTokenType("TYPE_KEYWORD");
@@ -207,9 +205,6 @@ public interface WeaveTypes {
       }
       else if (type == ANY_REGEX_LITERAL) {
         return new WeaveAnyRegexLiteralImpl(node);
-      }
-      else if (type == ARRAY_ELEMENT) {
-        return new WeaveArrayElementImpl(node);
       }
       else if (type == ARRAY_EXPRESSION) {
         return new WeaveArrayExpressionImpl(node);
@@ -249,9 +244,6 @@ public interface WeaveTypes {
       }
       else if (type == CLOJURE_EXPRESSION) {
         return new WeaveClojureExpressionImpl(node);
-      }
-      else if (type == CONDITIONAL_ARRAY_ELEMENT) {
-        return new WeaveConditionalArrayElementImpl(node);
       }
       else if (type == CONDITIONAL_ATTRIBUTE) {
         return new WeaveConditionalAttributeImpl(node);
@@ -364,6 +356,12 @@ public interface WeaveTypes {
       else if (type == LAMBDA_LITERAL) {
         return new WeaveLambdaLiteralImpl(node);
       }
+      else if (type == LAMBDA_TYPE) {
+        return new WeaveLambdaTypeImpl(node);
+      }
+      else if (type == LAMBDA_TYPE_PARAMETER) {
+        return new WeaveLambdaTypeParameterImpl(node);
+      }
       else if (type == LITERAL_PATTERN) {
         return new WeaveLiteralPatternImpl(node);
       }
@@ -448,9 +446,6 @@ public interface WeaveTypes {
       else if (type == SELECTOR) {
         return new WeaveSelectorImpl(node);
       }
-      else if (type == SIMPLE_ARRAY_ELEMENT) {
-        return new WeaveSimpleArrayElementImpl(node);
-      }
       else if (type == SIMPLE_KEY_VALUE_PAIR) {
         return new WeaveSimpleKeyValuePairImpl(node);
       }
@@ -472,11 +467,17 @@ public interface WeaveTypes {
       else if (type == TYPE_LITERAL) {
         return new WeaveTypeLiteralImpl(node);
       }
+      else if (type == TYPE_PARAMETER) {
+        return new WeaveTypeParameterImpl(node);
+      }
       else if (type == TYPE_PATTERN) {
         return new WeaveTypePatternImpl(node);
       }
       else if (type == TYPE_TYPE) {
         return new WeaveTypeTypeImpl(node);
+      }
+      else if (type == UNDEFINED_LITERAL) {
+        return new WeaveUndefinedLiteralImpl(node);
       }
       else if (type == UNION_TYPE) {
         return new WeaveUnionTypeImpl(node);

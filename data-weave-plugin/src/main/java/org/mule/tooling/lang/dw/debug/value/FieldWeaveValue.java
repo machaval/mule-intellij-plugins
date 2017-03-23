@@ -6,9 +6,9 @@ import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
-import com.mulesoft.weave.engine.debugger.AttributeDebuggerValue;
-import com.mulesoft.weave.engine.debugger.FieldDebuggerValue;
-import com.mulesoft.weave.engine.debugger.KeyDebuggerValue;
+import com.mulesoft.weave.debugger.AttributeDebuggerValue;
+import com.mulesoft.weave.debugger.FieldDebuggerValue;
+import com.mulesoft.weave.debugger.KeyDebuggerValue;
 import org.jetbrains.annotations.NotNull;
 
 public class FieldWeaveValue extends XValue {

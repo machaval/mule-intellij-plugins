@@ -15,7 +15,7 @@ plugins {
 
 subprojects {
     repositories {
-        mavenLocal()
+//        mavenLocal()
 	    mavenCentral()
 	    maven {
 		    url "http://central.maven.org/maven2/"

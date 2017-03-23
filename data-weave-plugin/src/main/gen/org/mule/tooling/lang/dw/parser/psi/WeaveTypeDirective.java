@@ -10,4 +10,7 @@ public interface WeaveTypeDirective extends WeaveDirective {
   @Nullable
   WeaveTypeDefinition getTypeDefinition();
 
+  @NotNull
+  List<WeaveTypeParameter> getTypeParameterList();
+
 }

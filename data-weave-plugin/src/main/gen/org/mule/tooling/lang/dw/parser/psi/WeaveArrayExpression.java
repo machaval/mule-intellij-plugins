@@ -10,7 +10,7 @@ import com.intellij.navigation.ItemPresentation;
 public interface WeaveArrayExpression extends WeaveExpression, NavigatablePsiElement {
 
   @NotNull
-  List<WeaveArrayElement> getArrayElementList();
+  List<WeaveExpression> getExpressionList();
 
   ItemPresentation getPresentation();
 

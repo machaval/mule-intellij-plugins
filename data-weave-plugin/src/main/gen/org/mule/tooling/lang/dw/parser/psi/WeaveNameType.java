@@ -13,4 +13,7 @@ public interface WeaveNameType extends WeaveType {
   @Nullable
   WeaveStringLiteral getStringLiteral();
 
+  @Nullable
+  WeaveTypeParameter getTypeParameter();
+
 }

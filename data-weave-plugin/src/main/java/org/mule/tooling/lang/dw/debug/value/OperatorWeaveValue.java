@@ -6,8 +6,8 @@ import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
-import com.mulesoft.weave.engine.debugger.DebuggerValue;
-import com.mulesoft.weave.engine.debugger.OperatorDebuggerValue;
+import com.mulesoft.weave.debugger.DebuggerValue;
+import com.mulesoft.weave.debugger.OperatorDebuggerValue;
 import org.jetbrains.annotations.NotNull;
 
 public class OperatorWeaveValue extends XValue {

@@ -28,8 +28,8 @@ public class WeaveArrayExpressionImpl extends WeaveExpressionImpl implements Wea
 
   @Override
   @NotNull
-  public List<WeaveArrayElement> getArrayElementList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveArrayElement.class);
+  public List<WeaveExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveExpression.class);
   }
 
   public ItemPresentation getPresentation() {

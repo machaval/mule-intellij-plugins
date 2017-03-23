@@ -5,9 +5,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
-import com.mulesoft.weave.engine.debugger.DebuggerFrame;
-import com.mulesoft.weave.engine.debugger.client.DebuggerClient;
-import com.mulesoft.weave.engine.debugger.server.event.OnFrameEvent;
+import com.mulesoft.weave.debugger.DebuggerFrame;
+import com.mulesoft.weave.debugger.client.DebuggerClient;
+import com.mulesoft.weave.debugger.event.OnFrameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

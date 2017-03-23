@@ -68,6 +68,7 @@ RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
   "}"                         { return R_CURLY; }
   "["                         { return L_BRACKET; }
   "]"                         { return R_BRACKET; }
+  "<:"                        { return SUB_TYPE;}
   ","                         { return COMMA; }
   ":"                         { return COLON; }
   "using"                     { return USING; }
@@ -78,9 +79,6 @@ RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
   "unless"                    { return UNLESS;}
   "otherwise"                 { return OTHERWISE;}
   "---"                       { return DOCUMENT_SEPARATOR; }
-  "<<"                        { return SHIFT_LEFT; }
-  ">>"                        { return SHIFT_RIGHT; }
-  ">>>"                       { return SHIFT_RIGHT_LOGICAL; }
   "!="                        { return NOT_EQUAL; }
   "~="                        { return SIMILAR; }
   "=="                        { return EQUAL; }
@@ -98,8 +96,6 @@ RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
   "?"                         { return QUESTION; }
   "!"                         { return ESCLAMATION; }
   "#"                         { return HASH; }
-  "&&"                        { return AND_AND; }
-  "||"                        { return OR_OR; }
   "and"                       { return AND_KEYWORD; }
   "or"                        { return OR_KEYWORD; }
   "|"                         { return OR; }
@@ -110,6 +106,7 @@ RANGE_LITERAL="["{INTEGER_LITERAL}{DOT}{DOT}{INTEGER_LITERAL}"]"
   "null"                      { return RULE_NULL_LITERAL;}
   "match"                     { return RULE_MATCH_LITERAL;}
   "->"                        { return ARROW_TOKEN;}
+  "=>"                        { return FAT_ARROW;}
 
   "%dw"                       { return VERSION_DIRECTIVE_KEYWORD;}
   "%input"                    { return INPUT_DIRECTIVE_KEYWORD;}

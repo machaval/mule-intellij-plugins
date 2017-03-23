@@ -24,10 +24,6 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitArrayElement(@NotNull WeaveArrayElement o) {
-    visitPsiElement(o);
-  }
-
   public void visitArrayExpression(@NotNull WeaveArrayExpression o) {
     visitExpression(o);
     // visitNavigatablePsiElement(o);
@@ -79,10 +75,6 @@ public class WeaveVisitor extends PsiElementVisitor {
 
   public void visitClojureExpression(@NotNull WeaveClojureExpression o) {
     visitExpression(o);
-  }
-
-  public void visitConditionalArrayElement(@NotNull WeaveConditionalArrayElement o) {
-    visitPsiElement(o);
   }
 
   public void visitConditionalAttribute(@NotNull WeaveConditionalAttribute o) {
@@ -238,6 +230,14 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitLambdaType(@NotNull WeaveLambdaType o) {
+    visitType(o);
+  }
+
+  public void visitLambdaTypeParameter(@NotNull WeaveLambdaTypeParameter o) {
+    visitPsiElement(o);
+  }
+
   public void visitLiteralExpression(@NotNull WeaveLiteralExpression o) {
     visitExpression(o);
   }
@@ -366,10 +366,6 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitSimpleArrayElement(@NotNull WeaveSimpleArrayElement o) {
-    visitPsiElement(o);
-  }
-
   public void visitSimpleKeyValuePair(@NotNull WeaveSimpleKeyValuePair o) {
     visitNavigatablePsiElement(o);
   }
@@ -402,12 +398,20 @@ public class WeaveVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitTypeParameter(@NotNull WeaveTypeParameter o) {
+    visitPsiElement(o);
+  }
+
   public void visitTypePattern(@NotNull WeaveTypePattern o) {
     visitPattern(o);
   }
 
   public void visitTypeType(@NotNull WeaveTypeType o) {
     visitType(o);
+  }
+
+  public void visitUndefinedLiteral(@NotNull WeaveUndefinedLiteral o) {
+    visitExpression(o);
   }
 
   public void visitUnionType(@NotNull WeaveUnionType o) {

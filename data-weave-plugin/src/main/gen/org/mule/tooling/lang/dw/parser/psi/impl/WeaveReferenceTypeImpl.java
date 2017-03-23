@@ -31,4 +31,10 @@ public class WeaveReferenceTypeImpl extends WeaveTypeImpl implements WeaveRefere
     return findNotNullChildByClass(WeaveFqnIdentifier.class);
   }
 
+  @Override
+  @NotNull
+  public List<WeaveType> getTypeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, WeaveType.class);
+  }
+
 }

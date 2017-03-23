@@ -2,12 +2,12 @@ package org.mule.tooling.lang.dw.debug;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XDebugSession;
-import com.mulesoft.weave.engine.debugger.client.DebuggerClient;
-import com.mulesoft.weave.engine.debugger.client.DebuggerClientListener;
-import com.mulesoft.weave.engine.debugger.server.event.BreakpointAddedEvent;
-import com.mulesoft.weave.engine.debugger.server.event.BreakpointRemovedEvent;
-import com.mulesoft.weave.engine.debugger.server.event.OnFrameEvent;
-import com.mulesoft.weave.engine.debugger.server.event.ScriptResultEvent;
+import com.mulesoft.weave.debugger.client.DebuggerClient;
+import com.mulesoft.weave.debugger.client.DebuggerClientListener;
+import com.mulesoft.weave.debugger.event.BreakpointAddedEvent;
+import com.mulesoft.weave.debugger.event.BreakpointRemovedEvent;
+import com.mulesoft.weave.debugger.event.OnFrameEvent;
+import com.mulesoft.weave.debugger.event.ScriptResultEvent;
 
 public class WeaveDebuggerClientListener implements DebuggerClientListener {
 

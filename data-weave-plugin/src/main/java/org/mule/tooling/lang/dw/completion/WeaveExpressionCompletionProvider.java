@@ -26,7 +26,7 @@ public class WeaveExpressionCompletionProvider extends CompletionProvider<Comple
     }
     if (prevSibling instanceof LeafPsiElement) {
       final IElementType elementType = ((LeafPsiElement) prevSibling).getElementType();
-      if (elementType.equals(WeaveTypes.COLON) || elementType.equals(WeaveTypes.L_PARREN) || elementType.equals(WeaveTypes.COMMA) || elementType.equals(WeaveTypes.AND_AND)) {
+      if (elementType.equals(WeaveTypes.COLON) || elementType.equals(WeaveTypes.L_PARREN) || elementType.equals(WeaveTypes.COMMA)) {
         for (String unaryOperator : UNARY_OPERATORS) {
           final LookupElementBuilder map = LookupElementBuilder.create(unaryOperator);
           completionResultSet.addElement(map);

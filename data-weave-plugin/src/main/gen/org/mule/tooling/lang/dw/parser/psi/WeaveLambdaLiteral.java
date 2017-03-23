@@ -13,4 +13,7 @@ public interface WeaveLambdaLiteral extends WeaveExpression {
   @NotNull
   List<WeaveFunctionParameter> getFunctionParameterList();
 
+  @NotNull
+  List<WeaveTypeParameter> getTypeParameterList();
+
 }

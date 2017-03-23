@@ -4,8 +4,8 @@ import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.mulesoft.weave.engine.debugger.WeaveBreakpoint;
-import com.mulesoft.weave.engine.debugger.client.DebuggerClient;
+import com.mulesoft.weave.debugger.WeaveBreakpoint;
+import com.mulesoft.weave.debugger.client.DebuggerClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

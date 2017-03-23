@@ -11,17 +11,7 @@ configurations {
 }
 
 dependencies {
-    compile files('lib/weave/core-1.1.2.jar')
-    compile files('lib/weave/parser-1.1.2.jar')
-    compile files('lib/weave/scala-library-2.11.7.jar')
-    compile files('lib/weave/mule-plugin-weave-3.8.2.jar')
-
-    compile (group: 'org.mule.mvel', name: 'mule-mvel2', version: '2.1.9-MULE-008')
-    compile (group: 'org.parboiled', name: 'parboiled_2.11', version: '2.1.3')
-    compile (group: 'org.threeten', name: 'threetenbp', version: '1.3.1')
-    compile (group: 'org.spire-math', name: 'spire_2.11', version: '0.11.0')
-    //compile (group: 'org.mule', name: 'mule-core', version: '3.8.1')
-    //compile (group: 'stax', name: 'stax-api', version: '1.0.1')
+    compile (group: 'com.mulesoft.weave', name: 'debugger', version: '1.2.0-SNAPSHOT')
     compile (group: 'org.codehaus.woodstox', name: 'stax2-api', version: '4.0.0')
     compile (group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '5.0.2')
 

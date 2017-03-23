@@ -1,13 +1,13 @@
 package org.mule.tooling.lang.dw.debug.value;
 
 import com.intellij.xdebugger.frame.XValue;
-import com.mulesoft.weave.engine.debugger.ArrayDebuggerValue;
-import com.mulesoft.weave.engine.debugger.DebuggerFunction;
-import com.mulesoft.weave.engine.debugger.DebuggerValue;
-import com.mulesoft.weave.engine.debugger.FieldDebuggerValue;
-import com.mulesoft.weave.engine.debugger.ObjectDebuggerValue;
-import com.mulesoft.weave.engine.debugger.OperatorDebuggerValue;
-import com.mulesoft.weave.engine.debugger.SimpleDebuggerValue;
+import com.mulesoft.weave.debugger.ArrayDebuggerValue;
+import com.mulesoft.weave.debugger.DebuggerFunction;
+import com.mulesoft.weave.debugger.DebuggerValue;
+import com.mulesoft.weave.debugger.FieldDebuggerValue;
+import com.mulesoft.weave.debugger.ObjectDebuggerValue;
+import com.mulesoft.weave.debugger.OperatorDebuggerValue;
+import com.mulesoft.weave.debugger.SimpleDebuggerValue;
 
 
 public class WeaveValueFactory {

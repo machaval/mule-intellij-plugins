@@ -14,12 +14,15 @@
   tokens = [
         L_PARREN='('
         R_PARREN=')'
+
         L_CURLY='{'
         R_CURLY='}'
         L_BRACKET='['
         R_BRACKET=']'
+        SUB_TYPE='<:'
         COMMA=','
         COLON=':'
+        FAT_ARROW='=>'
 
         LINE_COMMENT="regexp://([^\r\n])*?"
 
@@ -28,10 +31,6 @@
 
         //
         DOCUMENT_SEPARATOR="---"
-
-        SHIFT_LEFT="<<"
-        SHIFT_RIGHT=">>"
-        SHIFT_RIGHT_LOGICAL=">>>"
 
         NOT_EQUAL="!="
         SIMILAR="~="
@@ -53,8 +52,6 @@
         ESCLAMATION="!"
         HASH="#"
 
-        AND_AND="&&"
-        OR_OR="||"
         AND_KEYWORD="and"
         OR_KEYWORD="or"
 
@@ -120,23 +117,24 @@ VariableDirective::= '%var' VariableDefinition
 
 OutputDirective::= OUTPUT_DIRECTIVE_KEYWORD (":" Type)? DataFormat Options?
 
-TypeDirective::= '%type' TypeDefinition
+TypeDirective::= '%type' TypeDefinition TypeParameterDeclaration?
 
 TypeDefinition::=Identifier '=' TypeLiteral
 
 FunctionDirective::= '%function' FunctionDefinition
 
-FunctionDefinition::=Identifier L_PARREN ( FunctionParameter ( ',' FunctionParameter )* )? R_PARREN ( ":" Type "=" | "=")? Expression {
+FunctionDefinition::=Identifier TypeParameterDeclaration? L_PARREN ( FunctionParameter ( ',' FunctionParameter )* )? R_PARREN ( ":" Type "=" | "=")? Expression {
      methods = [getName setName getNameIdentifier]
      implements="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElement"
      mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
+     pin=3
 }
 
 Schema::= '{' ( SchemaElement ( ',' SchemaElement )* )? '}'
 
 SchemaElement::= Identifier ':' LiteralExpression
 
-InputDirective::= '%input' Identifier (":" Type)? DataFormat Options?
+InputDirective::= '%input' VARIABLE_DECLARATION DataFormat Options?
 
 Options::= OptionElement ( ',' OptionElement )*
 
@@ -183,7 +181,7 @@ AttributeElement::= ConditionalAttribute
 
 Attribute::= KeyExpression ':' Expression
 
-ConditionalAttribute::= '(' KeyExpression ':' Expression ')' 'when' Expression
+ConditionalAttribute::= '(' KeyExpression ':' Expression ')' 'when' Expression {pin = 6}
 
 Expression::= ConditionalExpression|
             MatchExpression|
@@ -254,11 +252,11 @@ NamedRegexPattern ::= CASE_KEYWORD Identifier ":" AnyRegexLiteral '->' Expressio
 DefaultPattern ::= OTHERWISE '->' Expression
 
 ValueExpression::= ObjectExpression
-                  |LiteralExpression
                   |RangeExpression
                   |ArrayExpression
                   |VariableReferenceExpression
                   |EnclosedExpression
+                  |LiteralExpression
 
 ConditionalExpression
          ::= Expression  ( WHEN | UNLESS ) Expression OTHERWISE Expression {pin=2}
@@ -294,7 +292,7 @@ AdditionSubtractionExpression
          ::= Expression  ( '+' | '-' ) Expression {pin=2}
 
 RightLeftExpression
-         ::= Expression '>>' Expression {pin=2}
+         ::= Expression '>''>' Expression {pin=2}
 
 MultiplicationDivisionExpression ::= Expression  ( '*' | '/' ) Expression {pin=2}
 
@@ -339,12 +337,14 @@ VariableReferenceExpression ::= FqnIdentifier
 //        mixin="org.mule.tooling.lang.dw.parser.psi.WeaveNamedElementImpl"
 //   }
 
-VariableDefinition ::= Identifier (":" Type)? '='  Expression  {
+VariableDefinition ::= VARIABLE_DECLARATION '='  Expression  {
             methods=[getVariableName getVariableValue getName setName getNameIdentifier]
             mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
             implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
             name="Variable"
         }
+
+private VARIABLE_DECLARATION ::= Identifier (":" Type)?
 
 //Literal Values
 LiteralExpression
@@ -354,12 +354,17 @@ LiteralExpression
            | NumberLiteral
            | AnyDateLiteral
            | AnyRegexLiteral
-           | TypeLiteral
            | LambdaLiteral
+           | UndefinedLiteral
+           | TypeLiteral
 
-LambdaLiteral ::= '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression
+UndefinedLiteral ::= '?''?''?'
 
-FunctionParameter ::= Identifier (":" Type)? ( '=' Expression )? {
+LambdaLiteral ::= TypeParameterDeclaration? '(' ( FunctionParameter ( ',' FunctionParameter )* )? ')' '->' Expression
+
+private TypeParameterDeclaration ::= '<' (TypeParameter (',' TypeParameter)*)? '>'
+
+FunctionParameter ::= VARIABLE_DECLARATION ('=' Expression)?  {
         methods=[getVariableName getVariableValue getName setName getNameIdentifier]
         mixin="org.mule.tooling.lang.dw.parser.psi.WeaveVariableImpl"
         implements="org.mule.tooling.lang.dw.parser.psi.WeaveVariable"
@@ -390,41 +395,48 @@ ArrayExpression::= '[' ( ArrayElement ( ',' ArrayElement )* )? ']'
     methods=[getPresentation]
 }
 
-ArrayElement::= ConditionalArrayElement
-                | SimpleArrayElement
-
-SimpleArrayElement::=Expression
-
-ConditionalArrayElement ::= '(' Expression ')' 'when' Expression
+private ArrayElement::= Expression
+                | '(' Expression ')' 'when' Expression {pin = 4}
 
 TypeLiteral ::= Type Schema?
 
 Type ::=
         UnionType |
+        LambdaType |
         ObjectType |
         ArrayType |
         TypeType |
-        ReferenceType |
-        SimpleType
+        SimpleType |
+        ReferenceType
 
 
-UnionType ::= Type '|' Type
+TypeParameter ::= Identifier ( '<:' Type)?
 
-ObjectType ::= OBJECT_KEYWORD ('(' ((KeyValuePairType) (',' KeyValuePairType)*)? ')')?
+UnionType ::= Type '|' Type {pin= 2}
 
-KeyValuePairType ::= '(' KeyType ":" Type ')'
+ObjectType ::=  ExpandedObjectType | SimpleObjectType
+
+private SimpleObjectType ::= ('{' ((KeyValuePairType) (',' KeyValuePairType)*)? '}') {pin = 1}
+
+private ExpandedObjectType ::= OBJECT_KEYWORD ('<''{' ((KeyValuePairType) (',' KeyValuePairType)*)? '}''>')? {pin = 1}
+
+KeyValuePairType ::=  KeyType ('?')? ":" Type
 
 KeyType ::= NameType AttributesType?
 
-AttributesType ::= "@(" NameType ":" Type ")"
+AttributesType ::= "@""(" NameType ":" Type ")" {pin= 1}
 
-NameType ::= (Identifier"#")?Identifier | StringLiteral
+NameType ::= ((Identifier"#")?Identifier | StringLiteral) | '('TypeParameter')'
 
-ArrayType ::= ARRAY_KEYWORD ('(' Type ')')?
+ArrayType ::= ARRAY_KEYWORD ('<' Type '>')?
 
-TypeType ::= TYPE_KEYWORD ('(' Type ')')?
+TypeType ::= TYPE_KEYWORD ('<' Type '>')?
 
-ReferenceType ::= FqnIdentifier
+LambdaType ::= '(' LambdaTypeParameter (',' LambdaTypeParameter)* ')' '=>' Type {pin= 5}
+
+LambdaTypeParameter ::= Type | Identifier ':' Type
+
+ReferenceType ::= FqnIdentifier ('<' Type (',' Type)* '>')?
 
 SimpleType ::= SIMPLE_TYPE_LITERAL
 
@@ -438,4 +450,4 @@ IdentifierPackage ::= (Identifier "::")*
 
 CustomLoader ::= Identifier"!"
 
-Identifier ::= DOLLAR_VARIABLE | ID   {methods = [getName] }
+Identifier ::= (DOLLAR_VARIABLE | ID | '+''+' | '-''-' | 'match')  {methods = [getName] }
