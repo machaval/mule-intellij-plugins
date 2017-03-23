@@ -151,28 +151,13 @@ public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBefore
     private MavenProject getMavenProject(RunConfiguration runConfiguration, Project project)
     {
         final MavenProjectsManager instance = MavenProjectsManager.getInstance(project);
-        final List<MavenProject> projects = instance.getProjects();
-        MavenProject muleMavenProject = null;
 
         if (runConfiguration instanceof MuleConfiguration)
         {
-            final String moduleName = ((MuleConfiguration) runConfiguration).getModuleName();
-            if (moduleName != null)
-            {
-                for (MavenProject mavenProj : projects)
-                {
-                    if (moduleName.equals(mavenProj.getName()))
-                    {
-                        muleMavenProject = mavenProj;
-                    }
-                }
-            }
+            MuleConfiguration muleConfiguration = (MuleConfiguration) runConfiguration;
+            return instance.findProject(muleConfiguration.getModule());
         }
-        if (muleMavenProject == null)
-        {
-            muleMavenProject = instance.getRootProjects().get(0);
-        }
-        return muleMavenProject;
+        return null;
     }
 
 
