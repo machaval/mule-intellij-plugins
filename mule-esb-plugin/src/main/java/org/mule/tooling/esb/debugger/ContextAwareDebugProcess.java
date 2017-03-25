@@ -9,6 +9,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
@@ -66,23 +67,23 @@ public class ContextAwareDebugProcess extends XDebugProcess {
     }
 
     @Override
-    public void startStepOver() {
-        getDebugProcesses().startStepOver();
+    public void startStepOver(@Nullable XSuspendContext context) {
+        getDebugProcesses().startStepOver(context);
     }
 
     @Override
-    public void startForceStepInto() {
-        getDebugProcesses().startForceStepInto();
+    public void startForceStepInto(@Nullable XSuspendContext context) {
+        getDebugProcesses().startForceStepInto(context);
     }
 
     @Override
-    public void startStepInto() {
-        getDebugProcesses().startStepInto();
+    public void startStepInto(@Nullable XSuspendContext context) {
+        getDebugProcesses().startStepInto(context);
     }
 
     @Override
-    public void startStepOut() {
-        getDebugProcesses().startStepOut();
+    public void startStepOut(@Nullable XSuspendContext context) {
+        getDebugProcesses().startStepOut(context);
     }
 
     @Override
@@ -110,13 +111,13 @@ public class ContextAwareDebugProcess extends XDebugProcess {
     }
 
     @Override
-    public void resume() {
-        getDebugProcesses().resume();
+    public void resume(@Nullable XSuspendContext context) {
+        getDebugProcesses().resume(context);
     }
 
     @Override
-    public void runToPosition(@NotNull XSourcePosition xSourcePosition) {
-        getDebugProcesses().runToPosition(xSourcePosition);
+    public void runToPosition(@NotNull XSourcePosition xSourcePosition, @Nullable XSuspendContext context) {
+        getDebugProcesses().runToPosition(xSourcePosition, context);
     }
 
     @Override
