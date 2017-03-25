@@ -14,6 +14,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.intellij.xdebugger.frame.XSuspendContext;
 import com.mulesoft.mule.debugger.response.MuleMessageInfo;
 import com.mulesoft.mule.debugger.response.ObjectFieldDefinition;
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +91,7 @@ public class MuleDebugProcess extends XDebugProcess
     }
 
     @Override
-    public void startStepOver()
+    public void startStepOver(@Nullable XSuspendContext context)
     {
         muleDebuggerSession.nextStep();
     }
@@ -109,19 +110,19 @@ public class MuleDebugProcess extends XDebugProcess
     }
 
     @Override
-    public void startStepInto()
+    public void startStepInto(@Nullable XSuspendContext context)
     {
         muleDebuggerSession.nextStep();
     }
 
     @Override
-    public void startStepOut()
+    public void startStepOut(@Nullable XSuspendContext context)
     {
         muleDebuggerSession.nextStep();
     }
 
     @Override
-    public void resume()
+    public void resume(@Nullable XSuspendContext context)
     {
         muleDebuggerSession.resume();
     }
@@ -141,7 +142,7 @@ public class MuleDebugProcess extends XDebugProcess
     }
 
     @Override
-    public void runToPosition(@NotNull XSourcePosition xSourcePosition)
+    public void runToPosition(@NotNull XSourcePosition xSourcePosition, @Nullable XSuspendContext context)
     {
         muleDebuggerSession.runToCursor(getMulePath(getXmlTagAt(getModule().getProject(), xSourcePosition)));
     }
