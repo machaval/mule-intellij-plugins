@@ -10,9 +10,8 @@ ModuleRootManager.getInstance(module).getCompilerOutputPath();
     https://github.com/JetBrains/intellij-community/blob/master/platform/analysis-api/src/com/intellij/lang/annotation/ExternalAnnotator.java
 
 
-//Playground for DW:
 
-    - Persisting metadata set for DW: http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html
+- Persisting metadata set for DW: http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html
 
 // store property
 PropertiesComponent.getInstance().setValue( "mypropertystring", "hello world" );
@@ -20,8 +19,15 @@ PropertiesComponent.getInstance().setValue( "mypropertystring", "hello world" );
 String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
 
 
-    - Find a way to specify the application/java for inputs;
+- Find a way to specify the application/java for inputs;
 
-    - Schemas/samples and autocompletion;
+- Connectors / configs view + test connection:
+
+    List all elements of type MuleElementType.CONFIG or MuleElementType.TRANSPORT_CONNECTOR:
+       MuleConfigUtils.getMuleElementTypeFromXmlElement(XmlTag xmlTag)
+
+    Tool Window: http://www.jetbrains.org/intellij/sdk/docs/user_interface_components/tool_windows.html
+    conditionClass attribute - the qualified name of a class implementing the Condition<Project> interface
+    (this can be the same class as the toolwindow factory implementation). If the condition returns false, the toolwindow will not be displayed.
 
 

@@ -82,7 +82,7 @@ public class WeaveEditor implements FileEditor {
     private final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
     private final static Key<CachedValue<List<String>>> MEL_STRINGS_KEY = Key.create("MEL Strings");
 
-    private final static long PREVIEW_DELAY = 200;
+    private final static long PREVIEW_DELAY = 500;
 
     Alarm myDocumentAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
 

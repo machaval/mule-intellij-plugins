@@ -122,7 +122,7 @@
 
         <library.presentationProvider implementation="org.mule.tooling.esb.framework.MuleLibraryPresentationProvider" order="first"/>
         <framework.type implementation="org.mule.tooling.esb.framework.MuleFrameworkType"/>
-        <!--<facetType implementation="org.mule.framework.MuleFacetType"/>-->
+        <facetType implementation="org.mule.tooling.esb.framework.facet.MuleFacetType" order="first"/>
         <!--<project.converterProvider implementation="com.intellij.appengine.converter.AppEngineFacetConverterProvider"/>-->
         <framework.detector implementation="org.mule.tooling.esb.framework.MuleFrameworkDetector"/>
         <library.type implementation="org.mule.tooling.esb.framework.MuleLibraryType"/>
@@ -187,7 +187,12 @@
         <internalFileTemplate name="Mule Deploy Properties"/>
         <internalFileTemplate name="Mule Domain Deploy Properties"/>
         <internalFileTemplate name="RAML File"/>
+<!--
 
+        <toolWindow id="Global Configs" secondary="false" icon="/mulesoft-icon.png" anchor="right"
+                    factoryClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"
+                    conditionClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"/>
+-->
     </extensions>
 
     <application-components>
