@@ -30,4 +30,5 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
     conditionClass attribute - the qualified name of a class implementing the Condition<Project> interface
     (this can be the same class as the toolwindow factory implementation). If the condition returns false, the toolwindow will not be displayed.
 
+    - connector icon
 

@@ -21,6 +21,7 @@ import com.intellij.framework.detection.DetectedFrameworkDescription;
 import com.intellij.framework.detection.FileContentPattern;
 import com.intellij.framework.detection.FrameworkDetectionContext;
 import com.intellij.framework.detection.FrameworkDetector;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
@@ -121,7 +122,13 @@ public class MuleFrameworkDetector extends FrameworkDetector
         {
             final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
             final AddSupportForSingleFrameworkDialog dialog = AddSupportForSingleFrameworkDialog.createDialog(moduleForFile, new MuleFrameworkSupportProvider());
-            dialog.showAndGet();
+
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.showAndGet();
+                }
+            });
         }
 
         @Override public boolean equals(Object o)
