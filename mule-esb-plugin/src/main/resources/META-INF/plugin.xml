@@ -227,10 +227,11 @@
 
         <action id="Mule.EncryptProperty" class="org.mule.tooling.esb.actions.EncryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
-            <!--<add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="Mule.DecryptProperty" class="org.mule.tooling.esb.actions.DecryptPropertyAction">
             <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
 
         <action id="Mule.GenerateFlowsFromRAML"

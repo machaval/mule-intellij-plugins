@@ -26,9 +26,8 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
     List all elements of type MuleElementType.CONFIG or MuleElementType.TRANSPORT_CONNECTOR:
        MuleConfigUtils.getMuleElementTypeFromXmlElement(XmlTag xmlTag)
 
-    Tool Window: http://www.jetbrains.org/intellij/sdk/docs/user_interface_components/tool_windows.html
-    conditionClass attribute - the qualified name of a class implementing the Condition<Project> interface
-    (this can be the same class as the toolwindow factory implementation). If the condition returns false, the toolwindow will not be displayed.
+    PsiTree listener, automatic updates when XML files are manually edited
+    Issue with tree cell rezising?
+    How to implement test connection?
 
-    - connector icon
 
