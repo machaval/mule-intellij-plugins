@@ -65,7 +65,7 @@ public class MuleLibraryDescription extends CustomLibraryDescription
 
         public MuleLibraryConfiguration(MuleSdk muleSdk)
         {
-            super("MuleESB -" + muleSdk.getVersion(), MuleLibraryType.getInstance(), new MuleLibraryProperties(muleSdk));
+            super("MuleESB-" + muleSdk.getVersion(), MuleLibraryType.getInstance(), new MuleLibraryProperties(muleSdk));
             this.muleSdk = muleSdk;
         }
 

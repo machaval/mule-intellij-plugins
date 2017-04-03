@@ -18,6 +18,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.awt.RelativePoint;
 import org.bouncycastle.util.encoders.Base64;
+import org.jetbrains.annotations.Nullable;
 import org.mule.security.encryption.binary.jce.algorithms.EncryptionAlgorithm;
 import org.mule.security.encryption.binary.jce.algorithms.EncryptionMode;
 import org.mule.tooling.esb.encrypt.ui.EncryptDialog;
@@ -39,8 +40,8 @@ public class DecryptPropertyAction extends AnAction {
         final Project project = (Project) anActionEvent.getData(CommonDataKeys.PROJECT);
 
         PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
-        PsiElement selectedPropertyPsi = LangDataKeys.PSI_ELEMENT_ARRAY.getData(anActionEvent.getDataContext())[0];
-        IProperty selectedProperty = (IProperty) selectedPropertyPsi;
+
+        IProperty selectedProperty = getSelectedProperty(anActionEvent.getDataContext());
 
         final EncryptDialog form = new EncryptDialog();
         form.setTitle("Decrypt Property: " + selectedProperty.getKey());
@@ -80,18 +81,35 @@ public class DecryptPropertyAction extends AnAction {
         final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(anActionEvent.getDataContext());
 
         boolean isProperty = false;
+        boolean isPropertyFile = false;
         boolean isEncrypted = false;
 
         if (file != null) {
-            isProperty = "properties".equalsIgnoreCase(file.getExtension());
-            if (isProperty) {
-                PsiElement selectedPropertyPsi = LangDataKeys.PSI_ELEMENT_ARRAY.getData(anActionEvent.getDataContext())[0];
-                IProperty selectedProperty = (IProperty) selectedPropertyPsi;
+            isPropertyFile = "properties".equalsIgnoreCase(file.getExtension());
+            if (isPropertyFile) {
+                IProperty selectedProperty = getSelectedProperty(anActionEvent.getDataContext());
                 String propertyValue = selectedProperty.getValue();
                 isEncrypted = (propertyValue.startsWith("![") && propertyValue.endsWith("]"));
+                isProperty = true;
             }
-            anActionEvent.getPresentation().setEnabled(isProperty && isEncrypted);
-            anActionEvent.getPresentation().setVisible(isProperty);
+            anActionEvent.getPresentation().setEnabled(isPropertyFile && isEncrypted && isProperty);
+            anActionEvent.getPresentation().setVisible(isPropertyFile && isProperty);
         }
+    }
+
+    @Nullable
+    private IProperty getSelectedProperty(DataContext context) {
+        IProperty selectedProperty = null;
+        PsiElement selectedPropertyPsi = null;
+        final PsiElement[] psiElementsArray = LangDataKeys.PSI_ELEMENT_ARRAY.getData(context);
+        if (psiElementsArray != null && psiElementsArray.length > 0)
+            selectedPropertyPsi = psiElementsArray[0];
+        else
+            selectedPropertyPsi = LangDataKeys.PSI_ELEMENT.getData(context);
+
+        if (selectedPropertyPsi != null) {
+            selectedProperty = (IProperty) selectedPropertyPsi;
+        }
+        return selectedProperty;
     }
 }

@@ -1,5 +1,6 @@
 package org.mule.tooling.esb.util;
 
+import com.intellij.facet.ProjectFacetManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -44,6 +45,8 @@ import org.mule.tooling.esb.config.MuleConfigConstants;
 import org.mule.tooling.esb.config.model.Flow;
 import org.mule.tooling.esb.config.model.Mule;
 import org.mule.tooling.esb.config.model.SubFlow;
+import org.mule.tooling.esb.framework.facet.MuleFacet;
+import org.mule.tooling.esb.framework.facet.MuleFacetType;
 import org.mule.tooling.lang.dw.parser.psi.WeavePsiUtils;
 
 import javax.xml.namespace.QName;
@@ -790,6 +793,18 @@ public class MuleConfigUtils
             psiElement = psiElement.getParent();
 
         return (XmlTag)psiElement;
+    }
+
+    public static boolean isMuleProject(Project project) {
+        ProjectFacetManager manager = ProjectFacetManager.getInstance(project);
+        final List<MuleFacet> facets = manager.getFacets(MuleFacetType.TYPE_ID);
+        return (facets != null && !facets.isEmpty());
+    }
+
+    public static boolean isMuleModule(Module module) {
+        ProjectFacetManager manager = ProjectFacetManager.getInstance(module.getProject());
+        final List<MuleFacet> facets = manager.getFacets(MuleFacetType.TYPE_ID, new Module[] { module });
+        return (facets != null && !facets.isEmpty());
     }
 
     public static List<XmlTag> findFlowRefsForFlow(@NotNull XmlTag flow) {

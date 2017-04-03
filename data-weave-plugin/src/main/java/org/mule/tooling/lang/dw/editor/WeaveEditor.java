@@ -82,7 +82,7 @@ public class WeaveEditor implements FileEditor {
     private final static Key<String> newFileDataTypeKey = new Key<String>("NEW_FILE_TYPE");
     private final static Key<CachedValue<List<String>>> MEL_STRINGS_KEY = Key.create("MEL Strings");
 
-    private final static long PREVIEW_DELAY = 200;
+    private final static long PREVIEW_DELAY = 500;
 
     Alarm myDocumentAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
 
@@ -576,8 +576,11 @@ public class WeaveEditor implements FileEditor {
                         List<String> globalDefs = getGlobalDefinitions(nextFile);
                         if (globalDefs != null && !globalDefs.isEmpty()) {
                             melFiles.addAll(getGlobalDefinitions(nextFile));
-                            dependencies.add(nextFile);
                         }
+                        PsiFile xmlFile = PsiManager.getInstance(getProject()).findFile(nextFile);
+                        if (isMuleFile(xmlFile))
+                            dependencies.add(nextFile); //If Mule file, find as dependency anyway
+
                     }
                 }
 
@@ -586,6 +589,20 @@ public class WeaveEditor implements FileEditor {
                 return null;
             }
         }
+
+        private boolean isMuleFile(PsiFile psiFile) {
+            if (!(psiFile instanceof XmlFile)) {
+                return false;
+            }
+            if (psiFile.getFileType() != StdFileTypes.XML) {
+                return false;
+            }
+            final XmlFile psiFile1 = (XmlFile) psiFile;
+            final XmlTag rootTag = psiFile1.getRootTag();
+            return rootTag.getLocalName().equalsIgnoreCase("mule");
+        }
+
+
     }
 
 }

@@ -1,9 +1,11 @@
 package org.mule.tooling.esb.wizard;
 
+import com.intellij.facet.*;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.wizards.MavenModuleBuilder;
+import org.mule.tooling.esb.framework.facet.MuleFacet;
 import org.mule.tooling.esb.util.MuleIcons;
 
 import javax.swing.*;
@@ -33,6 +36,9 @@ public class MuleDomainMavenModuleBuilder extends MavenModuleBuilder implements 
     @Override
     public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
         super.setupRootModel(rootModel);
+
+        setMuleFacet(rootModel.getModule());
+
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
@@ -81,6 +87,14 @@ public class MuleDomainMavenModuleBuilder extends MavenModuleBuilder implements 
 
     public void setMuleVersion(String muleVersion) {
         this.muleVersion = muleVersion;
+    }
+
+    public void setMuleFacet(Module module) {
+        FacetType type = FacetTypeRegistry.getInstance().findFacetType(MuleFacet.ID);
+        Facet facet = type.createFacet(module, "Mule", type.createDefaultConfiguration(), null);
+        ModifiableFacetModel model = FacetManager.getInstance(module).createModifiableModel();
+        model.addFacet(facet);
+        model.commit();
     }
 
 }
