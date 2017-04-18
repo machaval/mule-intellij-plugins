@@ -1,7 +1,11 @@
 package org.mule.tooling.esb.framework.facet;
 
+import com.intellij.facet.Facet;
+import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,4 +49,10 @@ public class MuleFacetConfigurationTab extends FacetEditorTab {
     public String getDisplayName() {
         return "Mule SDK";
     }
+
+//    public void onFacetInitialized(@NotNull Facet facet) {
+//        ToolWindowManager.getInstance(facet.getModule().getProject()).registerToolWindow("Global Configs", true, ToolWindowAnchor.LEFT, false);
+//    }
+
+
 }

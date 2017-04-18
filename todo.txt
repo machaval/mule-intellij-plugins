@@ -31,3 +31,11 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
     How to implement test connection?
 
 
+1) list all elements that are of abstractExtensionType,
+2) iterate over each element,
+3) get the prefix,
+4) lookup schema by prefix,
+5) parse the XSD and see if it contains the devkit
+
+
+TODO: Select output, e.g. from printing a Java collection and convert it to DW script.

@@ -120,12 +120,11 @@ public class MuleFrameworkDetector extends FrameworkDetector
         @Override
         public void setupFramework(@NotNull ModifiableModelsProvider modifiableModelsProvider, @NotNull ModulesProvider modulesProvider)
         {
-            final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
-            final AddSupportForSingleFrameworkDialog dialog = AddSupportForSingleFrameworkDialog.createDialog(moduleForFile, new MuleFrameworkSupportProvider());
-
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
+                    final AddSupportForSingleFrameworkDialog dialog = AddSupportForSingleFrameworkDialog.createDialog(moduleForFile, new MuleFrameworkSupportProvider());
                     dialog.showAndGet();
                 }
             });

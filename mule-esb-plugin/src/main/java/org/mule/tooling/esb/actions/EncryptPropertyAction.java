@@ -105,7 +105,7 @@ public class EncryptPropertyAction extends AnAction
         else
             selectedPropertyPsi = LangDataKeys.PSI_ELEMENT.getData(context);
 
-        if (selectedPropertyPsi != null) {
+        if (selectedPropertyPsi != null && selectedPropertyPsi instanceof IProperty) {
             selectedProperty = (IProperty) selectedPropertyPsi;
         }
         return selectedProperty;

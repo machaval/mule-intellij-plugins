@@ -384,8 +384,10 @@ public class WeaveEditor implements FileEditor {
         contentTypes.put(title, dataType.getText());
 
         VirtualFile vfile = inputOutputFiles.get(title);
-        vfile.putUserData(newFileDataTypeKey, dataType.getText());
-        FileContentUtilCore.reparseFiles(vfile);
+        if (vfile != null) {
+            vfile.putUserData(newFileDataTypeKey, dataType.getText());
+            FileContentUtilCore.reparseFiles(vfile);
+        }
 
         Editor oldEditor = editors.get(title);
         FileType newType = fileTypes.containsKey(dataType.getText()) ? fileTypes.get(dataType.getText()) : FileTypes.UNKNOWN;
