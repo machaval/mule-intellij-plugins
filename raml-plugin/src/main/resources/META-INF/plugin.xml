@@ -67,6 +67,8 @@
         <internalFileTemplate name="RAML File"/>
 
         <externalAnnotator language="RAML" implementationClass="org.mule.tooling.lang.raml.annotator.RamlAnnotator"/>
+        <langCodeStyleSettingsProvider implementation="org.mule.tooling.lang.raml.codestyle.RamlLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider implementation="org.mule.tooling.lang.raml.codestyle.RamlCodeStyleSettingsProvider"/>
     </extensions>
 
     <application-components>
