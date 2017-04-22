@@ -10,7 +10,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowPanel;
+import org.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowPanel;
 import org.mule.tooling.esb.util.MuleIcons;
 
 import java.util.Arrays;

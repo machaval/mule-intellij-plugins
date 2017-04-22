@@ -1,9 +1,11 @@
-package org.mule.tooling.esb.toolwindow;
+package org.mule.tooling.esb.toolwindow.globalconfigs;
 
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.ui.customization.CustomizationUtil;
+import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import com.intellij.ide.util.treeView.IndexComparator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -16,15 +18,16 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.meta.PsiMetaData;
+import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.treeStructure.SimpleNode;
+import com.intellij.ui.treeStructure.SimpleTree;
+import com.intellij.ui.treeStructure.SimpleTreeBuilder;
+import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -32,16 +35,20 @@ import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
 import com.intellij.xml.XmlSchemaProvider;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.esb.config.model.Mule;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 import org.mule.tooling.esb.util.MuleElementType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +61,9 @@ public class GlobalConfigsToolWindowPanel extends SimpleToolWindowPanel implemen
 
     private Project myProject;
 
-    private DnDAwareTree myTree;
+    //private DnDAwareTree myTree;
+    private Tree myTree;
+    private GlobalConfigsTreeStructure myStructure;
 
     public GlobalConfigsToolWindowPanel(Project project) {
         super(true, true);
@@ -75,65 +84,65 @@ public class GlobalConfigsToolWindowPanel extends SimpleToolWindowPanel implemen
 
 
     public void init() {
-
-        DefaultMutableTreeNode globalConfigs = new DefaultMutableTreeNode("");
-
-        final DomManager manager = DomManager.getDomManager(myProject);
-
-        final Collection<VirtualFile> files = FileTypeIndex.getFiles(StdFileTypes.XML, GlobalSearchScope.projectScope(myProject));
-
-        for (VirtualFile file : files) {
-
-            final PsiFile xmlFile = PsiManager.getInstance(myProject).findFile(file);
-//TODO: There's NPE here because the VFS may not be indexed yet.
-//TODO: Need dynamic init, PSI listener, etc.
-            PsiDirectory directory = xmlFile.getParent();
-            Module module = ModuleUtilCore.findModuleForPsiElement((PsiElement)(directory == null?xmlFile:directory));
-
-            if (MuleConfigUtils.isMuleFile(xmlFile)) {
-                final DomFileElement<Mule> fileElement = manager.getFileElement((XmlFile) xmlFile, Mule.class);
-
-                if (fileElement != null) {
-                    final Mule rootElement = fileElement.getRootElement();
-                    XmlTag[] subTags = rootElement.getXmlTag().getSubTags();
-
-                    for (XmlTag nextTag : subTags) {
-                        MuleElementType muleElementType = MuleConfigUtils.getMuleElementTypeFromXmlElement(nextTag);
-
-                        if (muleElementType != null &&
-                            (MuleElementType.CONFIG.equals(muleElementType) || (MuleElementType.TRANSPORT_CONNECTOR.equals(muleElementType)))) {
-
-                            DefaultMutableTreeNode lastChild = null;
-
-                            if (globalConfigs.getChildCount() > 0) {
-                                lastChild = (DefaultMutableTreeNode) globalConfigs.getLastChild();
-                            }
-
-                            if (lastChild == null || !(((PsiFile)lastChild.getUserObject()).getName().equals(xmlFile.getName()))) {
-                                lastChild = new DefaultMutableTreeNode(xmlFile);
-                                globalConfigs.add(lastChild);
-                            }
-
-                            DefaultMutableTreeNode nextConfigNode = new DefaultMutableTreeNode(nextTag);
-                            lastChild.add(nextConfigNode);
-                        }
-                    }
-                }
-            }
-        }
-
-        myTree = new DnDAwareTree(globalConfigs);
+        myStructure = new GlobalConfigsTreeStructure(myProject);
+        final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+        final SimpleNode rootNode = (SimpleNode)myStructure.getRootElement();
+        final DefaultTreeModel model = new DefaultTreeModel(root);
+        myTree = new SimpleTree(model);
+//        final AbstractTreeBuilder myTreeBuilder =
+//                new AbstractTreeBuilder(myTree, model, myStructure, null);
+        final SimpleTreeBuilder myTreeBuilder =
+                new SimpleTreeBuilder(myTree, model, myStructure, null);
+       // myTree.invalidate();
         myTree.setRootVisible(false);
-        myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        myTree.setUI(new WideSelectionTreeUI());
-        myTree.setOpaque(true);
 
-        JScrollPane scrollPane = new JScrollPane(myTree);
-        this.setContent(scrollPane);
+        PsiManager.getInstance(myProject).addPsiTreeChangeListener(new PsiTreeChangeAdapter() {
+            @Override
+            public void childAdded(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            @Override
+            public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            @Override
+            public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            @Override
+            public void childMoved(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            @Override
+            public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            @Override
+            public void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+                _treeChange(event);
+            }
+
+            private void _treeChange(@NotNull PsiTreeChangeEvent event) {
+                //TODO
+            /*
+                Check if the change is in the file (i.e. no file added or deleted)
+                if yes - locate the node
+                         rebuild
+                         if node was expanded - expand
+                if no - rebuild the tree
+             */
+
+                myTreeBuilder.updateFromRoot(true);
+            }
+        });
+
+        this.setContent(ScrollPaneFactory.createScrollPane(myTree));
         this.setToolbar(createActionsToolbar());
-
-        GlobalConfigsNodeRenderer r = new GlobalConfigsNodeRenderer();
-        myTree.setCellRenderer(r);
 
         addTreeMouseListeners();
     }
@@ -201,7 +210,7 @@ public class GlobalConfigsToolWindowPanel extends SimpleToolWindowPanel implemen
 
     }
 
-    public DnDAwareTree getTree() {
+    public Tree getTree() {
         return myTree;
     }
 
@@ -248,7 +257,10 @@ public class GlobalConfigsToolWindowPanel extends SimpleToolWindowPanel implemen
                 DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode)path.getLastPathComponent();
                 if (selectedElement == null)
                     return;
-                PsiElement element = (PsiElement)selectedElement.getUserObject();
+                GlobalConfigsTreeStructure.GlobalConfigNode configNode = (GlobalConfigsTreeStructure.GlobalConfigNode)selectedElement.getUserObject();
+                if (configNode == null)
+                    return;
+                PsiElement element = configNode.getXmlTag();
                 if (element == null)
                     return;
                 OpenSourceUtil.navigate((Navigatable)element);
@@ -279,4 +291,14 @@ public class GlobalConfigsToolWindowPanel extends SimpleToolWindowPanel implemen
 
         return false;
     }
+//
+//    @Nullable
+//    @Override
+//    public Object getData(@NonNls String dataId) {
+//        if (LocalDataKeys.PROCESSES_PROJECTS_TREE.is(dataId))
+//            return myTree;
+//        if (LocalDataKeys.PROCESSES_PROJECTS_TREE_STRUCTURE.is(dataId))
+//            return myStructure;
+//        return super.getData(dataId);
+//    }
 }

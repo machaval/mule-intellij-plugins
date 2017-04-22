@@ -191,8 +191,8 @@
 <!--
 
         <toolWindow id="Global Configs" secondary="false" icon="/mulesoft-icon.png" anchor="right"
-                    factoryClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"
-                    conditionClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"/>
+                    factoryClaorg.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowFactorytory"
+                    conditionClaorg.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowFactorytory"/>
 -->
     </extensions>
 

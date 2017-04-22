@@ -2,6 +2,7 @@ package org.mule.tooling.lang.raml.codestyle;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.java.JavaLanguage;
+import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.YAMLLanguageCodeStyleSettingsProvider;
@@ -17,6 +18,7 @@ public class RamlLanguageCodeStyleSettingsProvider extends YAMLLanguageCodeStyle
         return RamlLanguage.INSTANCE;
     }
 
+/*
     @Override
     public CommonCodeStyleSettings getDefaultCommonSettings() {
         CommonCodeStyleSettings settings = new CommonCodeStyleSettings(RamlLanguage.INSTANCE);
@@ -27,6 +29,7 @@ public class RamlLanguageCodeStyleSettingsProvider extends YAMLLanguageCodeStyle
         indentOptions.USE_TAB_CHARACTER = false;
         return settings;
     }
+*/
 
     @Override
     public String getCodeSample(@NotNull SettingsType settingsType) {
@@ -63,18 +66,12 @@ public class RamlLanguageCodeStyleSettingsProvider extends YAMLLanguageCodeStyle
                 "              example: !include acme-api/examples/UpdateGadgetResponse.json\n";
     }
 
-//    @Override
-//    public CommonCodeStyleSettings getDefaultCommonSettings() {
-//        CommonCodeStyleSettings defaultSettings = new CommonCodeStyleSettings( getLanguage() );
-//        CommonCodeStyleSettings.IndentOptions indentOptions = defaultSettings.initIndentOptions();
-//        indentOptions.INDENT_SIZE = 4;
-//        indentOptions.CONTINUATION_INDENT_SIZE = 8;
-//        indentOptions.TAB_SIZE = 4;
-//        indentOptions.USE_TAB_CHARACTER = true;
-//
-//        defaultSettings.LINE_COMMENT_AT_FIRST_COLUMN = false;
-//        defaultSettings.KEEP_FIRST_COLUMN_COMMENT = false;
-//
-//        return defaultSettings;
-//    }
+    @Override
+    public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
+        if (settingsType == SettingsType.INDENT_SETTINGS) {
+            //consumer.showStandardOptions("SPACE_AROUND_ASSIGNMENT_OPERATORS");
+            consumer.showAllStandardOptions();
+        }
+    }
+
 }

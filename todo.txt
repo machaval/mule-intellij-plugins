@@ -39,3 +39,5 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
 
 
 TODO: Select output, e.g. from printing a Java collection and convert it to DW script.
+
+TODO: API Designer-like RAML Color Highlighter

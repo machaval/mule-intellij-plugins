@@ -1,4 +1,4 @@
-package org.mule.tooling.esb.toolwindow;
+package org.mule.tooling.esb.toolwindow.globalconfigs;
 
 import com.intellij.facet.FacetManager;
 import com.intellij.facet.ProjectFacetManager;
@@ -28,7 +28,8 @@ import java.util.List;
 public class GlobalConfigsToolWindowFactory implements ToolWindowFactory, Condition<Project> {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-
+        GlobalConfigsToolWindowPanel panel = new GlobalConfigsToolWindowPanel(project);
+        toolWindow.getComponent().getParent().add(panel);
     }
 
     @Override

@@ -90,9 +90,10 @@ public class EncryptPropertyAction extends AnAction
                     isProperty = true;
                 }
             }
-            anActionEvent.getPresentation().setEnabled(isPropertyFile && !isEncrypted && isProperty);
-            anActionEvent.getPresentation().setVisible(isPropertyFile && isProperty);
         }
+
+        anActionEvent.getPresentation().setEnabled(isPropertyFile && !isEncrypted && isProperty);
+        anActionEvent.getPresentation().setVisible(isPropertyFile && isProperty);
     }
 
     @Nullable
