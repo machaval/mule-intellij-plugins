@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>org.mule.tooling.intellij.dataweave</id>
     <name>Data Weave Intellij Plugin</name>
-    <version>0.9</version>
+    <version>0.10</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Data Weave Intellij Plugin. This plugin allows to edit, run debug data weave files.
@@ -10,6 +10,16 @@
     <idea-version since-build="145"/>
 
     <change-notes><![CDATA[
+    <h1>v0.10</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Automatic DW Preview on/off switch</li>
+            <li>Bug fixes and performance improvements</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.9</h1>
       <ul>
        <li>

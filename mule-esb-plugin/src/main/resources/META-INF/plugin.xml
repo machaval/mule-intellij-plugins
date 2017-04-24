@@ -1,13 +1,23 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For Intellij</name>
-    <version>0.9</version>
+    <version>0.10</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule Intellij Plugin.
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.10</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Global configs tool window</li>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.9</h1>
       <ul>
        <li>
