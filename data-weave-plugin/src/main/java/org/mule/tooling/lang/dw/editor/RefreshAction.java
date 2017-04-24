@@ -40,7 +40,7 @@ public class RefreshAction extends AnAction {
             new WriteCommandAction.Simple(project, psiFile) {
                 @Override
                 protected void run() throws Throwable {
-                    editor.runPreview();
+                    editor.runPreview(true);
                 }
             }.execute();
         } catch (Exception e) {

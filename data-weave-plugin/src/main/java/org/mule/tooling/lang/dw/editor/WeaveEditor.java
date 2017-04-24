@@ -86,6 +86,8 @@ public class WeaveEditor implements FileEditor {
 
     Alarm myDocumentAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
 
+    private boolean autoSync = false;
+
     public WeaveEditor(@NotNull Project project, @NotNull VirtualFile virtualFile, final TextEditorProvider provider) {
         this.project = project;
         this.textEditor = new PsiAwareTextEditorImpl(project, virtualFile, provider);
@@ -196,7 +198,7 @@ public class WeaveEditor implements FileEditor {
                                 new WriteCommandAction.Simple(project, psiFile) {
                                     @Override
                                     protected void run() throws Throwable {
-                                        runPreview();
+                                        runPreview(false);
                                     }
                                 }.execute();
                             } catch (Exception e) {
@@ -338,7 +340,7 @@ public class WeaveEditor implements FileEditor {
                                 new WriteCommandAction.Simple(project, psiFile) {
                                     @Override
                                     protected void run() throws Throwable {
-                                        runPreview();
+                                        runPreview(false);
                                     }
                                 }.execute();
                             } catch (Exception e) {
@@ -367,6 +369,7 @@ public class WeaveEditor implements FileEditor {
         if (identifier != null) { //For input tabs only
             actionGroup.add(new OpenSampleAction(editor.getDocument()));
         } else { //Add Refresh to OutputTab
+            actionGroup.add(new AutoSyncAction(this));
             actionGroup.add(new RefreshAction(this));
         }
         tabInfo.setActions(actionGroup, "SchemaOrSample");
@@ -452,7 +455,10 @@ public class WeaveEditor implements FileEditor {
     }
 
 
-    protected void runPreview() {
+    protected void runPreview(boolean forceRefresh) {
+        if (!isAutoSync() && !forceRefresh)
+            return;
+
         final Map<String, Object> payload = new HashMap<String, Object>();
         Map<String, Map<String, Object>> flowVars = new HashMap<String, Map<String, Object>>();
         /*
@@ -493,6 +499,14 @@ public class WeaveEditor implements FileEditor {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public boolean isAutoSync() {
+        return autoSync;
+    }
+
+    public void setAutoSync(boolean autoSync) {
+        this.autoSync = autoSync;
     }
 
     private static Language getLanguage(String mimeType) {
@@ -603,8 +617,7 @@ public class WeaveEditor implements FileEditor {
             final XmlTag rootTag = psiFile1.getRootTag();
             return rootTag.getLocalName().equalsIgnoreCase("mule");
         }
-
-
     }
+
 
 }
