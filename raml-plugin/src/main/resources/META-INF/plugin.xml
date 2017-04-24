@@ -1,10 +1,10 @@
 <idea-plugin version="2">
     <id>org.mule.tooling.intellij.raml</id>
-    <name>Raml Plugin For IntelliJ</name>
+    <name>RAML Plugin For IntelliJ</name>
     <version>0.10</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
-     Raml Editor Plugin
+     RAML Editor Plugin
 
     ]]></description>
 
