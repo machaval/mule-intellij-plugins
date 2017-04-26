@@ -67,7 +67,6 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
         rootModel.addContentEntry(root);
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root);
-            //setMuleFramework(rootModel.getModule());
         });
     }
 
