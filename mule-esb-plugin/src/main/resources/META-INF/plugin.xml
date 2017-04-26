@@ -14,6 +14,7 @@
           <p>Enhancements</p>
           <ul>
             <li>Global configs tool window</li>
+            <li>Mule libraries are detected and added automatically to the project</li>
             <li>Bug fixes</li>
           </ul>
         </li>

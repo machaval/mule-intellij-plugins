@@ -4,6 +4,7 @@ import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
 import com.intellij.facet.FacetTypeRegistry;
 import com.intellij.facet.ModifiableFacetModel;
+import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -23,6 +24,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
@@ -51,6 +53,13 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
     public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
         super.setupRootModel(rootModel);
 
+        addListener(new ModuleBuilderListener() {
+            @Override
+            public void moduleCreated(@NotNull Module module) {
+                setMuleFramework(module);
+            }
+        });
+
         setMuleFacet(rootModel.getModule());
 
         final Project project = rootModel.getProject();
@@ -58,9 +67,8 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
         rootModel.addContentEntry(root);
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
             new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root);
-            setMuleFramework(rootModel.getModule());
+            //setMuleFramework(rootModel.getModule());
         });
-
     }
 
     private VirtualFile createAndGetContentEntry() {
@@ -118,7 +126,6 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
     }
 
     public void setMuleFramework(Module module) {
-        final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
         MuleSdk sdk = MuleSdkManager.getInstance().findFromVersion(muleVersion);
         if (sdk != null) {
             String libraryName = MuleLibraryKind.MULE_LIBRARY_KIND.getKindId() + "-" + muleVersion;
@@ -130,9 +137,8 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
 
                     ApplicationManager.getApplication().runWriteAction(() ->
                     {
-                        ModuleRootModificationUtil.addDependency(module, lib);
+                        final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
                         model.addLibraryEntry(lib);
-                        lib.getModifiableModel().commit();
                         model.commit();
                     });
                     break;
