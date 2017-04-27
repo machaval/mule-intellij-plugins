@@ -19,10 +19,13 @@ import org.jetbrains.annotations.Nullable;
 import org.mule.tooling.esb.launcher.configuration.runner.MuleRunnerCommandLine;
 import org.mule.tooling.esb.launcher.configuration.ui.MuleRunnerEditor;
 import org.mule.tooling.esb.sdk.MuleSdk;
+import org.mule.tooling.esb.util.MuleConfigUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class MuleConfiguration extends ModuleBasedConfiguration implements ModuleRunProfile, RunConfigurationWithSuppressedDefaultDebugAction
 {
@@ -35,9 +38,12 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     private String muleHome;
     private Project project;
 
+    private Module[] modules = new Module[] {};
+
     protected MuleConfiguration(String name, @NotNull ConfigurationFactory factory, Project project)
     {
-        super(name, new JavaRunConfigurationModule(project, true), factory);
+        //super(name, new JavaRunConfigurationModule(project, true), factory);
+        super(name, new MuleRunConfigurationModule(project, true), factory);
         this.project = project;
     }
 
@@ -78,8 +84,15 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     @Override
     public Collection<Module> getValidModules()
     {
+        final List<Module> validModules = new ArrayList<>();
+
         final ModuleManager moduleManager = ModuleManager.getInstance(this.project);
-        return Arrays.asList(moduleManager.getModules());
+        Module[] allModules = moduleManager.getModules();
+        for (Module m : allModules) {
+            if (MuleConfigUtils.isMuleDomainModule(m) || MuleConfigUtils.isMuleModule(m))
+                validModules.add(m);
+        }
+        return validModules;
     }
 
 
@@ -101,9 +114,9 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
             throw new RuntimeConfigurationException(muleHome + " path is not a valid Mule home.");
         }
 
-        if (getModule() == null)
+        if (getModules() == null || getModules().length < 1)
         {
-            throw new RuntimeConfigurationException("Module can not be empty.");
+            throw new RuntimeConfigurationException("Modules list can not be empty.");
         }
         super.checkConfiguration();
     }
@@ -120,12 +133,12 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         return muleHome;
     }
 
-    @Nullable
-    public String getModuleName()
-    {
-        final Module module = getModule();
-        return module != null ? module.getName() : null;
-    }
+//    @Nullable
+//    public String getModuleName()
+//    {
+//        final Module module = getModule();
+//        return module != null ? module.getName() : null;
+//    }
 
 
     public void setVmArgs(String vmArgs)
@@ -138,8 +151,21 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         this.muleHome = muleHome;
     }
 
-    public Module getModule()
-    {
-        return getConfigurationModule().getModule();
+//    public Module getModule()
+//    {
+//        return getConfigurationModule().getModule();
+//    }
+
+    @NotNull
+    @Override
+    public Module[] getModules() {
+        MuleRunConfigurationModule configurationModule = (MuleRunConfigurationModule)this.getConfigurationModule();
+        return configurationModule.getModules();
+    }
+
+    public void setModules(Module[] modules) {
+//        this.modules = modules;
+        MuleRunConfigurationModule configurationModule = (MuleRunConfigurationModule)this.getConfigurationModule();
+        configurationModule.setModules(modules);
     }
 }

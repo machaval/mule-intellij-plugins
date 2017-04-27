@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -27,8 +28,7 @@ import org.mule.tooling.esb.launcher.configuration.MuleConfiguration;
 import org.mule.tooling.esb.util.MuleIcons;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBeforeRunTask>
 {
@@ -94,70 +94,74 @@ public class MuleBeforeRunTasksProvider extends BeforeRunTaskProvider<MuleBefore
     public boolean executeTask(DataContext dataContext, RunConfiguration runConfiguration, ExecutionEnvironment executionEnvironment, MuleBeforeRunTask muleBeforeRunTask)
     {
         final Semaphore targetDone = new Semaphore();
-        final boolean[] result = new boolean[] {true};
+        final List<Boolean> results = new ArrayList<>();
+
         final Project project = executionEnvironment.getProject();
-        final MavenProject mavenProject = getMavenProject(runConfiguration, project);
-        try
-        {
-            ApplicationManager.getApplication().invokeAndWait(new Runnable()
-            {
-                public void run()
-                {
-                    if (!project.isDisposed() && mavenProject != null)
-                    {
-                        FileDocumentManager.getInstance().saveAllDocuments();
-                        final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
-                        final MavenRunner mavenRunner = MavenRunner.getInstance(project);
-                        targetDone.down();
-                        (new Task.Backgroundable(project, TasksBundle.message("maven.tasks.executing"), true)
-                        {
-                            public void run(@NotNull ProgressIndicator indicator)
-                            {
-                                try
-                                {
-                                    MavenRunnerParameters params =
-                                            new MavenRunnerParameters(true, mavenProject.getDirectory(), ParametersListUtil.parse("package"), explicitProfiles.getEnabledProfiles(),
-                                                    explicitProfiles.getDisabledProfiles());
-                                    result[0] = mavenRunner.runBatch(Collections.singletonList(params), null, null, TasksBundle.message("maven.tasks.executing"), indicator);
-                                }
-                                finally
-                                {
-                                    targetDone.up();
-                                }
-                            }
 
-                            public boolean shouldStartInBackground()
-                            {
-                                return MavenRunner.getInstance(project).getSettings().isRunMavenInBackground();
-                            }
+        MuleConfiguration muleConfiguration = (MuleConfiguration) runConfiguration;
 
-                            public void processSentToBackground()
-                            {
-                                MavenRunner.getInstance(project).getSettings().setRunMavenInBackground(true);
-                            }
-                        }).queue();
+        Module[] modules = muleConfiguration.getModules();
+
+        for (Module nextModule : modules) {
+            //final MavenProject mavenProject = getMavenProject(runConfiguration, project);
+            final MavenProject mavenProject = getMavenProject(nextModule);
+            try {
+                ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+                    public void run() {
+                        if (!project.isDisposed() && mavenProject != null) {
+                            FileDocumentManager.getInstance().saveAllDocuments();
+                            final MavenExplicitProfiles explicitProfiles = MavenProjectsManager.getInstance(project).getExplicitProfiles();
+                            final MavenRunner mavenRunner = MavenRunner.getInstance(project);
+                            targetDone.down();
+                            (new Task.Backgroundable(project, TasksBundle.message("maven.tasks.executing"), true) {
+                                public void run(@NotNull ProgressIndicator indicator) {
+                                    try {
+                                        MavenRunnerParameters params =
+                                                new MavenRunnerParameters(true, mavenProject.getDirectory(), ParametersListUtil.parse("package"), explicitProfiles.getEnabledProfiles(),
+                                                        explicitProfiles.getDisabledProfiles());
+                                        boolean result = mavenRunner.runBatch(Collections.singletonList(params), null, null, TasksBundle.message("maven.tasks.executing"), indicator);
+                                        results.add(result);
+                                    } finally {
+                                        targetDone.up();
+                                    }
+                                }
+
+                                public boolean shouldStartInBackground() {
+                                    return MavenRunner.getInstance(project).getSettings().isRunMavenInBackground();
+                                }
+
+                                public void processSentToBackground() {
+                                    MavenRunner.getInstance(project).getSettings().setRunMavenInBackground(true);
+                                }
+                            }).queue();
+                        }
                     }
-                }
-            }, ModalityState.NON_MODAL);
+                }, ModalityState.NON_MODAL);
+            } catch (Exception exeception) {
+                return false;
+            }
+            targetDone.waitFor();
         }
-        catch (Exception exeception)
-        {
-            return false;
+
+        boolean endResult = true;
+
+        for (Boolean nextResult : results) {
+            endResult = endResult && nextResult;
         }
-        targetDone.waitFor();
-        return result[0];
+
+        return endResult;
     }
 
-    private MavenProject getMavenProject(RunConfiguration runConfiguration, Project project)
-    {
-        final MavenProjectsManager instance = MavenProjectsManager.getInstance(project);
-
-        if (runConfiguration instanceof MuleConfiguration)
-        {
-            MuleConfiguration muleConfiguration = (MuleConfiguration) runConfiguration;
-            return instance.findProject(muleConfiguration.getModule());
-        }
-        return null;
+    private MavenProject getMavenProject(Module module) { //RunConfiguration runConfiguration, Project project)
+        final MavenProjectsManager instance = MavenProjectsManager.getInstance(module.getProject());
+        return instance.findProject(module);
+//
+//        if (runConfiguration instanceof MuleConfiguration)
+//        {
+//            MuleConfiguration muleConfiguration = (MuleConfiguration) runConfiguration;
+//            return instance.findProject(muleConfiguration.getModule());
+//        }
+//        return null;
     }
 
 

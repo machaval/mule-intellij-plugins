@@ -43,17 +43,23 @@ public class MuleDebugProcess extends XDebugProcess
     {
         super(session);
         this.muleDebuggerSession = muleDebuggerSession;
-        this.muleBreakpointHandler = new MuleBreakpointHandler(getModule(), muleDebuggerSession);
+        this.muleBreakpointHandler = new MuleBreakpointHandler(muleDebuggerSession);
         this.editorProperties = new MuleDebuggerEditorProperties();
         this.processHandler = result.getProcessHandler();
         this.executionConsole = result.getExecutionConsole();
         init();
     }
 
-    private Module getModule()
-    {
-        return ((MuleConfiguration) getSession().getRunProfile()).getModule();
-    }
+//    private Module getModule()
+//    {
+//        Module[] m = ((MuleConfiguration) getSession().getRunProfile()).getModules();
+//        if (m != null && m.length > 0) {
+//            return m[0];
+//        }
+//
+//        return null;
+//        //return ((MuleConfiguration) getSession().getRunProfile()).getModule();
+//    }
 
     public void init()
     {
@@ -144,7 +150,8 @@ public class MuleDebugProcess extends XDebugProcess
     @Override
     public void runToPosition(@NotNull XSourcePosition xSourcePosition, @Nullable XSuspendContext context)
     {
-        muleDebuggerSession.runToCursor(getMulePath(getXmlTagAt(getModule().getProject(), xSourcePosition)));
+        //muleDebuggerSession.runToCursor(getMulePath(getXmlTagAt(getModule().getProject(), xSourcePosition)));
+        muleDebuggerSession.runToCursor(getMulePath(getXmlTagAt(getProject(), xSourcePosition)));
     }
 
     @Override

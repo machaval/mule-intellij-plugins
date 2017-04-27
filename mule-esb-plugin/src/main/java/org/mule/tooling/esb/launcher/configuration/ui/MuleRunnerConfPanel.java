@@ -1,6 +1,5 @@
 package org.mule.tooling.esb.launcher.configuration.ui;
 
-import com.intellij.application.options.ModulesComboBox;
 import org.mule.tooling.esb.sdk.ui.MuleSdkComboSelection;
 
 import javax.swing.*;
@@ -9,9 +8,9 @@ public class MuleRunnerConfPanel
 {
     private JTextField vmArgsField;
     private JPanel mainPanel;
-    private ModulesComboBox moduleCombo;
+    //private ModulesComboBox moduleCombo;
     private MuleSdkComboSelection muleSdkSelector;
-
+    private MuleModulesCheckBoxList modulesList;
 
 
     public MuleRunnerConfPanel()
@@ -34,8 +33,9 @@ public class MuleRunnerConfPanel
         return muleSdkSelector.getMuleSdk();
     }
 
-    public ModulesComboBox getModuleCombo()
-    {
-        return moduleCombo;
-    }
+    public MuleModulesCheckBoxList getModulesList() { return modulesList; }
+//    public ModulesComboBox getModuleCombo()
+//    {
+//        return moduleCombo;
+//    }
 }

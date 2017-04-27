@@ -48,15 +48,6 @@ public class MuleProjectManager extends AbstractProjectComponent {
                                 String appPath = Paths.get(moduleContentRoot, MuleConfigUtils.CONFIG_RELATIVE_PATH).toString();
 
                                 PsiFile psiFile = PsiManager.getInstance(MuleProjectManager.this.myProject).findFile(event.getFile());
-
-                                /** TODO - this does not work becase rootTag is empty
-                                 logger.warn("*** PSI FILE IS " + psiFile);
-                                 final XmlFile psiFile1 = (XmlFile) psiFile;
-                                 final XmlTag rootTag = psiFile1.getRootTag();
-                                 logger.warn("*** ROOT TAG IS " + rootTag);
-                                 logger.warn("*** LOCAL NAME IS " + rootTag.getLocalName());
-                                 */
-
                                 if (psiFile != null && fileAbsolutePath.startsWith(appPath)) { //The file was created in src/main/app
                                     if (psiFile.getFileType() == StdFileTypes.XML) { //This is config file
                                         String pathRelative = MulePathUtils.getRelativePath(fileAbsolutePath, appPath);

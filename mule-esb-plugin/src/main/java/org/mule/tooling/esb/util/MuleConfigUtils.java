@@ -6,10 +6,13 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NonNavigatable;
 import com.intellij.psi.*;
@@ -549,16 +552,19 @@ public class MuleConfigUtils
     }
 
     @NotNull
-    public static Breakpoint toMuleBreakpoint(Module module, XLineBreakpoint<XBreakpointProperties> lineBreakpoint)
+    public static Breakpoint toMuleBreakpoint(Project project, XLineBreakpoint<XBreakpointProperties> lineBreakpoint)
     {
         final XSourcePosition sourcePosition = lineBreakpoint.getSourcePosition();
         final XExpression conditionExpression = lineBreakpoint.getConditionExpression();
-        return toMuleBreakpoint(module, sourcePosition, conditionExpression);
+        return toMuleBreakpoint(project, sourcePosition, conditionExpression);
     }
 
     @NotNull
-    public static Breakpoint toMuleBreakpoint(Module module, XSourcePosition sourcePosition, XExpression conditionExpression)
+    public static Breakpoint toMuleBreakpoint(Project project, XSourcePosition sourcePosition, XExpression conditionExpression)
     {
+        VirtualFile file = sourcePosition.getFile();
+        Module module = ModuleUtilCore.findModuleForFile(file, project);
+
         final String conditionScript = conditionExpression != null ? asMelScript(conditionExpression.getExpression()) : null;
         final XmlTag tag = getXmlTagAt(module.getProject(), sourcePosition);
         if (tag != null)
@@ -802,9 +808,29 @@ public class MuleConfigUtils
     }
 
     public static boolean isMuleModule(Module module) {
+        boolean muleModule = false;
         ProjectFacetManager manager = ProjectFacetManager.getInstance(module.getProject());
         final List<MuleFacet> facets = manager.getFacets(MuleFacetType.TYPE_ID, new Module[] { module });
-        return (facets != null && !facets.isEmpty());
+        muleModule = (facets != null && !facets.isEmpty());
+        if (!muleModule) { //Check for src/main/apps too, since not all modules may have facet added
+            VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+            for (VirtualFile f : contentRoots) {
+                VirtualFile deployProperties = f.findFileByRelativePath("src/main/app/mule-deploy.properties");
+                if (deployProperties != null && deployProperties.exists() && deployProperties.isValid())
+                    return true;
+            }
+        }
+        return muleModule;
+    }
+
+    public static boolean isMuleDomainModule(Module module) {
+        VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+        for (VirtualFile f : contentRoots) {
+            VirtualFile domainConfig = f.findFileByRelativePath("src/main/domain/mule-domain-config.xml");
+            if (domainConfig != null && domainConfig.exists() && domainConfig.isValid())
+                return true;
+        }
+        return false;
     }
 
     public static List<XmlTag> findFlowRefsForFlow(@NotNull XmlTag flow) {

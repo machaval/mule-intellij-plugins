@@ -6,6 +6,7 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.esb.launcher.configuration.MuleConfiguration;
 import org.mule.tooling.esb.launcher.configuration.archive.MuleAppManager;
 import org.mule.tooling.esb.sdk.MuleClassPath;
+import org.mule.tooling.esb.util.MuleConfigUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,16 +114,31 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
     }
 
     private void deployApp() throws ExecutionException {
-        //Get the zip and deploy it
-        final File file = MuleAppManager.getInstance(model.getProject()).getMuleApp(model.getModule());
         final String muleHome = model.getMuleHome();
         final File apps = new File(muleHome, "apps");
+        final File domains = new File(muleHome, "domains");
+
         try {
             FileUtils.cleanDirectory(apps);
-            FileUtil.copy(file, new File(apps, model.getModuleName() + ".zip"));
-            //FileUtil.copy(file, new File(apps, model.getProject().getName() + ".zip"));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        Module[] modules = model.getModules();
+
+        for (Module m : modules) {
+            //Get the zip and deploy it
+            final File file = MuleAppManager.getInstance(model.getProject()).getMuleApp(m);
+
+            try {
+                if (MuleConfigUtils.isMuleDomainModule(m))
+                    FileUtil.copy(file, new File(domains, m.getName() + ".zip"));
+                else
+                    FileUtil.copy(file, new File(apps, m.getName() + ".zip"));
+                //FileUtil.copy(file, new File(apps, model.getProject().getName() + ".zip"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -31,7 +31,8 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
     @Override
     protected void resetEditorFrom(MuleConfiguration runnerConfiguration)
     {
-        this.configurationPanel.getModuleCombo().setModules(runnerConfiguration.getValidModules());
+        this.configurationPanel.getModulesList().setModules(runnerConfiguration.getValidModules());
+/*
         Module selectedModule = runnerConfiguration.getModule();
         if (selectedModule == null)
         {
@@ -42,14 +43,24 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
             }
         }
         this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
+*/
+
+        Module[] selectedModules = runnerConfiguration.getModules();
+        if (selectedModules != null) {
+            for (Module m : selectedModules)
+                this.configurationPanel.getModulesList().selectModule(m, true);
+        }
+
         this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
         String muleHome = runnerConfiguration.getMuleHome();
         if (StringUtils.isBlank(muleHome))
         {
-            final MuleSdk from = MuleSdk.getFrom(selectedModule);
-            if (from != null)
-            {
-                muleHome = from.getMuleHome();
+            if (selectedModules != null && selectedModules.length > 0) {
+            final MuleSdk from = MuleSdk.getFrom(selectedModules[0]);
+                if (from != null)
+                {
+                    muleHome = from.getMuleHome();
+                }
             }
         }
         this.configurationPanel.getMuleHome().setSelectedItem(MuleSdkManager.getInstance().findSdk(muleHome));
@@ -67,10 +78,12 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
         runnerConfiguration.setVmArgs(this.configurationPanel.getVmArgsField().getText());
         final Object selectedItem = this.configurationPanel.getMuleHome().getSelectedItem();
         runnerConfiguration.setMuleHome(selectedItem instanceof MuleSdk ? ((MuleSdk) selectedItem).getMuleHome() : "");
-        final Module selectedModule = this.configurationPanel.getModuleCombo().getSelectedModule();
-        if (selectedModule != null)
+
+        Module[] selectedModules = this.configurationPanel.getModulesList().getSelectedModules(runnerConfiguration.getProject());
+//        final Module selectedModule = this.configurationPanel.getModuleCombo().getSelectedModule();
+        if (selectedModules != null)
         {
-            runnerConfiguration.setModule(selectedModule);
+            runnerConfiguration.setModules(selectedModules);
         }
     }
 

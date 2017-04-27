@@ -18,6 +18,7 @@ import org.mule.tooling.esb.sdk.MuleSdkManager;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 
 import javax.swing.*;
+import java.util.List;
 
 public class MuleFrameworkConfigurable extends FrameworkSupportInModuleConfigurable {
     @Nullable
@@ -52,16 +53,24 @@ public class MuleFrameworkConfigurable extends FrameworkSupportInModuleConfigura
             }
         }
 
-        Project myProject = module.getProject();
-        if (!MuleConfigUtils.isMuleProject(myProject)) {
+        //Project myProject = module.getProject();
+        //if (!MuleConfigUtils.isMuleProject(myProject)) {
+
+        if (!hasFacet(module)) {
             MuleFacetType type = (MuleFacetType) FacetTypeRegistry.getInstance().findFacetType(MuleFacet.ID);
             MuleFacetConfiguration configuration = type.createDefaultConfiguration();
             if (muleHome != null)
                 configuration.setPathToSdk(muleHome);
-            Facet facet = type.createFacet(module, "Mule", configuration, null);
+            Facet facet = type.createFacet(module, type.getPresentableName(), configuration, null);
             ModifiableFacetModel model = FacetManager.getInstance(module).createModifiableModel();
             model.addFacet(facet);
             model.commit();
         }
+    }
+
+    private boolean hasFacet(Module module) {
+        ProjectFacetManager manager = ProjectFacetManager.getInstance(module.getProject());
+        final List<MuleFacet> facets = manager.getFacets(MuleFacetType.TYPE_ID, new Module[] { module });
+        return (facets != null && !facets.isEmpty());
     }
 }
