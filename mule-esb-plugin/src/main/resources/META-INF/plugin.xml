@@ -13,6 +13,7 @@
        <li>
           <p>Enhancements</p>
           <ul>
+            <li>Run configurations now support running multiple Mule modules at once</li>
             <li>Global configs tool window</li>
             <li>Mule libraries are detected and added automatically to the project</li>
             <li>Bug fixes</li>
