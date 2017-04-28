@@ -6,6 +6,8 @@ import com.intellij.ide.util.treeView.IndexComparator;
 import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.ide.util.treeView.smartTree.TreeModel;
 import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.util.Disposer;
@@ -113,12 +115,14 @@ public class GlobalConfigsTreeStructure extends SimpleTreeStructure {
     public class MuleConfigNode extends NamedNode {
         private PsiFile myXmlFile;
         private Project myProject;
+        private Module myModule;
 
         public MuleConfigNode(SimpleNode aParent, PsiFile xmlFile) {
             super(aParent, xmlFile.getName());
             myXmlFile = xmlFile;
             myProject = xmlFile.getProject();
             myClosedIcon = MuleIcons.MuleFileType;
+            myModule = ModuleUtilCore.findModuleForFile(myXmlFile.getVirtualFile(), myProject);
             updatePresentation();
         }
 
@@ -126,6 +130,8 @@ public class GlobalConfigsTreeStructure extends SimpleTreeStructure {
             PresentationData presentation = getPresentation();
             presentation.clear();
             presentation.addText(myName, SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
+            if (myModule != null)
+                presentation.addText("  (" + myModule.getName() + ")", SimpleTextAttributes.GRAYED_ITALIC_ATTRIBUTES);
             update(presentation);
         }
 
