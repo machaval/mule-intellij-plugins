@@ -26,10 +26,7 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
     List all elements of type MuleElementType.CONFIG or MuleElementType.TRANSPORT_CONNECTOR:
        MuleConfigUtils.getMuleElementTypeFromXmlElement(XmlTag xmlTag)
 
-    PsiTree listener, automatic updates when XML files are manually edited
-    Issue with tree cell rezising?
     How to implement test connection?
-
 
 1) list all elements that are of abstractExtensionType,
 2) iterate over each element,
