@@ -16,7 +16,8 @@ import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
@@ -24,6 +25,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
@@ -39,6 +41,7 @@ import org.mule.tooling.esb.util.MuleIcons;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.List;
 
 public class MuleMavenModuleBuilder extends MavenModuleBuilder implements SourcePathsBuilder, MuleModuleBuilder {
 
@@ -125,24 +128,44 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
     }
 
     public void setMuleFramework(Module module) {
-        MuleSdk sdk = MuleSdkManager.getInstance().findFromVersion(muleVersion);
-        if (sdk != null) {
-            String libraryName = MuleLibraryKind.MULE_LIBRARY_KIND.getKindId() + "-" + muleVersion;
-            LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(LibraryTablesRegistrar.APPLICATION_LEVEL, module.getProject());
+        ApplicationManager.getApplication().runWriteAction(() ->
+        {
+            Library muleLibrary = null;
+            MuleSdk sdk = MuleSdkManager.getInstance().findFromVersion(muleVersion);
+            if (sdk != null) {
+                String libraryName = MuleLibraryKind.MULE_LIBRARY_KIND.getKindId() + "-" + muleVersion;
+                LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(LibraryTablesRegistrar.APPLICATION_LEVEL, module.getProject());
 
-            Library[] libs = table.getLibraries();
-            for (final Library lib : libs) {
-                if (lib.getName().equalsIgnoreCase(libraryName)) {
-
-                    ApplicationManager.getApplication().runWriteAction(() ->
-                    {
-                        final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-                        model.addLibraryEntry(lib);
-                        model.commit();
-                    });
-                    break;
+                Library[] libs = table.getLibraries();
+                for (final Library lib : libs) {
+                    if (lib.getName().equalsIgnoreCase(libraryName)) {
+                        muleLibrary = lib;
+                        break;
+                    }
                 }
+
+                if (muleLibrary == null) {//No global Mule library found, create one
+                    final LibraryTable.ModifiableModel projectTableModel = table.getModifiableModel();
+                    muleLibrary = projectTableModel.createLibrary(libraryName, MuleLibraryKind.MULE_LIBRARY_KIND);
+                    final Library.ModifiableModel libraryModel = muleLibrary.getModifiableModel();
+                    List<File> entries = sdk.getLibraryEntries();
+                    for (File nextEntry : entries) {
+                        String pathUrl = VirtualFileManager.constructUrl(LocalFileSystem.PROTOCOL, nextEntry.getAbsolutePath());
+                        VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(pathUrl);
+
+                        if (file != null) {
+                            libraryModel.addRoot(file, OrderRootType.CLASSES);
+                        }
+                    }
+                    libraryModel.commit();
+                    projectTableModel.commit();
+                }
+
+                final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
+                model.addLibraryEntry(muleLibrary);
+                model.commit();
+
             }
-        }
+        });
     }
 }
