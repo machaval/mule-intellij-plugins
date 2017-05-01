@@ -20,7 +20,7 @@ public class MuleLibraryPresentationProvider extends LibraryPresentationProvider
 
     @Override
     public String getDescription(@NotNull MuleLibraryProperties properties) {
-        return String.format("Mule - %s", properties.getVersion());
+        return String.format(MuleLibraryKind.MULE_LIBRARY_KIND_ID + "-%s", properties.getVersion());
     }
 
     @Override

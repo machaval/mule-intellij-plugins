@@ -6,6 +6,6 @@
 ">
     <flow name="${NAME}Flow">
         <description>Example Flow for ${NAME}</description>
-        <logger message="#[payload]" />
+        <logger message="#[message.payload]" />
     </flow>
 </mule>

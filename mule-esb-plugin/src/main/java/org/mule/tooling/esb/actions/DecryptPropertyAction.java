@@ -92,9 +92,9 @@ public class DecryptPropertyAction extends AnAction {
                 isEncrypted = (propertyValue.startsWith("![") && propertyValue.endsWith("]"));
                 isProperty = true;
             }
-            anActionEvent.getPresentation().setEnabled(isPropertyFile && isEncrypted && isProperty);
-            anActionEvent.getPresentation().setVisible(isPropertyFile && isProperty);
         }
+        anActionEvent.getPresentation().setEnabled(isPropertyFile && isEncrypted && isProperty);
+        anActionEvent.getPresentation().setVisible(isPropertyFile && isProperty);
     }
 
     @Nullable
@@ -107,7 +107,7 @@ public class DecryptPropertyAction extends AnAction {
         else
             selectedPropertyPsi = LangDataKeys.PSI_ELEMENT.getData(context);
 
-        if (selectedPropertyPsi != null) {
+        if (selectedPropertyPsi != null && selectedPropertyPsi instanceof IProperty) {
             selectedProperty = (IProperty) selectedPropertyPsi;
         }
         return selectedProperty;

@@ -12,8 +12,8 @@
     <border type="none"/>
     <children>
       <grid id="d33f1" layout-manager="FormLayout">
-        <rowspec value="center:max(d;4px):noGrow"/>
-        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:d:grow"/>
+        <rowspec value="top:3dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
@@ -27,7 +27,7 @@
         <properties>
           <toolTipText value="Support the project by giving it a Star on GitHub or making a donation."/>
         </properties>
-        <border type="none" title="MuleESB Runner - "/>
+        <border type="none" title="Mule Runner "/>
         <children>
           <component id="a4aff" class="javax.swing.JLabel">
             <constraints>
@@ -58,28 +58,38 @@
               <text value="Mule "/>
             </properties>
           </component>
-          <component id="94f05" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <text value="Module"/>
-            </properties>
-          </component>
-          <component id="75cb0" class="com.intellij.application.options.ModulesComboBox" binding="moduleCombo">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties/>
-          </component>
           <nested-form id="1276d" form-file="org/mule/tooling/esb/sdk/ui/MuleSdkComboSelection.form" binding="muleSdkSelector">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
           </nested-form>
+          <scrollpane id="269cb">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms top="0" left="1" bottom="0" right="2" defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+            <border type="line">
+              <font/>
+              <color color="-4934476"/>
+            </border>
+            <children>
+              <component id="6a141" class="org.mule.tooling.esb.launcher.configuration.ui.MuleModulesCheckBoxList" binding="modulesList">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="94f05" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="Modules"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

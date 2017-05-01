@@ -40,6 +40,13 @@ public class MuleApplicationConfigurationProducer extends JavaRunConfigurationPr
     public boolean isConfigurationFromContext(MuleConfiguration muleConfiguration, ConfigurationContext configurationContext)
     {
         final Module module = configurationContext.getModule();
-        return module != null && module.equals(muleConfiguration.getModule());
+        if (module != null) {
+            Module[] modules = muleConfiguration.getModules();
+            for (Module m : modules) {
+                if (module.equals(m))
+                    return true;
+            }
+        }
+        return false;
     }
 }

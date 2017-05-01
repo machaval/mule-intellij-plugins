@@ -13,20 +13,20 @@ import org.mule.tooling.esb.util.MuleConfigUtils;
 public class MuleBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>
 {
 
-    private Module module;
+    //private Module module;
     private MuleDebuggerSession debuggerManager;
 
-    public MuleBreakpointHandler(@NotNull Module module, MuleDebuggerSession debuggerManager)
+    public MuleBreakpointHandler(MuleDebuggerSession debuggerManager)
     {
         super(MuleBreakpointType.class);
-        this.module = module;
+//        this.module = module;
         this.debuggerManager = debuggerManager;
     }
 
     @Override
     public void registerBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> xBreakpoint)
     {
-        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(module, xBreakpoint);
+        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(debuggerManager.getProject(), xBreakpoint);
         System.out.println("breakpoint added = " + breakpoint.getApplicationName() + "  , path  " + breakpoint.getPath());
         debuggerManager.addBreakpoint(breakpoint);
     }
@@ -34,7 +34,7 @@ public class MuleBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XB
     @Override
     public void unregisterBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> xBreakpoint, boolean temporary)
     {
-        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(module, xBreakpoint);
+        final Breakpoint breakpoint = MuleConfigUtils.toMuleBreakpoint(debuggerManager.getProject(), xBreakpoint);
         System.out.println("breakpoint added = " + breakpoint.getApplicationName() + "  , path  " + breakpoint.getPath());
         debuggerManager.removeBreakpoint(breakpoint);
     }

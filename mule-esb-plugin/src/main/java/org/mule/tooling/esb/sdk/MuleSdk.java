@@ -160,8 +160,9 @@ public class MuleSdk {
                     .orderEntries().recursively().librariesOnly().exportedOnly();
             final String[] home = new String[1];
             enumerator.forEachLibrary(library -> {
-
-                if (MuleLibraryKind.MULE_LIBRARY_KIND.equals(((LibraryEx) library).getKind())) {
+                if (MuleLibraryKind.MULE_LIBRARY_KIND.equals(((LibraryEx) library).getKind()) &&
+                        library.getFiles(OrderRootType.CLASSES) != null &&
+                        library.getFiles(OrderRootType.CLASSES).length > 0) {
                     home[0] = getMuleHome(library.getFiles(OrderRootType.CLASSES)[0]);
                     return false;
                 } else {

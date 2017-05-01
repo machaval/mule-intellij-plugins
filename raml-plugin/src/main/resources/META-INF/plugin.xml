@@ -1,14 +1,24 @@
 <idea-plugin version="2">
     <id>org.mule.tooling.intellij.raml</id>
-    <name>Raml Plugin For IntelliJ</name>
-    <version>0.9</version>
+    <name>RAML Plugin For IntelliJ</name>
+    <version>0.10</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
-     Raml Editor Plugin
+     RAML Editor Plugin
 
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.10</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Code style settings added, default indent set to 2
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.9</h1>
       <ul>
        <li>
@@ -67,6 +77,8 @@
         <internalFileTemplate name="RAML File"/>
 
         <externalAnnotator language="RAML" implementationClass="org.mule.tooling.lang.raml.annotator.RamlAnnotator"/>
+        <langCodeStyleSettingsProvider implementation="org.mule.tooling.lang.raml.codestyle.RamlLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider implementation="org.mule.tooling.lang.raml.codestyle.RamlCodeStyleSettingsProvider"/>
     </extensions>
 
     <application-components>

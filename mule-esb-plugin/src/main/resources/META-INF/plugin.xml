@@ -1,13 +1,25 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
-    <name>Mule ESB Plugin For Intellij</name>
-    <version>0.9</version>
+    <name>Mule ESB Plugin For IntelliJ</name>
+    <version>0.10</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
-     Mule Intellij Plugin.
+     Mule ESB Plugin For IntelliJ.
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.10</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Run configurations now support running multiple Mule modules at once</li>
+            <li>Global configs tool window</li>
+            <li>Mule libraries are detected and added automatically to the project</li>
+            <li>Bug fixes</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.9</h1>
       <ul>
        <li>
@@ -191,8 +203,8 @@
 <!--
 
         <toolWindow id="Global Configs" secondary="false" icon="/mulesoft-icon.png" anchor="right"
-                    factoryClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"
-                    conditionClass="org.mule.tooling.esb.toolwindow.GlobalConfigsToolWindowFactory"/>
+                    factoryClaorg.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowFactorytory"
+                    conditionClaorg.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowFactorytory"/>
 -->
     </extensions>
 

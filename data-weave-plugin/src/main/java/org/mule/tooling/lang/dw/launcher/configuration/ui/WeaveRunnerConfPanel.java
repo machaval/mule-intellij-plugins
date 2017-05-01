@@ -148,10 +148,13 @@ public class WeaveRunnerConfPanel
         @Override
         public void run(AnActionButton button)
         {
-            final WeaveInput newOptions = new WeaveInput("in" + myModel.getItems().size(), "");
+            final WeaveInput newOptions = new WeaveInput("in" + this.myModel.getItems().size(), "");
             if (showEditorDialog(newOptions))
             {
-                myModel.addRow(newOptions);
+             //   this.myModel.addRow(newOptions); -- throws UnsupportedOperationException?
+                final ArrayList<WeaveInput> weaveInputs = new ArrayList<>(myModel.getItems());
+                weaveInputs.add(newOptions);
+                myModel.setItems(weaveInputs);
             }
         }
     }

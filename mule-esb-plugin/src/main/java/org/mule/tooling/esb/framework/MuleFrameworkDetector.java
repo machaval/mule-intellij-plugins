@@ -34,6 +34,7 @@ import com.intellij.util.indexing.FileContent;
 import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.esb.sdk.MuleSdk;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -65,23 +66,34 @@ public class MuleFrameworkDetector extends FrameworkDetector
     @Override
     public ElementPattern<FileContent> createSuitableFilePattern()
     {
-        return FileContentPattern.fileContent().withName("mule-app.properties");
+        return FileContentPattern.fileContent().andOr(
+                        FileContentPattern.fileContent().withName("mule-app.properties"),
+                        FileContentPattern.fileContent().withName("mule-domain-config.xml"));
+
+        //        new FileContent()
+//        return FileContentPattern.fileContent().oneOf(FileContentPattern.fileContent().withName("mule-app.properties")., FileContentPattern.fileContent().withName("mule-domain-config.xml"));
+
+                //.withName("mule-app.properties")..withName("mule-domain-config.xml");
     }
 
     @Override
     public List<? extends DetectedFrameworkDescription> detect(@NotNull Collection<VirtualFile> collection, @NotNull FrameworkDetectionContext context)
     {
+        List<MuleFrameworkDetected> detectedFrameworkDescriptions = new ArrayList<>();
 
         if (!collection.isEmpty() && context.getProject() != null)
         {
-            final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
-            if (MuleSdk.getFrom(moduleForFile) == null)
-            {
-                return Collections.singletonList(new MuleFrameworkDetected(this, collection, context));
+            for (VirtualFile nextDetectedFile : collection) {
+                final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(nextDetectedFile);
+                if (MuleSdk.getFrom(moduleForFile) == null) {
+                    final List<VirtualFile> relatedFiles = new ArrayList<>();
+                    relatedFiles.add(nextDetectedFile);
+                    detectedFrameworkDescriptions.add(new MuleFrameworkDetected(this, relatedFiles, context));
+                }
             }
 
         }
-        return Collections.emptyList();
+        return detectedFrameworkDescriptions;
     }
 
     private class MuleFrameworkDetected extends DetectedFrameworkDescription
@@ -120,12 +132,12 @@ public class MuleFrameworkDetector extends FrameworkDetector
         @Override
         public void setupFramework(@NotNull ModifiableModelsProvider modifiableModelsProvider, @NotNull ModulesProvider modulesProvider)
         {
-            final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
-            final AddSupportForSingleFrameworkDialog dialog = AddSupportForSingleFrameworkDialog.createDialog(moduleForFile, new MuleFrameworkSupportProvider());
-
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    final Module moduleForFile = ProjectRootManager.getInstance(context.getProject()).getFileIndex().getModuleForFile(collection.iterator().next());
+                    final AddSupportForSingleFrameworkDialog dialog = AddSupportForSingleFrameworkDialog.createDialog(moduleForFile, new MuleFrameworkSupportProvider());
+                    dialog.setTitle(dialog.getTitle() + " - " + moduleForFile.getName());
                     dialog.showAndGet();
                 }
             });

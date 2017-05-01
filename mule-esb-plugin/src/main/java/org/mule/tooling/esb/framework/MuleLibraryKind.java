@@ -5,11 +5,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class MuleLibraryKind extends PersistentLibraryKind<MuleLibraryProperties>
 {
+    public static String MULE_LIBRARY_KIND_ID = "MuleESB";
+
     public static MuleLibraryKind MULE_LIBRARY_KIND = new MuleLibraryKind();
 
     public MuleLibraryKind()
     {
-        super("Mule");
+        super(MULE_LIBRARY_KIND_ID);
     }
 
     @NotNull
