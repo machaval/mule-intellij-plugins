@@ -33,12 +33,15 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     public static final String PREFIX = "MuleESBConfig-";
     public static final String VM_ARGS_FIELD = PREFIX + "VmArgs";
     public static final String MULE_HOME_FIELD = PREFIX + "MuleHome";
+    public static final String CLEAR_DATA_FIELD = PREFIX + "ClearData";
 
     private String vmArgs;
     private String muleHome;
-    private Project project;
+    private String clearData;
 
     private Module[] modules = new Module[] {};
+
+    private Project project;
 
     protected MuleConfiguration(String name, @NotNull ConfigurationFactory factory, Project project)
     {
@@ -68,6 +71,8 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         super.readExternal(element);
         this.vmArgs = JDOMExternalizerUtil.readField(element, VM_ARGS_FIELD);
         this.muleHome = JDOMExternalizerUtil.readField(element, MULE_HOME_FIELD);
+        this.clearData = JDOMExternalizerUtil.readField(element, CLEAR_DATA_FIELD);
+
         getConfigurationModule().readExternal(element);
     }
 
@@ -78,6 +83,8 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         // Stores the values of this class into the parent
         JDOMExternalizerUtil.writeField(element, VM_ARGS_FIELD, this.getVmArgs());
         JDOMExternalizerUtil.writeField(element, MULE_HOME_FIELD, this.getMuleHome());
+        JDOMExternalizerUtil.writeField(element, CLEAR_DATA_FIELD, this.getClearData());
+
         getConfigurationModule().writeExternal(element);
     }
 
@@ -133,28 +140,23 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
         return muleHome;
     }
 
-//    @Nullable
-//    public String getModuleName()
-//    {
-//        final Module module = getModule();
-//        return module != null ? module.getName() : null;
-//    }
-
-
-    public void setVmArgs(String vmArgs)
-    {
+    public void setVmArgs(@Nullable String vmArgs) {
         this.vmArgs = vmArgs;
     }
 
-    public void setMuleHome(String muleHome)
+    public void setMuleHome(@Nullable String muleHome)
     {
         this.muleHome = muleHome;
     }
 
-//    public Module getModule()
-//    {
-//        return getConfigurationModule().getModule();
-//    }
+    @Nullable
+    public String getClearData() {
+        return clearData;
+    }
+
+    public void setClearData(@Nullable String clearData) {
+        this.clearData = clearData;
+    }
 
     @NotNull
     @Override

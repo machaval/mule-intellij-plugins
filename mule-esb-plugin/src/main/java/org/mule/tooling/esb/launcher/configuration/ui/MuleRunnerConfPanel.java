@@ -12,6 +12,10 @@ public class MuleRunnerConfPanel
     private MuleSdkComboSelection muleSdkSelector;
     private MuleModulesCheckBoxList modulesList;
 
+    private JRadioButton alwaysRadioButton;
+    private JRadioButton neverRadioButton;
+    private JRadioButton promptRadioButton;
+
 
     public MuleRunnerConfPanel()
     {
@@ -34,8 +38,16 @@ public class MuleRunnerConfPanel
     }
 
     public MuleModulesCheckBoxList getModulesList() { return modulesList; }
-//    public ModulesComboBox getModuleCombo()
-//    {
-//        return moduleCombo;
-//    }
+
+    public JRadioButton getAlwaysRadioButton() {
+        return alwaysRadioButton;
+    }
+
+    public JRadioButton getNeverRadioButton() {
+        return neverRadioButton;
+    }
+
+    public JRadioButton getPromptRadioButton() {
+        return promptRadioButton;
+    }
 }

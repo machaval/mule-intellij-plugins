@@ -15,6 +15,9 @@ import java.util.Collection;
 
 public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
 {
+    public static String CLEAR_DATA_ALWAYS = "Always";
+    public static String CLEAR_DATA_NEVER = "Never";
+    public static String CLEAR_DATA_PROMPT = "Prompt";
 
     private MuleRunnerConfPanel configurationPanel;
 
@@ -32,26 +35,14 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
     protected void resetEditorFrom(MuleConfiguration runnerConfiguration)
     {
         this.configurationPanel.getModulesList().setModules(runnerConfiguration.getValidModules());
-/*
-        Module selectedModule = runnerConfiguration.getModule();
-        if (selectedModule == null)
-        {
-            Collection<Module> modules = runnerConfiguration.getValidModules();
-            if (modules.size() > 0)
-            {
-                selectedModule = modules.iterator().next();
-            }
-        }
-        this.configurationPanel.getModuleCombo().setSelectedModule(selectedModule);
-*/
 
         Module[] selectedModules = runnerConfiguration.getModules();
         if (selectedModules != null) {
             for (Module m : selectedModules)
                 this.configurationPanel.getModulesList().selectModule(m, true);
         }
-
         this.configurationPanel.getVmArgsField().setText(runnerConfiguration.getVmArgs());
+
         String muleHome = runnerConfiguration.getMuleHome();
         if (StringUtils.isBlank(muleHome))
         {
@@ -64,6 +55,16 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
             }
         }
         this.configurationPanel.getMuleHome().setSelectedItem(MuleSdkManager.getInstance().findSdk(muleHome));
+
+        String clearData = runnerConfiguration.getClearData();
+        JRadioButton selectedButton = this.configurationPanel.getPromptRadioButton();
+
+        if (CLEAR_DATA_ALWAYS.equals(clearData))
+            selectedButton = this.configurationPanel.getAlwaysRadioButton();
+        else if (CLEAR_DATA_NEVER.equals(clearData))
+            selectedButton = this.configurationPanel.getNeverRadioButton();
+
+        selectedButton.setSelected(true);
     }
 
     /**
@@ -78,6 +79,13 @@ public class MuleRunnerEditor extends SettingsEditor<MuleConfiguration>
         runnerConfiguration.setVmArgs(this.configurationPanel.getVmArgsField().getText());
         final Object selectedItem = this.configurationPanel.getMuleHome().getSelectedItem();
         runnerConfiguration.setMuleHome(selectedItem instanceof MuleSdk ? ((MuleSdk) selectedItem).getMuleHome() : "");
+
+        if (this.configurationPanel.getAlwaysRadioButton().isSelected())
+            runnerConfiguration.setClearData(CLEAR_DATA_ALWAYS);
+        else if (this.configurationPanel.getNeverRadioButton().isSelected())
+            runnerConfiguration.setClearData(CLEAR_DATA_NEVER);
+        else
+            runnerConfiguration.setClearData(CLEAR_DATA_PROMPT);
 
         Module[] selectedModules = this.configurationPanel.getModulesList().getSelectedModules(runnerConfiguration.getProject());
 //        final Module selectedModule = this.configurationPanel.getModuleCombo().getSelectedModule();
