@@ -13,7 +13,7 @@
 
 [Creating Mule application components](#creating-mule-application-components)
 
-[Run configurations](#run-configurations)
+[Run/Debug configurations](#run-debug-configurations)
 
 [Properties encryption and decryption](#properties-encryption-and-decryption)
 
@@ -58,7 +58,7 @@ As a result, the New Project wizard opens.
 ![New Project wizard](images/newMuleApplication.png)
 
 2. Select the **Mule Application** project category in the left pane of the New Project window.
-3. Select the Mule Runtime version from the drop-down menu. If there are no versions available, click the **New...** button and the **Mule SDK** dialog appears.
+3. Select the Mule Runtime version from the drop-down menu. If the list is empty, or the required version is missing, click the **New...** button and the **Mule SDK** dialog appears.
    1. If there is an existing Mule Runtime installation, click the **+** button and navigate to the directory where Mule is installed (i.e. the *MULE_HOME*)
    2. If there are no Mule Runtimes installed, click the **Download a version** button and select Mule Runtime version to download and the installation directory.
 
@@ -77,7 +77,8 @@ As a result, the New Project wizard opens.
 
 ![New Mule component](images/createMuleComponent.png)
 
-## Run configurations
+## Run/Debug configurations
+To create a new Run/Debug
 
 ## Properties encryption and decryption
 
