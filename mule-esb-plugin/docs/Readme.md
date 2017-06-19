@@ -13,9 +13,9 @@
 
 [Creating Mule application components](#creating-mule-application-components)
 
-[Run/Debug configurations](#run-debug-configurations)
+[Run/Debug configurations](#rundebug-configurations)
 
-[Properties encryption and decryption](#properties-encryption-and-decryption)
+[Encrypting and decrypting properties](#encrypting-and-decrypting-properties)
 
 [APIKit scaffolding](#apikit-scaffolding)
 
@@ -78,11 +78,36 @@ As a result, the New Project wizard opens.
 ![New Mule component](images/createMuleComponent.png)
 
 ## Run/Debug configurations
-To create a new Run/Debug
+To create a new Run/Debug configuration, select **Run | Edit configurations...**, or select the **Edit configurations** option in the toolbar menu.
 
-## Properties encryption and decryption
+![Edit configurations](images/editConfigurations.png)
+
+In the new Run/Debug Configuration dialog click the **+** button to add new configuration and select the **Mule ESB** option.
+
+![New Run Configuration](images/addNewConfiguration.png)
+
+Set the name for the new configuration, select modules to be deployed, select the runtime version and optionally set the additional VM arguments. Click **OK** to save the new configuration.
+
+![Mule Run/Debug Configuration](images/runDebugConfiguration.png)
+
+## Encrypting and decrypting properties
+
+To encrypt a property, open the `.properties` file and either a) right-click on the property name, or b) open the **Structure** view and right-click on the property name.
+
+![Encrypt property](images/encrypt1.png)
+
+![Encrypt property](images/encrypt2.png)
+
+Select the **Encrypt...** menu option and in the Encryption dialog set the encryption password, algorithm and mode.
+
+![Encrypt property](images/encryptDialog.png)
+
 
 ## APIKit scaffolding
+
+Right-click on the RAML file in the Project view. The XML file with the same name will be created automatically in the `src/main/api` directory. If the file already exists, it will be overwritten,
+
+![API Scaffolding](images/apiScaffolding.png)
 
 ## Live templates
 

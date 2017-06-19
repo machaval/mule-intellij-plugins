@@ -88,9 +88,11 @@ public class DecryptPropertyAction extends AnAction {
             isPropertyFile = "properties".equalsIgnoreCase(file.getExtension());
             if (isPropertyFile) {
                 IProperty selectedProperty = getSelectedProperty(anActionEvent.getDataContext());
-                String propertyValue = selectedProperty.getValue();
-                isEncrypted = (propertyValue.startsWith("![") && propertyValue.endsWith("]"));
-                isProperty = true;
+                if (selectedProperty != null) {
+                    String propertyValue = selectedProperty.getValue();
+                    isEncrypted = (propertyValue.startsWith("![") && propertyValue.endsWith("]"));
+                    isProperty = true;
+                }
             }
         }
         anActionEvent.getPresentation().setEnabled(isPropertyFile && isEncrypted && isProperty);
