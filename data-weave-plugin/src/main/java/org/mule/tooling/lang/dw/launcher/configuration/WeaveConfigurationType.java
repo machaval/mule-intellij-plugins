@@ -21,13 +21,13 @@ public class WeaveConfigurationType implements ConfigurationType
     @Override
     public String getDisplayName()
     {
-        return "Data Weave";
+        return "DataWeave";
     }
 
     @Override
     public String getConfigurationTypeDescription()
     {
-        return "Runs a weave script";
+        return "Runs a DataWeave script";
     }
 
     @Override

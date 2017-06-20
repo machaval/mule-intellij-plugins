@@ -10,7 +10,7 @@ import org.mule.tooling.esb.util.MuleIcons;
 public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescriptorFactory {
     public static final String MULE_CONFIGURATION_FILE = "Mule Config";
     public static final String MULE_DOMAIN_CONFIGURATION_FILE = "Mule Domain Config";
-    public static final String DATA_WEAVE_FILE = "Data Weave";
+    public static final String DATA_WEAVE_FILE = "DataWeave";
     public static final String MEL_FILE = "Mel File";
     public static final String MULE_MAVEN_PROJECT = "Mule Maven Project";
     public static final String MULE_DOMAIN_MAVEN_PROJECT = "Mule Domain Maven Project";

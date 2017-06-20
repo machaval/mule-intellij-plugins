@@ -46,7 +46,7 @@ public class WeaveIntegrationStackFrame extends XStackFrame
 
     public void customizePresentation(@NotNull ColoredTextContainer component)
     {
-        component.append("Data Weave", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        component.append("DataWeave", SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
     @Nullable

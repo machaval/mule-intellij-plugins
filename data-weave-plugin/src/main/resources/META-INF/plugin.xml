@@ -1,15 +1,25 @@
 <idea-plugin version="2">
     <id>org.mule.tooling.intellij.dataweave</id>
-    <name>Data Weave IntelliJ Plugin</name>
-    <version>0.10</version>
+    <name>DataWeave Plugin for IntelliJ</name>
+    <version>0.11</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
-     Data Weave IntelliJ Plugin. This plugin allows to edit, run debug data weave files.
+     DataWeave Plugin for IntelliJ. This plugin allows to edit, run and debug DataWeave files.
     ]]></description>
 
     <idea-version since-build="145"/>
 
     <change-notes><![CDATA[
+    <h1>v0.11</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>DataWeave library upgraded</li>
+            <li>Bug fixes and performance improvements</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.10</h1>
       <ul>
        <li>
@@ -57,7 +67,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <!--Data Weave-->
+        <!--DataWeave-->
 
         <configurationType implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationType"/>
         <runConfigurationProducer implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationProducer"/>

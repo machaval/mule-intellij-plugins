@@ -35,7 +35,7 @@ public class MuleLanguageInjector implements LanguageInjector {
     //Scripting elements
     private QName scriptingScript = new QName("http://www.mulesoft.org/schema/mule/scripting", "script");
 
-    //Data Weave Message Processor
+    //DataWeave Message Processor
     private QName dwSetPayload = new QName("http://www.mulesoft.org/schema/mule/ee/dw", "set-payload");
     private QName dwSetProperty = new QName("http://www.mulesoft.org/schema/mule/ee/dw", "set-property");
     private QName dwSetVariable = new QName("http://www.mulesoft.org/schema/mule/ee/dw", "set-variable");

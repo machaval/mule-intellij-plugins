@@ -71,7 +71,7 @@ As a result, the New Project wizard opens.
 2. Enter the new component name and select one of the following options in the drop-down menu:
 - Mule Configuration
 - MUnit Test
-- Data Weave
+- DataWeave
 - MEL Script
 - RAML File
 
