@@ -49,7 +49,7 @@ To download and install Mule Runtime plugin:
 
 ![Installation](images/install.png)
 
-> Note - this will also install two other plugins from the suite, the **[DataWeave plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/data-weave-plugin)** and the **[RAML plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/raml-plugin)**.
+> NOTE: this will also install two other plugins from the suite, the **[DataWeave plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/data-weave-plugin)** and the **[RAML plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/raml-plugin)**.
 
 ## Creating Mule applications
 1. If no project is currently open in IntelliJ IDEA, click **Create New Project** on the Welcome screen. Otherwise, select **File | New | Project**.

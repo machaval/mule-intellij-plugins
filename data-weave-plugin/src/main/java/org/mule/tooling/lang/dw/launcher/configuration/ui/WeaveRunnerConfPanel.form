@@ -41,7 +41,7 @@
               <forms/>
             </constraints>
             <properties>
-              <text value="Weave Home"/>
+              <text value="DataWeave Home"/>
             </properties>
           </component>
           <component id="94f05" class="javax.swing.JLabel">
@@ -76,7 +76,7 @@
               <text value="Output"/>
             </properties>
           </component>
-          <component id="eb1e7" class="javax.swing.JTextField" binding="output">
+          <component id="eb1e7" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="output">
             <constraints>
               <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -91,7 +91,7 @@
               <forms/>
             </constraints>
             <properties>
-              <text value="Weave File"/>
+              <text value="DataWeave File"/>
             </properties>
           </component>
           <component id="d0204" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="weaveFile">

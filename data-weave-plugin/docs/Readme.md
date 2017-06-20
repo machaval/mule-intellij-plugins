@@ -23,9 +23,7 @@ To download and install Mule Runtime plugin:
 3. Click the **Browse Repositories...** button
 4. Search for **DataWeave Plugin for IntelliJ** and click the **Install** button
 
-![Installation](images/install.png)
-
-> Note - if you have **[Mule ESB plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/mule-esb-plugin)** installed, most likely you already have the DataWeave plugin installed as well.
+> NOTE: if you have **[Mule ESB plugin](https://github.com/machaval/mule-intellij-plugins/tree/master/mule-esb-plugin)** installed, most likely you already have the DataWeave plugin installed as well.
 
 ## Creating DataWeave files
 1. Right-click on a folder in the **Project** view and select **New | Mule Component** in the context menu, or select **File | New | Mule Component** in the main menu.
