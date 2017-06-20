@@ -45,14 +45,18 @@ The input panel manages tabs automatically based on the number of input directiv
 
 
 ## Run/Debug configurations
-To create a new Run/Debug configuration, select **Run | Edit configurations...**, or select the **Edit configurations** option in the toolbar menu.
+DataWeave scripts can be run or debugged separately from a Mule application. To create a new Run/Debug configuration, select **Run | Edit configurations...**, or select the **Edit configurations** option in the toolbar menu.
 
 ![Edit configurations](images/editConfigurations.png)
 
-In the new Run/Debug Configuration dialog click the **+** button to add new configuration and select the **Mule ESB** option.
+In the new Run/Debug Configuration dialog click the **+** button to add new configuration and select the **DataWeave** option.
 
-![New Run Configuration](images/addNewConfiguration.png)
-
-Set the name for the new configuration, select modules to be deployed, select the runtime version and optionally set the additional VM arguments. Click **OK** to save the new configuration.
+Set the following options:
+- *DataWeave File* - an absolute path to the `.dwl` script;
+- *DataWeave Home* - an absolute path to the DataWeave plugin, usually located in `$MULE_HOME/plugins/mule-plugin-weave-<version>-dist`;
+- *Output* - an absolute path to a file into which the DW script output will be written. Cannot be a directory;
+- *Input* - a list of DW script inputs and their locations.
 
 ![Mule Run/Debug Configuration](images/runDebugConfiguration.png)
+
+
