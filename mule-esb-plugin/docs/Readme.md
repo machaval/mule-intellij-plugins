@@ -109,6 +109,8 @@ Right-click on the RAML file in the Project view. The XML file with the same nam
 
 ![API Scaffolding](images/apiScaffolding.png)
 
+APIKit SOAP scaffolding is done in a similar way, when the context menu is opened on the WSDL file.
+
 ## Live templates
 
 | Template | Value |Notes|

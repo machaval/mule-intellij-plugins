@@ -17,7 +17,7 @@
 - Run/Debug DataWeave
 
 ## Installation
-To download and install Mule Runtime plugin:
+To download and install DataWeave plugin:
 1. Open the IntelliJ **Settings** dialog
 2. In the left-hand pane, select **Plugins**
 3. Click the **Browse Repositories...** button
@@ -52,10 +52,10 @@ DataWeave scripts can be run or debugged separately from a Mule application. To 
 In the new Run/Debug Configuration dialog click the **+** button to add new configuration and select the **DataWeave** option.
 
 Set the following options:
-- *DataWeave File* - an absolute path to the `.dwl` script;
-- *DataWeave Home* - an absolute path to the DataWeave plugin, usually located in `$MULE_HOME/plugins/mule-plugin-weave-<version>-dist`;
-- *Output* - an absolute path to a file into which the DW script output will be written. Cannot be a directory;
-- *Input* - a list of DW script inputs and their locations.
+- **DataWeave File** - an absolute path to the `.dwl` script;
+- **DataWeave Home** - an absolute path to the DataWeave plugin, usually located in `$MULE_HOME/plugins/mule-plugin-weave-<version>-dist`;
+- **Output** - an absolute path to a file into which the DW script output will be written. Cannot be a directory;
+- **Input** - a list of DW script inputs and their locations.
 
 ![Mule Run/Debug Configuration](images/runDebugConfiguration.png)
 
