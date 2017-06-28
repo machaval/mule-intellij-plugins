@@ -4,7 +4,7 @@ configurations {
 }
 
 dependencies {
-    compile files('lib/mule-plugin-debugger-3.8.3.jar',
+    compile files('lib/mule-plugin-debugger-3.8.4.jar',
                   'lib/security-api-1.6.0.jar',
                   'lib/mule-module-apikit-soap-common-1.0.0.jar',
                   'lib/mule-module-apikit-soap-xml-generator-1.0.0.jar',
@@ -13,7 +13,7 @@ dependencies {
     compile project(':data-weave-plugin')
     compile project(':raml-plugin')
 
-    compile ('org.mule.tools:apikit-scaffolder:3.8.3') {
+    compile ('org.mule.tools:apikit-scaffolder:3.8.4') {
         exclude module: 'xml-apis'
         exclude module: 'commons-logging'
         exclude module: 'raml-parser-2'
