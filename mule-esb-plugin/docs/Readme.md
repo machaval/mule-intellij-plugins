@@ -1,5 +1,5 @@
 # Mule Runtime plugin for IntelliJ IDEA
-**version 0.10**
+**version 0.11**
 
 
 

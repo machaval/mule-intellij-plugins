@@ -1,35 +1,21 @@
-# Intellij Plugin For Mule ESB
+# MuleSoft plugins for IntelliJ
 ![Build status](https://travis-ci.org/machaval/mule-esb-plugin.svg?branch=master)
 
 Join the chat at
-
 [![Join the chat at https://gitter.im/machaval/mule-esb-plugin](https://badges.gitter.im/machaval/mule-esb-plugin.svg)](https://gitter.im/machaval/mule-esb-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This plugin allows any Mule ESB developer to work with IntelliJ.
- 
-## Features
 
-* Run Mule Configuration Integration
-* Mule Debugger Integration
-* Mel Script Support
-    * Color Highlighting
-* DataWeave Support
-    * Color Highlighting
-    * Code Folding
-    * Outline
-    * Refactoring
-    * Go to declaration
-* Mule Config File Support
-    * Flow Subflow Outline
-    * Navigate through flow-ref
-    * Scripting injection inside xml.
-    * Navigate from test to xml through getFlowConstruct("flowName")
-    
-## Status and Roadmap
-    
-* Support for new mule product
-* Improve mel support with more features such as auto-completion and java navigation
-* Graphical UI????
+#### Mule ESB Plugin:
+* source code: https://github.com/machaval/mule-intellij-plugins/tree/master/mule-esb-plugin
+* documentation: https://github.com/machaval/mule-intellij-plugins/tree/master/mule-esb-plugin/docs
+
+#### RAML Plugin:
+* source code: https://github.com/machaval/mule-intellij-plugins/tree/master/raml-plugin
+* documentation: https://github.com/machaval/mule-intellij-plugins/tree/master/raml-plugin/docs
+
+#### DataWeave Plugin:
+* source code: https://github.com/machaval/mule-intellij-plugins/tree/master/data-weave-plugin
+* documentation: https://github.com/machaval/mule-intellij-plugins/tree/master/data-weave-plugin/docs
 
 ## Importing project into IntelliJ
 
@@ -49,4 +35,4 @@ Note, the version of gradle used to build the project is currently 2.14. If you 
 If you liked what the plugin please contribute either with code or issues.
 
 # Disclaimer
-This is not an official mulesoft product and is not a replacement for the excellent Anypoint Studio product. This means there is no support for this!
+This is not an official Mulesoft product and is not a replacement for the excellent Anypoint Studio product. This means there is no support for this!
