@@ -105,29 +105,42 @@ public class WeaveConfiguration extends ModuleBasedConfiguration implements Modu
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException
     {
-        final String muleHome = getWeaveHome();
-        if (!StringUtils.isBlank(muleHome))
+        final String weaveHome = getWeaveHome();
+        if (!StringUtils.isBlank(weaveHome))
         {
-            if (!new File(muleHome).exists())
+            if (!new File(weaveHome).exists())
             {
-                throw new RuntimeConfigurationException("Weave home does not exists : " + muleHome);
+                throw new RuntimeConfigurationException("DataWeave home does not exists : " + weaveHome);
             }
 
             if (!WeaveSdk.isValidWeaveHome(getWeaveHome()))
             {
-                throw new RuntimeConfigurationException(muleHome + " path is not a valid Weave home.");
+                throw new RuntimeConfigurationException(weaveHome + " path is not a valid DataWeave home.");
             }
         }
 
         if (StringUtils.isBlank(getWeaveFile()))
         {
-            throw new RuntimeConfigurationException(getWeaveFile() + " weave file can not be empty.");
+            throw new RuntimeConfigurationException(getWeaveFile() + " DataWeave file cannot be empty.");
         }
 
         if (getModule() == null)
         {
-            throw new RuntimeConfigurationException("Module can not be empty.");
+            throw new RuntimeConfigurationException("Module cannot be empty.");
         }
+
+        if (StringUtils.isBlank(getWeaveOutput()))
+        {
+            throw new RuntimeConfigurationException(getWeaveOutput() + " DataWeave output cannot be empty.");
+        }
+
+        File output = new File(getWeaveOutput());
+        if (output.exists() && output.isDirectory())
+        {
+            throw new RuntimeConfigurationException("Output cannot be a directory : " + getWeaveOutput());
+        }
+
+
         super.checkConfiguration();
     }
 

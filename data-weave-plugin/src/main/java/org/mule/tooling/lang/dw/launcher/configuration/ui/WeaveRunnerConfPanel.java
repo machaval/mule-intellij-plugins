@@ -23,7 +23,7 @@ public class WeaveRunnerConfPanel
     private TextFieldWithBrowseButton weaveHome;
     private JPanel mainPanel;
     private ModulesComboBox moduleCombo;
-    private JTextField output;
+    private TextFieldWithBrowseButton output;
     private TextFieldWithBrowseButton weaveFile;
     private JPanel inputPanel;
     private TableView<WeaveInput> myInputsTable;
@@ -33,8 +33,12 @@ public class WeaveRunnerConfPanel
     public WeaveRunnerConfPanel(final Project project)
     {
         this.project = project;
-        final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
-        getWeaveHome().addBrowseFolderListener("Select Weave Home", "Select weave home", project, descriptor);
+
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
+        getWeaveHome().addBrowseFolderListener("Select DataWeave Home", "Select DataWeave Home", project, descriptor);
+
+        descriptor = new FileChooserDescriptor(true, true, false, false, false, false);
+        getOutput().addBrowseFolderListener("Select Output", "Select Output", project, descriptor);
 
         final FileChooserDescriptor waveDescriptor = new FileChooserDescriptor(true, false, false, false, false, false)
                 .withHideIgnored(true).withShowHiddenFiles(false).withFileFilter(new Condition<VirtualFile>() {
@@ -46,7 +50,7 @@ public class WeaveRunnerConfPanel
                         return (virtualFile.getExtension() != null && extensions.contains(virtualFile.getExtension().toLowerCase()));
                     }
                 });
-        getWeaveFile().addBrowseFolderListener("Select Weave File", "Select Weave File", project, waveDescriptor);
+        getWeaveFile().addBrowseFolderListener("Select DataWeave File", "Select DataWeave File", project, waveDescriptor);
 
         myModel = new ListTableModel<>(NAME, FILE);
         myInputsTable = new TableView<>(myModel);
@@ -99,7 +103,7 @@ public class WeaveRunnerConfPanel
         return myModel;
     }
 
-    public JTextField getOutput()
+    public TextFieldWithBrowseButton getOutput()
     {
         return output;
     }

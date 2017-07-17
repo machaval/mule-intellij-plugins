@@ -7,7 +7,7 @@ configurations {
 }
 
 dependencies {
-	compile ('org.raml:raml-parser-2:1.0.7')
+	compile ('org.raml:raml-parser-2:1.0.10')
 }
 
 intellij {

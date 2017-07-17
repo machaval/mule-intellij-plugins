@@ -5,7 +5,7 @@ Join the chat at
 
 [![Join the chat at https://gitter.im/machaval/mule-esb-plugin](https://badges.gitter.im/machaval/mule-esb-plugin.svg)](https://gitter.im/machaval/mule-esb-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This plugin allows any Mule ESB developer to work with intellij.
+This plugin allows any Mule ESB developer to work with IntelliJ.
  
 ## Features
 
@@ -13,7 +13,7 @@ This plugin allows any Mule ESB developer to work with intellij.
 * Mule Debugger Integration
 * Mel Script Support
     * Color Highlighting
-* Data Weave Support
+* DataWeave Support
     * Color Highlighting
     * Code Folding
     * Outline

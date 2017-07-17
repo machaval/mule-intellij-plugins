@@ -6,14 +6,17 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import org.codehaus.plexus.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mule.tooling.esb.launcher.configuration.MuleConfiguration;
 import org.mule.tooling.esb.launcher.configuration.archive.MuleAppManager;
+import org.mule.tooling.esb.launcher.configuration.ui.MuleRunnerEditor;
 import org.mule.tooling.esb.sdk.MuleClassPath;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 
@@ -113,10 +116,28 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
         return super.startProcess();
     }
 
+    private boolean isClearAppData() {
+        String clearDataString = model.getClearData();
+
+        boolean clearData = (MuleRunnerEditor.CLEAR_DATA_ALWAYS.equals(clearDataString));
+
+        if (!clearData) {
+            if (MuleRunnerEditor.CLEAR_DATA_PROMPT.equals(clearDataString)) {
+                int result = Messages.showYesNoDialog("Clear the application data (caches, object stores) before the launch?", "Clear Application Data", AllIcons.General.QuestionDialog);
+                clearData = (result == Messages.YES);
+            }
+        }
+
+        return clearData;
+    }
+
     private void deployApp() throws ExecutionException {
         final String muleHome = model.getMuleHome();
         final File apps = new File(muleHome, "apps");
         final File domains = new File(muleHome, "domains");
+        final File muleAppData = new File(muleHome, ".mule");
+
+        boolean clearData = isClearAppData();
 
         try {
             FileUtils.cleanDirectory(apps);
@@ -127,6 +148,11 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
         Module[] modules = model.getModules();
 
         for (Module m : modules) {
+            if (clearData) {
+                File moduleAppData = new File(muleAppData, m.getName());
+                FileUtil.delete(moduleAppData);
+            }
+
             //Get the zip and deploy it
             final File file = MuleAppManager.getInstance(model.getProject()).getMuleApp(m);
 

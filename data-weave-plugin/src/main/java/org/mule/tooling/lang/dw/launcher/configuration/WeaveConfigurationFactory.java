@@ -17,7 +17,7 @@ class WeaveConfigurationFactory extends ConfigurationFactory
 
     public RunConfiguration createTemplateConfiguration(Project project)
     {
-        return new WeaveConfiguration("Data Weave", this, project);
+        return new WeaveConfiguration("DataWeave", this, project);
     }
 
     @Override

@@ -22,8 +22,8 @@ public class CreateMuleComponentFile extends CreateFileFromTemplateAction implem
         builder.setTitle(MULE_CONFIGURATION)
                 .addKind("Mule Configuration", MuleIcons.MuleFileType, MuleFileTemplateDescriptorManager.MULE_CONFIGURATION_FILE)
                 .addKind("MUnit Test", MuleIcons.MUnitFileType, MuleFileTemplateDescriptorManager.MUNIT_FILE)
-                .addKind("Data Weave", MuleIcons.DataFileType, MuleFileTemplateDescriptorManager.DATA_WEAVE_FILE)
-                .addKind("Mel Script", MuleIcons.MelFileType, MuleFileTemplateDescriptorManager.MEL_FILE)
+                .addKind("DataWeave", MuleIcons.DataFileType, MuleFileTemplateDescriptorManager.DATA_WEAVE_FILE)
+                .addKind("MEL Script", MuleIcons.MelFileType, MuleFileTemplateDescriptorManager.MEL_FILE)
                 .addKind("RAML File", MuleIcons.RamlFileType, MuleFileTemplateDescriptorManager.RAML_FILE);
     }
 

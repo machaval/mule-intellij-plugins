@@ -1,13 +1,25 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For IntelliJ</name>
-    <version>0.10</version>
+    <version>0.11</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule ESB Plugin For IntelliJ.
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.11</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Run configurations now can clear the application data prior to launch</li>
+          </ul>
+          <ul>
+            <li>Documentation</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.10</h1>
       <ul>
        <li>
@@ -103,7 +115,7 @@
             <li>XML Configuration Navigation</li>
             <li>XML script code injection.</li>
             <li>XML Outline</li>
-            <li>Data Weave editor</li>
+            <li>DataWeave editor</li>
             <li>Run Debug Mule App.</li>
           </ul>
         </li>
@@ -189,11 +201,11 @@
         <dom.fileDescription implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>
 
         <!--Templates-->
-        <internalFileTemplate name="Data Weave"/>
+        <internalFileTemplate name="DataWeave"/>
         <internalFileTemplate name="Mule Config"/>
         <internalFileTemplate name="Mule Domain Config"/>
         <internalFileTemplate name="MUnit Config"/>
-        <internalFileTemplate name="Mel File"/>
+        <internalFileTemplate name="MEL File"/>
         <internalFileTemplate name="Mule Maven Project"/>
         <internalFileTemplate name="Mule Domain Maven Project"/>
         <internalFileTemplate name="log4j2"/>
