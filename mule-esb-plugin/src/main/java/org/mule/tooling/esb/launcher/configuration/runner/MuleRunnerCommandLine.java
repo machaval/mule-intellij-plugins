@@ -158,9 +158,9 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
 
             try {
                 if (MuleConfigUtils.isMuleDomainModule(m))
-                    FileUtil.copy(file, new File(domains, m.getName() + ".zip"));
+                    FileUtil.copy(file, new File(domains, file.getName()));
                 else
-                    FileUtil.copy(file, new File(apps, m.getName() + ".zip"));
+                    FileUtil.copy(file, new File(apps, file.getName()));
                 //FileUtil.copy(file, new File(apps, model.getProject().getName() + ".zip"));
             } catch (IOException e) {
                 e.printStackTrace();
