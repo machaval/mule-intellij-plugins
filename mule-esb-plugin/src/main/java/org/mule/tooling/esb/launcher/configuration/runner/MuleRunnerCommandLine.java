@@ -139,15 +139,24 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
 
         boolean clearData = isClearAppData();
 
-        try {
-            FileUtils.cleanDirectory(apps);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Module[] modules = model.getModules();
 
         for (Module m : modules) {
+            File[] moduleFiles = apps.listFiles(x -> x.getName().startsWith(m.getName()));
+            if(moduleFiles != null && moduleFiles.length > 0){
+                for(File file: moduleFiles){
+                    try {
+                        if(file.isDirectory()){
+                            FileUtils.cleanDirectory(file);
+                        } else {
+                            FileUtils.forceDelete(file);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             if (clearData) {
                 File moduleAppData = new File(muleAppData, m.getName());
                 FileUtil.delete(moduleAppData);
