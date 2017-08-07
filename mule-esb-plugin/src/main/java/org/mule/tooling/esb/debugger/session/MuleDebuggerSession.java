@@ -1,6 +1,7 @@
 package org.mule.tooling.esb.debugger.session;
 
 
+import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.mulesoft.mule.debugger.client.DebuggerClient;
@@ -20,291 +21,222 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class MuleDebuggerSession extends DefaultDebuggerResponseCallback
-{
+public class MuleDebuggerSession extends DefaultDebuggerResponseCallback {
 
-    private static final int MAX_RETRIES = 30;
-    private DebuggerClient debuggerClient;
+  private static final int MAX_RETRIES = 30;
+  private DebuggerClient debuggerClient;
 
-    private boolean isConnected = false;
-    private List<Breakpoint> breakpoints = new ArrayList<>();
-    private List<MessageReceivedListener> messageReceivedListeners = new ArrayList<>();
-    private boolean exceptionBreakpoint = true;
-    private Project project;
+  private boolean isConnected = false;
+  private List<Breakpoint> breakpoints = new ArrayList<>();
+  private List<MessageReceivedListener> messageReceivedListeners = new ArrayList<>();
+  private boolean exceptionBreakpoint = true;
+  private Project project;
 
-    public MuleDebuggerSession(Project project)
-    {
-        this.project = project;
+  public MuleDebuggerSession(Project project) {
+    this.project = project;
+  }
+
+  public void connectAsync(@NotNull String host, @NotNull int port) {
+    debuggerClient = new DebuggerClient(new DebuggerConnection(host, port));
+    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      connect(debuggerClient, true, 0);
+    });
+  }
+
+  public void connect(@NotNull String host, @NotNull int port) throws ExecutionException {
+    debuggerClient = new DebuggerClient(new DebuggerConnection(host, port));
+    boolean connect = connect(debuggerClient, false, 0);
+    if (!connect) {
+      throw new ExecutionException("Unable to open port " + port + " with host " + host);
     }
+  }
 
-    public void connect(@NotNull String host, @NotNull int port)
-    {
-        debuggerClient = new DebuggerClient(new DebuggerConnection(host, port));
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                connect(debuggerClient, 0);
-            }
-        });
-    }
+  private DebuggerClient getDebuggerClient() {
+    return debuggerClient;
+  }
 
-    private DebuggerClient getDebuggerClient()
-    {
-        return debuggerClient;
-    }
+  private boolean connect(DebuggerClient debuggerClient, boolean retry, int retries) {
+    try {
+      debuggerClient.start(this);
+    } catch (IOException e) {
+      if (retry) {
+        if (retries < MAX_RETRIES) {
+          try {
+            Thread.sleep(1000L * 2);
+            connect(debuggerClient, retry, retries + 1);
+          } catch (InterruptedException e1) {
+            return false;
+          }
 
-    private boolean connect(DebuggerClient debuggerClient, int retries)
-    {
-        try
-        {
-            debuggerClient.start(this);
+        } else {
+          return false;
         }
-        catch (IOException e)
-        {
-            if (retries < MAX_RETRIES)
-            {
-                try
-                {
-                    Thread.sleep(1000L * 2);
-                    connect(debuggerClient, retries + 1);
-                }
-                catch (InterruptedException e1)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return true;
+      } else {
+        return false;
+      }
     }
+    return true;
+  }
 
-    public void disconnect()
-    {
-        if (isConnected)
-        {
-            try
-            {
-                System.out.println("MuleDebuggerSession.disconnect");
-                getDebuggerClient().disconnect();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-        }
-    }
-
-    public Project getProject()
-    {
-        return project;
-    }
-
-    public boolean isExceptionBreakpoint()
-    {
-        return exceptionBreakpoint;
-    }
-
-    public boolean isConnected()
-    {
-        return isConnected;
-    }
-
-    public void nextStep()
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().nextStep();
-        }
-    }
-
-    public void resume()
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().resume();
-        }
-    }
-
-    public void runToCursor(String path)
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().runToProcessor(path);
-        }
-    }
-
-    public void enableExceptionBreakpoint()
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().enableExceptionBreakpoint(true);
-        }
-        exceptionBreakpoint = true;
-    }
-
-    public void disableExceptionBreakpoint()
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().enableExceptionBreakpoint(false);
-        }
-        exceptionBreakpoint = false;
-    }
-
-    public void addBreakpoint(Breakpoint muleBreakpoint)
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().addBreakpoints(muleBreakpoint);
-        }
-        else
-        {
-            breakpoints.add(muleBreakpoint);
-        }
-    }
-
-    @Override
-    public void onError(String error)
-    {
-        System.out.println("MuleDebuggerSession.onError " + error);
-    }
-
-    public void removeBreakpoint(Breakpoint muleBreakpoint)
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().removeBreakpoints(muleBreakpoint);
-        }
-        else
-        {
-            breakpoints.remove(muleBreakpoint);
-        }
-    }
-
-    public List<ObjectFieldDefinition> loadInnerFields(ObjectFieldDefinition fieldDefinition)
-    {
-        final List<ObjectFieldDefinition> result = new ArrayList<>();
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        getDebuggerClient().loadInnerFields(fieldDefinition.getPath(), new DefaultDebuggerResponseCallback()
-        {
-            @Override
-            public void onInnerFieldsLoaded(ObjectFieldDefinition innerFields)
-            {
-                result.addAll(innerFields.getInnerElements());
-                countDownLatch.countDown();
-            }
-        });
-
-        try
-        {
-            countDownLatch.await(3, TimeUnit.MINUTES);
-        }
-        catch (InterruptedException e)
-        {
-
-        }
-        return result;
-    }
-
-    public void addMessageReceivedListener(MessageReceivedListener listener)
-    {
-        messageReceivedListeners.add(listener);
-    }
-
-    @Override
-    public void onMuleMessageArrived(final MuleMessageInfo muleMessageInfo)
-    {
-        ApplicationManager.getApplication().runReadAction(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                for (MessageReceivedListener listener : messageReceivedListeners)
-                {
-                    listener.onNewMessageReceived(muleMessageInfo);
-                }
-            }
-        });
-
-    }
-
-    @Override
-    public void onExceptionThrown(final MuleMessageInfo muleMessageInfo, final ObjectFieldDefinition exceptionThrown)
-    {
-        ApplicationManager.getApplication().runReadAction(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                for (MessageReceivedListener listener : messageReceivedListeners)
-                {
-                    listener.onExceptionThrown(muleMessageInfo, exceptionThrown);
-                }
-            }
-        });
-    }
-
-
-    @Override
-    public void onConnected()
-    {
-        isConnected = true;
-        //Lets add the breakpoints that where added before it is connected
-        for (Breakpoint breakpoint : breakpoints)
-        {
-            addBreakpoint(breakpoint);
-        }
-        getDebuggerClient().enableExceptionBreakpoint(exceptionBreakpoint);
-        breakpoints.clear();
-    }
-
-    @Override
-    public void onExecutionStopped(final OnExecutionStoppedEvent stoppedEvent)
-    {
-        ApplicationManager.getApplication().runReadAction(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                final List<MessageReceivedListener> listeners = messageReceivedListeners;
-                for (MessageReceivedListener listener : listeners)
-                {
-                    listener.onExecutionStopped(stoppedEvent.getMuleMessageInfo(), stoppedEvent.getFrame(), stoppedEvent.getPath(), stoppedEvent.getInternalPosition());
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onExit()
-    {
-        isConnected = false;
+  public void disconnect() {
+    if (isConnected) {
+      try {
+        System.out.println("MuleDebuggerSession.disconnect");
         getDebuggerClient().disconnect();
+      } catch (Exception e) {
+        //ignore
+      }
     }
+  }
 
-    public void eval(String script, final ScriptEvaluationCallback callback)
-    {
-        if (isConnected)
-        {
-            getDebuggerClient().executeScript(script, new DefaultDebuggerResponseCallback()
-            {
-                @Override
-                public void onScriptEvaluationException(RemoteDebugException exception)
-                {
-                    callback.onScriptEvaluationException(exception);
-                }
+  public Project getProject() {
+    return project;
+  }
 
-                @Override
-                public void onScriptEvaluation(ScriptResultInfo info)
-                {
-                    callback.onScriptEvaluation(info);
-                }
-            });
+  public boolean isExceptionBreakpoint() {
+    return exceptionBreakpoint;
+  }
+
+  public boolean isConnected() {
+    return isConnected;
+  }
+
+  public void nextStep() {
+    if (isConnected) {
+      getDebuggerClient().nextStep();
+    }
+  }
+
+  public void resume() {
+    if (isConnected) {
+      getDebuggerClient().resume();
+    }
+  }
+
+  public void runToCursor(String path) {
+    if (isConnected) {
+      getDebuggerClient().runToProcessor(path);
+    }
+  }
+
+  public void enableExceptionBreakpoint() {
+    if (isConnected) {
+      getDebuggerClient().enableExceptionBreakpoint(true);
+    }
+    exceptionBreakpoint = true;
+  }
+
+  public void disableExceptionBreakpoint() {
+    if (isConnected) {
+      getDebuggerClient().enableExceptionBreakpoint(false);
+    }
+    exceptionBreakpoint = false;
+  }
+
+  public void addBreakpoint(Breakpoint muleBreakpoint) {
+    if (isConnected) {
+      getDebuggerClient().addBreakpoints(muleBreakpoint);
+    } else {
+      breakpoints.add(muleBreakpoint);
+    }
+  }
+
+  @Override
+  public void onError(String error) {
+    System.out.println("MuleDebuggerSession.onError " + error);
+  }
+
+  public void removeBreakpoint(Breakpoint muleBreakpoint) {
+    if (isConnected) {
+      getDebuggerClient().removeBreakpoints(muleBreakpoint);
+    } else {
+      breakpoints.remove(muleBreakpoint);
+    }
+  }
+
+  public List<ObjectFieldDefinition> loadInnerFields(ObjectFieldDefinition fieldDefinition) {
+    final List<ObjectFieldDefinition> result = new ArrayList<>();
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
+    getDebuggerClient().loadInnerFields(fieldDefinition.getPath(), new DefaultDebuggerResponseCallback() {
+      @Override
+      public void onInnerFieldsLoaded(ObjectFieldDefinition innerFields) {
+        result.addAll(innerFields.getInnerElements());
+        countDownLatch.countDown();
+      }
+    });
+
+    try {
+      countDownLatch.await(3, TimeUnit.MINUTES);
+    } catch (InterruptedException ignored) {
+
+    }
+    return result;
+  }
+
+  public void addMessageReceivedListener(MessageReceivedListener listener) {
+    messageReceivedListeners.add(listener);
+  }
+
+  @Override
+  public void onMuleMessageArrived(final MuleMessageInfo muleMessageInfo) {
+    ApplicationManager.getApplication().runReadAction(() -> {
+      for (MessageReceivedListener listener : messageReceivedListeners) {
+        listener.onNewMessageReceived(muleMessageInfo);
+      }
+    });
+
+  }
+
+  @Override
+  public void onExceptionThrown(final MuleMessageInfo muleMessageInfo, final ObjectFieldDefinition exceptionThrown) {
+    ApplicationManager.getApplication().runReadAction(() -> {
+      for (MessageReceivedListener listener : messageReceivedListeners) {
+        listener.onExceptionThrown(muleMessageInfo, exceptionThrown);
+      }
+    });
+  }
+
+
+  @Override
+  public void onConnected() {
+    isConnected = true;
+    //Lets add the breakpoints that where added before it is connected
+    for (Breakpoint breakpoint : breakpoints) {
+      addBreakpoint(breakpoint);
+    }
+    getDebuggerClient().enableExceptionBreakpoint(exceptionBreakpoint);
+    breakpoints.clear();
+  }
+
+  @Override
+  public void onExecutionStopped(final OnExecutionStoppedEvent stoppedEvent) {
+    ApplicationManager.getApplication().runReadAction(() -> {
+      final List<MessageReceivedListener> listeners = messageReceivedListeners;
+      for (MessageReceivedListener listener : listeners) {
+        listener.onExecutionStopped(stoppedEvent.getMuleMessageInfo(), stoppedEvent.getFrame(), stoppedEvent.getPath(), stoppedEvent.getInternalPosition());
+      }
+    });
+  }
+
+  @Override
+  public void onExit() {
+    isConnected = false;
+    getDebuggerClient().disconnect();
+  }
+
+  public void eval(String script, final ScriptEvaluationCallback callback) {
+    if (isConnected) {
+      getDebuggerClient().executeScript(script, new DefaultDebuggerResponseCallback() {
+        @Override
+        public void onScriptEvaluationException(RemoteDebugException exception) {
+          callback.onScriptEvaluationException(exception);
         }
+
+        @Override
+        public void onScriptEvaluation(ScriptResultInfo info) {
+          callback.onScriptEvaluation(info);
+        }
+      });
     }
+  }
 }

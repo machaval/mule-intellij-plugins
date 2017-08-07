@@ -16,14 +16,13 @@ import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mule.tooling.esb.launcher.configuration.runner.MuleRunnerCommandLine;
+import org.mule.tooling.esb.launcher.configuration.runner.MuleRunnerCommandLineState;
 import org.mule.tooling.esb.launcher.configuration.ui.MuleRunnerEditor;
 import org.mule.tooling.esb.sdk.MuleSdk;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException
     {
-        return new MuleRunnerCommandLine(executionEnvironment, this);
+        return new MuleRunnerCommandLineState(executionEnvironment, this);
     }
 
     @Override
