@@ -95,6 +95,11 @@ Set the name for the new configuration, select modules to be deployed, select th
 
 ## Remote Mule instance debugging
 
+To debug a remote Mule instance, select **Run | Edit configurations...**, or select the **Edit configurations** option in the toolbar menu, click the **+** button to add new configuration and select the **Mule ESB Remote Debug** option.
+
+![Remote Debug Configuration](images/remoteDebugConfiguration.png)
+
+Set the name for the new configuration and change the host and port where the Mule container is running. Right below the host and port there's a list of additional command line parameters that must be passed to the Mule instance. See the **[Starting Mule Server In Debug Mode](https://docs.mulesoft.com/anypoint-studio/v/6/studio-visual-debugger#debugging-remotely)** section of the MuleSoft Anypoint Platform documentation for more details.
 
 ## Encrypting and decrypting properties
 
