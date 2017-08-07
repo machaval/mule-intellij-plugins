@@ -13,8 +13,8 @@
        <li>
           <p>Enhancements</p>
           <ul>
-            <li>Adding new remote debugger for mule apps (Beta)</li>
-            <li>Improve breakpoints when mp is unknown</li>
+            <li>Adding new remote debugger for Mule apps (Beta)</li>
+            <li>Allow breakpoints for unknown Message Processors</li>
           </ul>
           <ul>
             <li>Documentation</li>
