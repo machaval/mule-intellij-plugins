@@ -8,6 +8,19 @@
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>v0.12</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Adding new remote debugger for mule apps (Beta)</li>
+            <li>Improve breakpoints when mp is unknown</li>
+          </ul>
+          <ul>
+            <li>Documentation</li>
+          </ul>
+        </li>
+      </ul>
     <h1>v0.11</h1>
       <ul>
        <li>
@@ -140,8 +153,13 @@
         <!-- Mule Runner/Debugger -->
         <configurationType implementation="org.mule.tooling.esb.launcher.configuration.MuleConfigurationType"/>
         <programRunner id="Debug" implementation="org.mule.tooling.esb.launcher.configuration.runner.MuleProgramDebugger" order="last"/>
+
         <stepsBeforeRunProvider implementation="org.mule.tooling.esb.launcher.MuleBeforeRunTasksProvider"/>
         <xdebugger.breakpointType implementation="org.mule.tooling.esb.debugger.breakpoint.MuleBreakpointType"/>
+
+        <!-- Mule Runner/Debugger -->
+        <configurationType implementation="org.mule.tooling.esb.launcher.configuration.MuleRemoteConfigurationType"/>
+        <programRunner id="RemoteDebug" implementation="org.mule.tooling.esb.launcher.configuration.runner.MuleRemoteDebugger" order="last"/>
 
         <!--Mule Standalone framework -->
 

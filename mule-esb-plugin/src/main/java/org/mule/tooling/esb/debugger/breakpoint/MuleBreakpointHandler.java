@@ -1,7 +1,6 @@
 package org.mule.tooling.esb.debugger.breakpoint;
 
 
-import com.intellij.openapi.module.Module;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;

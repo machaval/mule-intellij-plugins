@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleRunner {
+public class MuleRunnerCommandLineState extends JavaCommandLineState implements MuleRunnerState {
 
     //Mule Main Class
     public static final String MAIN_CLASS = "org.mule.module.launcher.MuleContainer";
@@ -33,7 +33,7 @@ public class MuleRunnerCommandLine extends JavaCommandLineState implements MuleR
 
     private final boolean isDebug;
 
-    public MuleRunnerCommandLine(@NotNull ExecutionEnvironment environment, @NotNull MuleConfiguration model) {
+    public MuleRunnerCommandLineState(@NotNull ExecutionEnvironment environment, @NotNull MuleConfiguration model) {
         super(environment);
         this.model = model;
         this.isDebug = DefaultDebugExecutor.EXECUTOR_ID.equals(environment.getExecutor().getId());

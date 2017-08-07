@@ -1,7 +1,7 @@
 package org.mule.tooling.esb.launcher.configuration.runner;
 
 
-public interface MuleRunner {
+public interface MuleRunnerState {
 
     String getHost();
 
