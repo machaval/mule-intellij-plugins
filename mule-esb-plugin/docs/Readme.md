@@ -15,6 +15,8 @@
 
 [Run/Debug configurations](#rundebug-configurations)
 
+[Remote Mule instance debugging](#remote-mule-instance-debugging)
+
 [Encrypting and decrypting properties](#encrypting-and-decrypting-properties)
 
 [APIKit scaffolding](#apikit-scaffolding)
@@ -30,6 +32,7 @@
 - Multiple applications can be launched in a single Run Configuration
 - Properties encryption and decryption
 - Mule configuration XML files debugger
+- Support for remote debugging of a standalone Mule instance
 - APIKit and APIKit SOAP scaffolding
 - Pre-defined live templates for common Mule elements and expressions
 - File types for DataWeave, MEL, RAML, Mule and MUnit
@@ -89,6 +92,9 @@ In the new Run/Debug Configuration dialog click the **+** button to add new conf
 Set the name for the new configuration, select modules to be deployed, select the runtime version and optionally set the additional VM arguments. Click **OK** to save the new configuration.
 
 ![Mule Run/Debug Configuration](images/runDebugConfiguration.png)
+
+## Remote Mule instance debugging
+
 
 ## Encrypting and decrypting properties
 

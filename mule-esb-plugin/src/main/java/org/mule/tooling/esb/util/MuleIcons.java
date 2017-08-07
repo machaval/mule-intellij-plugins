@@ -17,7 +17,7 @@ public class MuleIcons {
     public static final Icon RamlFileType = IconLoader.findIcon("/raml_type.png");
     //public static final Icon DataWeaveIcon = IconLoader.findIcon("/dataweave.png");
     public static final Icon ConnectorIcon = IconLoader.findIcon("/connector.png");
-
+    public static final Icon MuleRemoteDebugIcon = IconLoader.findIcon("/mule-remote-debug.png");
     private MuleIcons() {
         super();
     }

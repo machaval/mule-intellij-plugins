@@ -19,17 +19,17 @@ public class MuleRemoteConfigurationType implements ConfigurationType {
 
   @Override
   public String getDisplayName() {
-    return "Mule Remote ESB";
+    return "Mule ESB Remote Debug";
   }
 
   @Override
   public String getConfigurationTypeDescription() {
-    return "Mule Remote ESB";
+    return "Mule ESB Remote Debug";
   }
 
   @Override
   public Icon getIcon() {
-    return MuleIcons.MuleIcon;
+    return MuleIcons.MuleRemoteDebugIcon;
   }
 
   @NotNull
