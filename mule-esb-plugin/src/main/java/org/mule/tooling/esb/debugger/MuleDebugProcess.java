@@ -26,6 +26,7 @@ import org.mule.tooling.esb.debugger.session.MuleDebuggerSession;
 import org.mule.tooling.esb.launcher.configuration.MuleConfiguration;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.mule.tooling.esb.util.MuleConfigUtils.getMulePath;
 import static org.mule.tooling.esb.util.MuleConfigUtils.getXmlTagAt;
@@ -38,10 +39,10 @@ public class MuleDebugProcess extends XDebugProcess {
   private final ProcessHandler processHandler;
   private final ExecutionConsole executionConsole;
 
-  public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull final MuleDebuggerSession muleDebuggerSession, ExecutionResult result) {
+  public MuleDebugProcess(@NotNull final XDebugSession session, @NotNull final MuleDebuggerSession muleDebuggerSession, ExecutionResult result, Map<String, String> modulesToAppsMap) {
     super(session);
     this.muleDebuggerSession = muleDebuggerSession;
-    this.muleBreakpointHandler = new MuleBreakpointHandler(muleDebuggerSession);
+    this.muleBreakpointHandler = new MuleBreakpointHandler(muleDebuggerSession, modulesToAppsMap);
     this.editorProperties = new MuleDebuggerEditorProperties();
     this.processHandler = result.getProcessHandler();
     this.executionConsole = result.getExecutionConsole();

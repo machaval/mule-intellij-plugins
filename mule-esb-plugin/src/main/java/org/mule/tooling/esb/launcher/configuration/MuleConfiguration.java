@@ -90,15 +90,7 @@ public class MuleConfiguration extends ModuleBasedConfiguration implements Modul
     @Override
     public Collection<Module> getValidModules()
     {
-        final List<Module> validModules = new ArrayList<>();
-
-        final ModuleManager moduleManager = ModuleManager.getInstance(this.project);
-        Module[] allModules = moduleManager.getModules();
-        for (Module m : allModules) {
-            if (MuleConfigUtils.isMuleDomainModule(m) || MuleConfigUtils.isMuleModule(m))
-                validModules.add(m);
-        }
-        return validModules;
+        return MuleConfigUtils.getMuleModules(this.project, true);
     }
 
 
