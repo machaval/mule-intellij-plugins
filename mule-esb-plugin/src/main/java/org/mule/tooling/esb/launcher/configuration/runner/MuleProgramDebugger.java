@@ -120,7 +120,7 @@ public class MuleProgramDebugger extends GenericDebuggerRunner {
             //Init Mule Debug Process
             final MuleRunnerState muleRunnerState = (MuleRunnerState) state;
             muleDebuggerSession.connectAsync(muleRunnerState.getHost(), muleRunnerState.getPort());
-            final MuleDebugProcess muleDebugProcess = new MuleDebugProcess(session, muleDebuggerSession, executionResult);
+            final MuleDebugProcess muleDebugProcess = new MuleDebugProcess(session, muleDebuggerSession, executionResult, null);
 
             //Register All Processes
             context.put(JAVA_CONTEXT, javaDebugProcess);

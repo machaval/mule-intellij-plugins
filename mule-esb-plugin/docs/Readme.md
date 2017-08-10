@@ -101,6 +101,8 @@ To debug a remote Mule instance, select **Run | Edit configurations...**, or sel
 
 Set the name for the new configuration and change the host and port where the Mule container is running. Right below the host and port there's a list of additional command line parameters that must be passed to the Mule instance. See the **[Starting Mule Server In Debug Mode](https://docs.mulesoft.com/anypoint-studio/v/6/studio-visual-debugger#debugging-remotely)** section of the MuleSoft Anypoint Platform documentation for more details.
 
+If the deployed artifact name does not match the project or module name, make sure the **Customize deployed applications names** checkbox is selected, and then set the deployed artifact name in the table below.
+
 ## Encrypting and decrypting properties
 
 To encrypt a property, open the `.properties` file and either a) right-click on the property name, or b) open the **Structure** view and right-click on the property name.

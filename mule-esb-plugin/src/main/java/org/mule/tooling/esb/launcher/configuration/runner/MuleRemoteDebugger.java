@@ -21,50 +21,59 @@ import org.mule.tooling.esb.debugger.MuleDebugProcess;
 import org.mule.tooling.esb.debugger.session.MuleDebuggerSession;
 import org.mule.tooling.esb.launcher.configuration.MuleRemoteConfiguration;
 
+import java.util.Map;
+
 
 public class MuleRemoteDebugger extends GenericDebuggerRunner {
 
-  @NonNls
-  private static final String ID = "MuleESBDebuggerRunner";
-  public static final String JAVA_CONTEXT = "Java";
-  public static final String MULE_CONTEXT = "Mule";
+    @NonNls
+    private static final String ID = "MuleESBDebuggerRunner";
+    public static final String JAVA_CONTEXT = "Java";
+    public static final String MULE_CONTEXT = "Mule";
 
-  public MuleRemoteDebugger() {
-    super();
-  }
+    public MuleRemoteDebugger() {
+        super();
+    }
 
-  @NotNull
-  @Override
-  public String getRunnerId() {
-    return ID;
-  }
+    @NotNull
+    @Override
+    public String getRunnerId() {
+        return ID;
+    }
 
-  @Override
-  public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-    return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof MuleRemoteConfiguration;
-  }
+    @Override
+    public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
+        return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof MuleRemoteConfiguration;
+    }
 
-  @Override
-  protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
-    FileDocumentManager.getInstance().saveAllDocuments();
-    return createContentDescriptor(state, env);
-  }
+    @Override
+    protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
+        FileDocumentManager.getInstance().saveAllDocuments();
+        return createContentDescriptor(state, env);
+    }
 
-  @Nullable
-  protected RunContentDescriptor attachVirtualMachine(final RunProfileState state, final @NotNull ExecutionEnvironment env, RemoteConnection connection, boolean pollConnection)
-          throws ExecutionException {
-    final MuleDebuggerSession muleDebuggerSession = new MuleDebuggerSession(env.getProject());
-    final MuleRunnerState muleRunnerState = (MuleRunnerState) state;
-    muleDebuggerSession.connect(muleRunnerState.getHost(), muleRunnerState.getPort());
-    return XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter() {
-      @NotNull
-      public XDebugProcess start(@NotNull XDebugSession session) {
-        //Init Mule Debug Process
-        //Register All Processes
-        return new MuleDebugProcess(session, muleDebuggerSession, new DefaultExecutionResult());
-      }
-    }).getRunContentDescriptor();
+    @Nullable
+    protected RunContentDescriptor attachVirtualMachine(final RunProfileState state, final @NotNull ExecutionEnvironment env, RemoteConnection connection, boolean pollConnection)
+            throws ExecutionException {
+        final MuleDebuggerSession muleDebuggerSession = new MuleDebuggerSession(env.getProject());
 
-  }
+        //TODO - pass the module name to the muleDebuggerSession
+        final MuleRemoteConfiguration configuration = (MuleRemoteConfiguration) env.getRunProfile();
+
+        final MuleRunnerState muleRunnerState = (MuleRunnerState) state;
+        muleDebuggerSession.connect(muleRunnerState.getHost(), muleRunnerState.getPort());
+        return XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter() {
+            @NotNull
+            public XDebugProcess start(@NotNull XDebugSession session) {
+                //Init Mule Debug Process
+                //Register All Processes
+                Map<String, String> modulesToAppsMap = null;
+                if (configuration.isCustomAppsMap())
+                    modulesToAppsMap = configuration.getModulesToAppsMap();
+                return new MuleDebugProcess(session, muleDebuggerSession, new DefaultExecutionResult(), modulesToAppsMap);
+            }
+        }).getRunContentDescriptor();
+
+    }
 
 }

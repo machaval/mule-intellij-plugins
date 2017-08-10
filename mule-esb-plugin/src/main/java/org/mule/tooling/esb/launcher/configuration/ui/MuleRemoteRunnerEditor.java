@@ -10,25 +10,34 @@ import javax.swing.*;
 
 public class MuleRemoteRunnerEditor extends SettingsEditor<MuleRemoteConfiguration> {
 
-  private MuleRemoteDebuggerConfPanel muleRemoteDebuggerConfPanel;
-  public MuleRemoteRunnerEditor() {
-    muleRemoteDebuggerConfPanel = new MuleRemoteDebuggerConfPanel();
-  }
+    private MuleRemoteDebuggerConfPanel muleRemoteDebuggerConfPanel;
 
-  @Override
-  protected void resetEditorFrom(@NotNull MuleRemoteConfiguration configuration) {
-    muleRemoteDebuggerConfPanel.updateFromConfig(configuration);
-  }
+    public MuleRemoteRunnerEditor() {
+        muleRemoteDebuggerConfPanel = new MuleRemoteDebuggerConfPanel();
+    }
 
-  @Override
-  protected void applyEditorTo(@NotNull MuleRemoteConfiguration configuration) throws ConfigurationException {
-    configuration.setHost(muleRemoteDebuggerConfPanel.getHostText());
-    configuration.setPort(muleRemoteDebuggerConfPanel.getPortNumber());
-  }
+    public MuleRemoteRunnerEditor(MuleRemoteConfiguration runnerConfiguration)
+    {
+        this.muleRemoteDebuggerConfPanel = new MuleRemoteDebuggerConfPanel();
+        super.resetFrom(runnerConfiguration);
+    }
 
-  @NotNull
-  @Override
-  protected JComponent createEditor() {
-    return muleRemoteDebuggerConfPanel.getMainPanel();
-  }
+    @Override
+    protected void resetEditorFrom(@NotNull MuleRemoteConfiguration configuration) {
+        muleRemoteDebuggerConfPanel.updateFromConfig(configuration);
+    }
+
+    @Override
+    protected void applyEditorTo(@NotNull MuleRemoteConfiguration configuration) throws ConfigurationException {
+        configuration.setHost(muleRemoteDebuggerConfPanel.getHostText());
+        configuration.setPort(muleRemoteDebuggerConfPanel.getPortNumber());
+        configuration.setCustomAppsMap(muleRemoteDebuggerConfPanel.isCustomAppsMapping());
+        configuration.setModulesToAppsMap(muleRemoteDebuggerConfPanel.getModuleToAppsMap());
+    }
+
+    @NotNull
+    @Override
+    protected JComponent createEditor() {
+        return muleRemoteDebuggerConfPanel.getMainPanel();
+    }
 }

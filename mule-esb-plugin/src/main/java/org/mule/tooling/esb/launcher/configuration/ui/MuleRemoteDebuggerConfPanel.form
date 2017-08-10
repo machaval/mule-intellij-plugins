@@ -9,7 +9,7 @@
     <border type="none"/>
     <children>
       <grid id="c8cfd" layout-manager="FormLayout">
-        <rowspec value="center:d:grow"/>
+        <rowspec value="center:p:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:100px:grow"/>
@@ -18,7 +18,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:100px:grow"/>
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="etched" title="Settings" title-justification="1"/>
@@ -63,7 +63,7 @@
           </component>
         </children>
       </grid>
-      <grid id="7ba2" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="7ba2" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -94,12 +94,29 @@
               <text value="Mule launcher command line parameters:"/>
             </properties>
           </component>
-          <component id="522c3" class="javax.swing.JSeparator">
+          <component id="7b91d" class="javax.swing.JCheckBox" binding="customizeDeployedApps">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Customize deployed applications names"/>
+            </properties>
+          </component>
+          <scrollpane id="64fea">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-          </component>
+            <border type="none"/>
+            <children>
+              <component id="d5e67" class="javax.swing.JTable" binding="appsMap" custom-create="true">
+                <constraints/>
+                <properties>
+                  <enabled value="false"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <vspacer id="a6025">
