@@ -35,7 +35,6 @@ import org.mule.tooling.esb.debugger.MuleDebugProcess;
 import org.mule.tooling.esb.debugger.session.MessageReceivedListener;
 import org.mule.tooling.esb.debugger.session.MuleDebuggerSession;
 import org.mule.tooling.esb.launcher.configuration.MuleRemoteConfiguration;
-
 import java.util.List;
 import java.util.Map;
 
@@ -150,11 +149,6 @@ public class MuleRemoteDebugger extends GenericDebuggerRunner {
                 return null;
             }
         }
-
-
-
-
     }
-
 
 }

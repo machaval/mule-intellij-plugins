@@ -60,7 +60,6 @@ public class MuleRemoteDebuggerConfPanel {
         hostTextField.setText(configuration.getHost());
         portTextField.setText(String.valueOf(configuration.getPort()));
         jvmPortTextField.setText(String.valueOf(configuration.getJvmPort()));
-
         customizeDeployedApps.setSelected(configuration.isCustomAppsMap());
 
         //if (configuration.isCustomAppsMap()) {
