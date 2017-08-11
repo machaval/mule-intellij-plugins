@@ -99,7 +99,7 @@ To debug a remote Mule instance, select **Run | Edit configurations...**, or sel
 
 ![Remote Debug Configuration](images/remoteDebugConfiguration.png)
 
-Set the name for the new configuration and change the host and port where the Mule container is running. Right below the host and port there's a list of additional command line parameters that must be passed to the Mule instance. See the **[Starting Mule Server In Debug Mode](https://docs.mulesoft.com/anypoint-studio/v/6/studio-visual-debugger#debugging-remotely)** section of the MuleSoft Anypoint Platform documentation for more details.
+Set the name for the new configuration and change the host and port where the Mule container is running. Also set the remote JVM debug port so that the debugger stops at breakpoints inside Java classes. Right below the host and port there's a list of additional command line parameters that must be passed to the Mule instance. See the **[Starting Mule Server In Debug Mode](https://docs.mulesoft.com/anypoint-studio/v/6/studio-visual-debugger#debugging-remotely)** section of the MuleSoft Anypoint Platform documentation for more details.
 
 If the deployed artifact name does not match the project or module name, make sure the **Customize deployed applications names** checkbox is selected, and then set the deployed artifact name in the table below.
 
