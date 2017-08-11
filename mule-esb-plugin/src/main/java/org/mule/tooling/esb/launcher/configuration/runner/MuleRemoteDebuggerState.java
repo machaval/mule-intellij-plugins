@@ -14,10 +14,12 @@ public class MuleRemoteDebuggerState implements MuleRunnerState, RemoteState {
 
   private String host;
   private int port;
+  private int jvmPort;
 
-  public MuleRemoteDebuggerState(String host, int port) {
+  public MuleRemoteDebuggerState(String host, int port, int jvmPort) {
     this.host = host;
     this.port = port;
+    this.jvmPort = jvmPort;
   }
 
   @Override
@@ -32,7 +34,7 @@ public class MuleRemoteDebuggerState implements MuleRunnerState, RemoteState {
 
   @Override
   public RemoteConnection getRemoteConnection() {
-    return new RemoteConnection(true, host, 5005 + "", false);
+    return new RemoteConnection(true, host, jvmPort + "", false);
   }
 
   @Nullable

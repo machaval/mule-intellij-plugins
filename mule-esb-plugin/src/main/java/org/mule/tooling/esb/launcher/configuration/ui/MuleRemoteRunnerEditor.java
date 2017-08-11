@@ -31,6 +31,7 @@ public class MuleRemoteRunnerEditor extends SettingsEditor<MuleRemoteConfigurati
     protected void applyEditorTo(@NotNull MuleRemoteConfiguration configuration) throws ConfigurationException {
         configuration.setHost(muleRemoteDebuggerConfPanel.getHostText());
         configuration.setPort(muleRemoteDebuggerConfPanel.getPortNumber());
+        configuration.setJvmPort(muleRemoteDebuggerConfPanel.getJvmPortNumber());
         configuration.setCustomAppsMap(muleRemoteDebuggerConfPanel.isCustomAppsMapping());
         configuration.setModulesToAppsMap(muleRemoteDebuggerConfPanel.getModuleToAppsMap());
     }
