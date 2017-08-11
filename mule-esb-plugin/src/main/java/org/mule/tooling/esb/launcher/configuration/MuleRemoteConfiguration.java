@@ -26,11 +26,14 @@ import java.util.*;
 public class MuleRemoteConfiguration extends LocatableConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction, RemoteRunProfile {
 
     public static final String PORT_PROP_NAME = "mule.remote.port";
+    public static final String JVM_PORT_PROP_NAME = "mule.jvm.remote.port";
     public static final String HOST_PROP_NAME = "mule.remote.host";
     public static final String ISCUSTOMMAP_PROP_NAME = "mule.is.custom.map";
     public static final String MODULE_NAME_PREFIX = "mule.module.";
 
     private int port = 6666;
+    private int jvmPort = 5005;
+
     private String host = "localhost";
     private boolean isCustomAppsMap = false;
 
@@ -43,7 +46,7 @@ public class MuleRemoteConfiguration extends LocatableConfigurationBase implemen
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-        return new MuleRemoteDebuggerState(host, port);
+        return new MuleRemoteDebuggerState(host, port, jvmPort);
     }
 
     @Override
@@ -51,6 +54,11 @@ public class MuleRemoteConfiguration extends LocatableConfigurationBase implemen
         super.readExternal(element);
         try {
             this.port = Integer.parseInt(JDOMExternalizerUtil.readField(element, PORT_PROP_NAME, "6666"));
+        } catch (Exception e) {
+            //Ignore bad ports
+        }
+        try {
+            this.jvmPort = Integer.parseInt(JDOMExternalizerUtil.readField(element, JVM_PORT_PROP_NAME, "5005"));
         } catch (Exception e) {
             //Ignore bad ports
         }
@@ -71,6 +79,7 @@ public class MuleRemoteConfiguration extends LocatableConfigurationBase implemen
         // Stores the values of this class into the parent
         JDOMExternalizerUtil.writeField(element, HOST_PROP_NAME, this.host);
         JDOMExternalizerUtil.writeField(element, PORT_PROP_NAME, String.valueOf(this.port));
+        JDOMExternalizerUtil.writeField(element, JVM_PORT_PROP_NAME, String.valueOf(this.jvmPort));
         JDOMExternalizerUtil.writeField(element, ISCUSTOMMAP_PROP_NAME, String.valueOf(isCustomAppsMap));
 
         if (modulesToAppsMap != null) {
@@ -86,6 +95,14 @@ public class MuleRemoteConfiguration extends LocatableConfigurationBase implemen
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public int getJvmPort() {
+        return jvmPort;
+    }
+
+    public void setJvmPort(int jvmPort) {
+        this.jvmPort = jvmPort;
     }
 
     public String getHost() {

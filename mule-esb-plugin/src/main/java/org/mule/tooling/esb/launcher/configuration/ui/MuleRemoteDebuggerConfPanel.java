@@ -26,6 +26,7 @@ public class MuleRemoteDebuggerConfPanel {
     private JPanel mainPanel;
     private JCheckBox customizeDeployedApps;
     private JTable appsMap;
+    private JFormattedTextField jvmPortTextField;
 
     public MuleRemoteDebuggerConfPanel() {
 
@@ -58,6 +59,8 @@ public class MuleRemoteDebuggerConfPanel {
     public void updateFromConfig(MuleRemoteConfiguration configuration) {
         hostTextField.setText(configuration.getHost());
         portTextField.setText(String.valueOf(configuration.getPort()));
+        jvmPortTextField.setText(String.valueOf(configuration.getJvmPort()));
+
         customizeDeployedApps.setSelected(configuration.isCustomAppsMap());
 
         //if (configuration.isCustomAppsMap()) {
@@ -101,6 +104,14 @@ public class MuleRemoteDebuggerConfPanel {
         }
     }
 
+    public int getJvmPortNumber() {
+        try {
+            return Integer.parseInt(jvmPortTextField.getText());
+        } catch (Exception e) {
+            return 5005;
+        }
+    }
+
     public boolean isCustomAppsMapping() {
         return customizeDeployedApps.isSelected();
     }
@@ -123,6 +134,7 @@ public class MuleRemoteDebuggerConfPanel {
         formatter.setAllowsInvalid(false);
         formatter.setCommitsOnValidEdit(true);
         portTextField = new JFormattedTextField(formatter);
+        jvmPortTextField = new JFormattedTextField(formatter);
 
         appsMap = new JBTable(new ModulesTableModel());
 
