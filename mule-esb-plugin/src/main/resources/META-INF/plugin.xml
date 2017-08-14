@@ -8,6 +8,19 @@
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>v0.13</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Remote debugger recognizes both Mule and Java breakpoints</li>
+            <li>APIKit Scaffolding action publishes logs in Events Log</li>
+          </ul>
+          <ul>
+            <li>Documentation</li>
+          </ul>
+        </li>
+      </ul>
      <h1>v0.12</h1>
       <ul>
        <li>

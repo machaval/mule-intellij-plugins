@@ -9,6 +9,16 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <h1>v0.13</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Generates RAML 1.0 Types from the XSD (Beta)
+            <li>RAML Parser updated to version 1.0.14
+          </ul>
+        </li>
+      </ul>
     <h1>v0.11</h1>
       <ul>
        <li>
@@ -97,8 +107,11 @@
 
 
     <actions>
-        <!--
-        -->
+        <action id="RAML.GenerateRAMLFromXSD"
+                class="org.mule.tooling.lang.raml.actions.XSDToRAMLAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="NewGroup1"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
 
 </idea-plugin>
