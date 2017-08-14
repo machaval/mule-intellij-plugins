@@ -1,5 +1,5 @@
 # RAML plugin for IntelliJ IDEA
-**version 0.11**
+**version 0.13**
 
 
 
@@ -14,7 +14,7 @@
 ## Features
 - Supports RAML 0.8 and RAML 1.0
 - Syntax highlighting and auto completion
-
+- (Experimental) Generates RAML 1.0 types from the XSD files
 
 ## Installation
 To download and install RAML plugin:
