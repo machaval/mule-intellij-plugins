@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>org.mule.tooling.intellij.dataweave</id>
     <name>DataWeave Plugin for IntelliJ</name>
-    <version>0.11</version>
+    <version>0.13</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      DataWeave Plugin for IntelliJ. This plugin allows to edit, run and debug DataWeave files.

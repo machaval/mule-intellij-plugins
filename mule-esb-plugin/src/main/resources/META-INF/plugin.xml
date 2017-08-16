@@ -1,13 +1,26 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For IntelliJ</name>
-    <version>0.11</version>
+    <version>0.13</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule ESB Plugin For IntelliJ.
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>v0.13</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>Remote debugger recognizes both Mule and Java breakpoints</li>
+            <li>APIKit Scaffolding action publishes logs in Events Log</li>
+          </ul>
+          <ul>
+            <li>Documentation</li>
+          </ul>
+        </li>
+      </ul>
      <h1>v0.12</h1>
       <ul>
        <li>
