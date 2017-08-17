@@ -75,6 +75,7 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
         return null;
     }
 
+    @Override
     @NotNull
     public Set<String> getAvailableNamespaces(@NotNull XmlFile file, @Nullable String tagName) {
         final Module module = ModuleUtil.findModuleForPsiElement(file);
@@ -89,6 +90,12 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
                     if (metaData instanceof XmlNSDescriptorImpl) {
                         XmlNSDescriptorImpl descriptor = (XmlNSDescriptorImpl) metaData;
                         String defaultNamespace = descriptor.getDefaultNamespace();
+
+                        //Stupid HTTP module XSD weirdo
+                        if (xsd.getName().contains("mule-httpn"))
+                            defaultNamespace = "http://www.mulesoft.org/schema/mule/http";
+                        /////
+
                         if (StringUtils.isNotEmpty(defaultNamespace)) {
                             if (StringUtils.isNotEmpty(tagName)) {
                                 XmlElementDescriptor elementDescriptor = descriptor.getElementDescriptor(tagName, defaultNamespace);
@@ -108,6 +115,7 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
         return namespaces;
     }
 
+    @Override
     public Set<String> getLocations(@NotNull @NonNls final String namespace, @NotNull final XmlFile context) throws ProcessCanceledException {
         Set<String> locations = new HashSet<>();
         final Module module = ModuleUtil.findModuleForPsiElement(context);
@@ -119,7 +127,8 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
             for (Map.Entry<String, XmlFile> entry : schemas.entrySet()) {
                 final String s = getNamespace(entry.getValue(), context.getProject());
                 if (s != null && s.equals(namespace)) {
-                    locations.add(entry.getKey()); //Observe the formatting rules
+                    if (!entry.getKey().contains("mule-httpn.xsd"))
+                        locations.add(entry.getKey()); //Observe the formatting rules
                 }
             }
         } catch (Exception e) {
@@ -193,6 +202,11 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
 
     @Nullable
     private static String getNamespace(final XmlFile xmlFile, final Project project) {
+        //Stupid HTTP module XSD weirdo
+        if (xmlFile.getName().contains("mule-httpn.xsd"))
+            return "http://www.mulesoft.org/schema/mule/http";
+        /////
+
         final XmlDocument document = xmlFile.getDocument();
         if (document != null) {
             final PsiMetaData metaData = document.getMetaData();
@@ -203,6 +217,16 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
         return null;
     }
 
+    private static boolean isXSD(final XmlFile xmlFile) {
+        final XmlDocument document = xmlFile.getDocument();
+        if (document != null) {
+            final PsiMetaData metaData = document.getMetaData();
+            if (metaData instanceof XmlNSDescriptorImpl) {
+                return true;
+            }
+        }
+        return false;
+    }
     /*********************************************************************************************************************************************************
      Provides Map of schema url -> XSD name per Module
      *********************************************************************************************************************************************************/
