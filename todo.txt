@@ -38,3 +38,19 @@ String value = PropertiesComponent.getInstance().getValue( "mypropertystring" );
 TODO: Select output, e.g. from printing a Java collection and convert it to DW script.
 
 TODO: API Designer-like RAML Color Highlighter
+
+TODO: API Projects support:
+1. API Project
+
+    src/main/resources
+       {environment}
+               apidef/       - RAML, examples, schemas
+               policies/     - policy description file TBD
+               sla_tiers/
+               apidescriptor.json - general API description, endpoint, etc.
+
+2. IDE functionality
+
+   - create new project
+   - add new environment
+   - delete environment

@@ -48,8 +48,10 @@ public class MuleFrameworkConfigurable extends FrameworkSupportInModuleConfigura
             LibraryEx libraryEx = (LibraryEx)nextLib;
             if (muleHome == null && MuleLibraryKind.MULE_LIBRARY_KIND.equals(libraryEx.getKind())) {
                 MuleLibraryProperties properties = (MuleLibraryProperties)libraryEx.getProperties();
-                muleHome = properties.getState().getMuleHome();
-                break;
+                if (properties != null && properties.getState() != null) {
+                    muleHome = properties.getState().getMuleHome();
+                    break;
+                }
             }
         }
 
