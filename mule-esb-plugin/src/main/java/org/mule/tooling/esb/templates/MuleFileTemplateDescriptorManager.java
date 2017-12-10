@@ -13,6 +13,7 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
     public static final String DATA_WEAVE_FILE = "Data Weave";
     public static final String MEL_FILE = "Mel File";
     public static final String MULE_MAVEN_PROJECT = "Mule Maven Project";
+    public static final String MULE_MAVEN_MODULE = "Mule Maven Module";
     public static final String MULE_DOMAIN_MAVEN_PROJECT = "Mule Domain Maven Project";
     public static final String MULE_DEPLOY_PROPERTIES = "Mule Deploy Properties";
     public static final String MULE_DOMAIN_DEPLOY_PROPERTIES = "Mule Domain Deploy Properties";
@@ -28,6 +29,7 @@ public class MuleFileTemplateDescriptorManager implements FileTemplateGroupDescr
         group.addTemplate(new FileTemplateDescriptor(MULE_DOMAIN_CONFIGURATION_FILE, MuleIcons.MuleFileType));
         group.addTemplate(new FileTemplateDescriptor(DATA_WEAVE_FILE, MuleIcons.DataFileType));
         group.addTemplate(new FileTemplateDescriptor(MULE_MAVEN_PROJECT, MavenIcons.MavenLogo));
+        group.addTemplate(new FileTemplateDescriptor(MULE_MAVEN_MODULE, MavenIcons.MavenLogo));
         group.addTemplate(new FileTemplateDescriptor(MULE_DOMAIN_MAVEN_PROJECT, MavenIcons.MavenLogo));
         group.addTemplate(new FileTemplateDescriptor(MUNIT_FILE, MuleIcons.MUnitFileType));
         group.addTemplate(new FileTemplateDescriptor(RAML_FILE, MuleIcons.RamlFileType));

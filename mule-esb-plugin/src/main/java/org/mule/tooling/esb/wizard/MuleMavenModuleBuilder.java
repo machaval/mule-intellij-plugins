@@ -68,8 +68,12 @@ public class MuleMavenModuleBuilder extends MavenModuleBuilder implements Source
         final Project project = rootModel.getProject();
         final VirtualFile root = createAndGetContentEntry();
         rootModel.addContentEntry(root);
+
+        //Check if this is a module and has parent
+        final MavenId parentId = (this.getParentProject() != null ? this.getParentProject().getMavenId() : null);
+
         MavenUtil.runWhenInitialized(project, (DumbAwareRunnable) () -> {
-            new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root);
+            new MuleMavenProjectBuilderHelper().configure(project, getProjectId(), muleVersion, root, parentId);
         });
     }
 

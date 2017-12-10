@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenConstants;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.utils.MavenUtil;
@@ -23,7 +24,7 @@ import java.util.Properties;
 public class MuleMavenProjectBuilderHelper
 {
 
-    public void configure(final Project project, final MavenId projectId, final String muleVersion, final VirtualFile root)
+    public void configure(final Project project, final MavenId projectId, final String muleVersion, final VirtualFile root, @Nullable MavenId parentId)
     {
         try
         {
@@ -40,7 +41,11 @@ public class MuleMavenProjectBuilderHelper
             final VirtualFile testResources = VfsUtil.createDirectories(root.getPath() + "/src/test/resources");
             createLog4JTest(project, projectId, testResources);
 
-            createPomFile(project, projectId, muleVersion, root);
+            if (parentId == null)
+                createPomFile(project, projectId, muleVersion, root);
+            else
+                createModulePomFile(project, projectId, root, parentId);
+
             // execute when current dialog is closed (e.g. Project Structure)
             MavenUtil.invokeLater(project, ModalityState.NON_MODAL, () -> EditorHelper.openInEditor(getPsiFile(project, muleConfigFile)));
 
@@ -185,6 +190,38 @@ public class MuleMavenProjectBuilderHelper
     private static void showError(Project project, Throwable e)
     {
         MavenUtil.showError(project, "Failed to create a Mule project", e);
+    }
+
+    private VirtualFile createModulePomFile(final Project project, final MavenId projectId, final VirtualFile root, final MavenId parentId)
+    {
+        return new WriteCommandAction<VirtualFile>(project, "Create Mule Project", PsiFile.EMPTY_ARRAY)
+        {
+            @Override
+            protected void run(@NotNull Result<VirtualFile> result) throws Throwable
+            {
+                try
+                {
+                    VirtualFile pomFile = root.findOrCreateChildData(this, MavenConstants.POM_XML);
+                    final Properties templateProps = new Properties();
+                    templateProps.setProperty("GROUP_ID", parentId.getGroupId());
+                    templateProps.setProperty("ARTIFACT_ID", projectId.getArtifactId());
+                    templateProps.setProperty("PARENT_ID", parentId.getArtifactId());
+                    templateProps.setProperty("VERSION", parentId.getVersion());
+
+                    final FileTemplateManager manager = FileTemplateManager.getInstance(project);
+                    final FileTemplate template = manager.getInternalTemplate(MuleFileTemplateDescriptorManager.MULE_MAVEN_MODULE);
+                    final Properties defaultProperties = manager.getDefaultProperties();
+                    defaultProperties.putAll(templateProps);
+                    final String text = template.getText(defaultProperties);
+                    VfsUtil.saveText(pomFile, text);
+                    result.setResult(pomFile);
+                }
+                catch (IOException e)
+                {
+                    showError(project, e);
+                }
+            }
+        }.execute().getResultObject();
     }
 
     private VirtualFile createPomFile(final Project project, final MavenId projectId, final String muleVersion, final VirtualFile root)
