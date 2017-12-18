@@ -54,3 +54,9 @@ TODO: API Projects support:
    - create new project
    - add new environment
    - delete environment
+
+//Location of IDEA files:
+
+~/Library/Caches
+~/Library/Preferences
+~/Library/Application Support

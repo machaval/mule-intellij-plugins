@@ -1,13 +1,26 @@
 <idea-plugin version="2">
     <id>org.mule.intellij.plugin</id>
     <name>Mule ESB Plugin For IntelliJ</name>
-    <version>0.13</version>
+    <version>0.14</version>
     <vendor email="achaval@gmail.com" url="https://github.com/machaval/mule-esb-plugin">Mariano Achaval</vendor>
     <description><![CDATA[
      Mule ESB Plugin For IntelliJ.
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>v0.14</h1>
+      <ul>
+       <li>
+          <p>Enhancements</p>
+          <ul>
+            <li>A new template for the child module POM</li>
+            <li>Minor bugfixes</li>
+          </ul>
+          <ul>
+            <li>Documentation</li>
+          </ul>
+        </li>
+      </ul>
      <h1>v0.13</h1>
       <ul>
        <li>
@@ -238,6 +251,7 @@
         <internalFileTemplate name="MUnit Config"/>
         <internalFileTemplate name="MEL File"/>
         <internalFileTemplate name="Mule Maven Project"/>
+        <internalFileTemplate name="Mule Maven Module"/>
         <internalFileTemplate name="Mule Domain Maven Project"/>
         <internalFileTemplate name="log4j2"/>
         <internalFileTemplate name="Mule Deploy Properties"/>

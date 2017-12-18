@@ -76,8 +76,10 @@ public class MuleModulesCheckBoxList extends JList<JCheckBox> {
 
     public void selectModule(Module m, boolean selected) {
         DefaultListModel<JCheckBox> myModel = (DefaultListModel<JCheckBox>)getModel();
-        JCheckBox element = findCheckBox(m.getName());
-        element.setSelected(selected);
+        if (m != null) {
+            JCheckBox element = findCheckBox(m.getName());
+            element.setSelected(selected);
+        }
     }
 
     public Module[] getSelectedModules(Project p) {
