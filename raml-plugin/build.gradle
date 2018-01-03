@@ -1,3 +1,10 @@
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+		}
+	}
+}
 
 configurations {
 	compile.exclude module: 'xml-apis'
@@ -11,6 +18,7 @@ dependencies {
 }
 
 intellij {
+	version = ideaVersion
 	plugins = ["yaml"]
 	pluginName = 'raml-plugin'  
 	publish {

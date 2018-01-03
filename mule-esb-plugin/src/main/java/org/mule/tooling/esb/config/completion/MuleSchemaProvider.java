@@ -1,5 +1,11 @@
 package org.mule.tooling.esb.config.completion;
 
+import com.intellij.javaee.ExternalResourceManager;
+import com.intellij.javaee.ResourceRegistrar;
+import com.intellij.javaee.StandardResourceProvider;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -7,6 +13,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectLocator;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.Library;
@@ -66,8 +74,10 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
         }
         try {
             Map<String, XmlFile> schemas = getSchemas(module);
-            if (schemas != null)
-                return schemas.get(url);
+            if (schemas != null) {
+                XmlFile schemaFile = schemas.get(url);
+                return schemaFile;
+            }
         } catch (Exception e) {
             //e.printStackTrace();
         }
@@ -127,8 +137,16 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
             for (Map.Entry<String, XmlFile> entry : schemas.entrySet()) {
                 final String s = getNamespace(entry.getValue(), context.getProject());
                 if (s != null && s.equals(namespace)) {
-                    if (!entry.getKey().contains("mule-httpn.xsd"))
+                    if (!entry.getKey().contains("mule-httpn.xsd")) {
                         locations.add(entry.getKey()); //Observe the formatting rules
+                        XmlFile schemaFile = entry.getValue();
+                        try {
+                            ExternalResourceManager.getInstance().addResource(namespace, schemaFile.getVirtualFile().getUrl());
+                        } catch (Throwable ex) {
+                            Notifications.Bus.notify(new Notification("Schema Provider", "Schema Provider", ex.toString(),
+                                    NotificationType.ERROR));
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -157,6 +175,7 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
     }
 
     //============================================================================================================
+
     @NotNull
     private CachedValueProvider.Result<Map<String, XmlFile>> computeSchemas(@NotNull Module module) throws Exception {
         final Project project = module.getProject();

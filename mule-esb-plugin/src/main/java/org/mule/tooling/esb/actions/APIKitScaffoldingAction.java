@@ -48,9 +48,11 @@ public class APIKitScaffoldingAction extends AnAction
 
         logger.debug("*** APP DIR IS DIRECTORY = " + appDir.isDirectory());
 
+        //TODO - list all RAML files in the classpath???
         final List<File> ramlFiles = new ArrayList<File>();
         final File ramlFile = new File(file.getPath());
         ramlFiles.add(ramlFile);
+
         try
         {
             new IdeaScaffolderAPI().execute(ramlFiles, appDir, null, "3.8");

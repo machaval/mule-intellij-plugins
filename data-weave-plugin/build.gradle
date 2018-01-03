@@ -28,6 +28,7 @@ dependencies {
 }
 
 intellij {
+    version = ideaVersion
     pluginName = 'data-weave-plugin'
     publish {
         pluginId '8458'
