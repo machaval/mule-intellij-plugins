@@ -141,7 +141,12 @@ public class MuleSchemaProvider extends XmlSchemaProvider {
                         locations.add(entry.getKey()); //Observe the formatting rules
                         XmlFile schemaFile = entry.getValue();
                         try {
-                            ExternalResourceManager.getInstance().addResource(namespace, schemaFile.getVirtualFile().getUrl());
+                            String url = schemaFile.getVirtualFile().getUrl();
+                            if (url != null) {
+                                if (url.startsWith("jar://"))
+                                    url = url.substring(6);
+                                ExternalResourceManager.getInstance().addResource(namespace, url);
+                            }
                         } catch (Throwable ex) {
                             Notifications.Bus.notify(new Notification("Schema Provider", "Schema Provider", ex.toString(),
                                     NotificationType.ERROR));
