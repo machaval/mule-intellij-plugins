@@ -7,10 +7,6 @@
 
 [Installation](#installation)
 
-[Creating DataWeave files](#creating-dataweave-files)
-
-[Run/Debug configurations](#rundebug-configurations)
-
 ## Features
 - Supports RAML 0.8 and RAML 1.0
 - Syntax highlighting and auto completion
