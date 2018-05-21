@@ -7,11 +7,17 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.mule.tooling.esb.launcher.configuration.archive.MuleAppManager;
 import org.mule.tooling.esb.util.MuleConfigUtils;
 import org.mule.tooling.lang.raml.file.RamlFileType;
 import org.mule.tooling.lang.raml.util.RamlIcons;
@@ -19,10 +25,7 @@ import org.mule.tools.apikit.Scaffolder;
 import org.mule.tools.apikit.ScaffolderAPI;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class APIKitScaffoldingAction extends AnAction
 {
@@ -51,8 +54,19 @@ public class APIKitScaffoldingAction extends AnAction
         final List<File> ramlFiles = new ArrayList<File>();
         final File ramlFile = new File(file.getPath());
         ramlFiles.add(ramlFile);
+
+//TODO - list all RAML files in the project and add them too?
+//        Collection<VirtualFile> ramlFilesInProject = FilenameIndex.getAllFilesByExt(project, "raml", GlobalSearchScope.projectScope(project));
+//        for (VirtualFile vFile : ramlFilesInProject) {
+//            ramlFiles.add(new File(vFile.getPath()));
+//        }
+
+        //TODO - go through the list of modules and see if any one of them is a Mule domain
+//                if (MuleConfigUtils.isMuleDomainModule(module))
+
         try
         {
+            //TODO Mule version should be derived from Maven project?
             new IdeaScaffolderAPI().execute(ramlFiles, appDir, null, "3.8");
         } catch (RuntimeException e) {
             logger.error("FINALLY CAUGHT RAML ERROR! ", e);

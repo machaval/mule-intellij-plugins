@@ -38,7 +38,7 @@ public class MuleAppMavenHandler implements MuleAppHandler
 
             File applicationZip = null;
             final File[] zips = outputDir.listFiles((dir, name) -> name.endsWith("zip"));
-            if (zips.length > 0)
+            if (zips != null && zips.length > 0)
             {
                 applicationZip = zips[0];
             }

@@ -91,7 +91,7 @@ public class MuleDomainMavenModuleBuilder extends MavenModuleBuilder implements 
 
     public void setMuleFacet(Module module) {
         FacetType type = FacetTypeRegistry.getInstance().findFacetType(MuleFacet.ID);
-        Facet facet = type.createFacet(module, "Mule", type.createDefaultConfiguration(), null);
+        Facet facet = type.createFacet(module, type.getPresentableName(), type.createDefaultConfiguration(), null);
         ModifiableFacetModel model = FacetManager.getInstance(module).createModifiableModel();
         model.addFacet(facet);
         model.commit();

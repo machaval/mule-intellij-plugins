@@ -1,5 +1,5 @@
-include 'data-weave-plugin'
 include 'raml-plugin'
+include 'data-weave-plugin'
 include 'mule-esb-plugin'
 
 
