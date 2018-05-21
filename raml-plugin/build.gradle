@@ -7,7 +7,8 @@ sourceSets {
 }
 
 configurations {
-	compile.exclude module: 'xml-apis'
+	gen
+//	compile.exclude module: 'xml-apis'
 	all*.exclude group: 'xml-apis', module: 'xml-apis'
 	all*.exclude module: 'commons-logging'
 	all*.exclude group: 'org.slf4j'

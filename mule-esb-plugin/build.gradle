@@ -39,7 +39,7 @@ sourceSets {
 }
 
 intellij {
-    version ideaVersion
+    version = ideaVersion
     //plugins = ["maven", "groovy", 'properties', 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
     plugins = ["maven", "Groovy", 'properties', project(':data-weave-plugin'), project(':raml-plugin')]
     pluginName = 'mule-esb-plugin'
