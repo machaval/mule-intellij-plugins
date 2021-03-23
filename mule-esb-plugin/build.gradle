@@ -20,11 +20,6 @@ dependencies {
         exclude group: "org.slf4j"
     }
 
-//    compile (group: 'com.mulesoft.security', name: 'security-api', version: '1.6.0') {
-//        exclude group: 'org.mule.modules'
-//        exclude group: 'org.mule.transports'
-//    }
-
     compile (group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55')
     compile (group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3')
 }
@@ -40,10 +35,6 @@ sourceSets {
 
 intellij {
     version = ideaVersion
-    //plugins = ["maven", "groovy", 'properties', 'org.mule.tooling.intellij.dataweave', 'org.mule.tooling.intellij.raml']
-    plugins = ["maven", "Groovy", 'properties', project(':data-weave-plugin'), project(':raml-plugin')]
+    plugins = ["maven", "Groovy", 'properties', 'com.intellij.java', project(':data-weave-plugin'), project(':raml-plugin')]
     pluginName = 'mule-esb-plugin'
-    publish {
-        pluginId '8212'
-    }
 }
