@@ -224,7 +224,6 @@
         <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleFlowElementLiveTemplateContextType"/>
         <liveTemplateContext implementation="org.mule.tooling.esb.templates.MuleTopElementLiveTemplateContextType"/>
 
-<!--        <defaultLiveTemplatesProvider implementation="org.mule.tooling.esb.templates.MuleConfigLiveTemplatesProvider"/>-->
         <defaultLiveTemplates file="/liveTemplates/mule_config.xml"/>
 
         <renameHandler implementation="org.mule.tooling.esb.config.refactoring.rename.FlowRenameHandler" order="first"/>
@@ -234,8 +233,11 @@
         <xml.schemaProvider implementation="org.mule.tooling.esb.config.completion.MuleSchemaProvider"/>
 
         <!--MEL Support-->
-<!--        <fileTypeFactory implementation="org.mule.tooling.esb.lang.mel.MelFileTypeFactory"/>-->
-        <fileType name="Mel" language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.MelFileType" extensions="mel"/>
+        <fileType name="Mel"
+                  language="Mel"
+                  implementationClass="org.mule.tooling.esb.lang.mel.MelFileType"
+                  extensions="mel"
+                  fieldName="INSTANCE"/>
         <lang.parserDefinition language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.parser.MelParserDefinition"/>
         <colorSettingsPage implementation="org.mule.tooling.esb.lang.mel.highlighter.MelColorSettingsPage"/>
         <lang.syntaxHighlighterFactory language="Mel"
@@ -244,8 +246,7 @@
         <lang.braceMatcher language="Mel" implementationClass="org.mule.tooling.esb.lang.mel.MelPairedBraceMatcher"/>
 
         <!-- MUnit -->
-        <dom.fileDescription implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>
-<!--        <dom.fileMetaData implementation="org.mule.tooling.esb.MUnitDomFileDescription"/>-->
+        <dom.fileMetaData implementation="org.mule.tooling.esb.MUnitDomFileDescription" rootTagName="mule"/>
 
         <!--Templates-->
         <internalFileTemplate name="DataWeave"/>
@@ -265,10 +266,6 @@
                     factoryClass="org.mule.tooling.esb.toolwindow.globalconfigs.GlobalConfigsToolWindowFactory"/>
 
     </extensions>
-
-    <application-components>
-        <!-- Add your application components here -->
-    </application-components>
 
     <project-components>
         <component>

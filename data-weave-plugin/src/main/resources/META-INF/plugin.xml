@@ -73,9 +73,11 @@
         <configurationType implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationType"/>
         <runConfigurationProducer implementation="org.mule.tooling.lang.dw.launcher.configuration.WeaveConfigurationProducer"/>
 
-        <fileType name="DataWeave" language="Weave"
+        <fileType name="DataWeave"
+                  language="Weave"
                   implementationClass="org.mule.tooling.lang.dw.WeaveFileType"
-                  extensions="dwl;dw;wev"/>
+                  extensions="dwl;dw;wev"
+                  fieldName="INSTANCE"/>
 
         <lang.parserDefinition language="Weave" implementationClass="org.mule.tooling.lang.dw.parser.WeaveParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Weave"

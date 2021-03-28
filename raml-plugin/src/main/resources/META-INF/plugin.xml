@@ -83,7 +83,8 @@
         <fileType name="Raml"
                   language="RAML"
                   implementationClass="org.mule.tooling.lang.raml.file.RamlFileType"
-                  extensions="raml"/>
+                  extensions="raml"
+                  fieldName="INSTANCE"/>
         <lang.parserDefinition language="RAML" implementationClass="org.mule.tooling.lang.raml.parser.RamlParserDefinition"/>
         <lang.commenter language="RAML" implementationClass="org.mule.tooling.lang.raml.RamlCommenter"/>
         <lang.syntaxHighlighterFactory language="RAML" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
