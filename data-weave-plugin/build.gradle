@@ -28,6 +28,7 @@ dependencies {
 
 intellij {
     version = ideaVersion
+    plugins = ['com.intellij.java']
     pluginName = 'data-weave-plugin'
 }
 
