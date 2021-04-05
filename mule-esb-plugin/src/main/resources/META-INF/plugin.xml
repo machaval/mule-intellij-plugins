@@ -249,7 +249,7 @@
         <dom.fileMetaData implementation="org.mule.tooling.esb.MUnitDomFileDescription" rootTagName="mule"/>
 
         <!--Templates-->
-        <internalFileTemplate name="DataWeave"/>
+        <internalFileTemplate name="Data Weave"/>
         <internalFileTemplate name="Mule Config"/>
         <internalFileTemplate name="Mule Domain Config"/>
         <internalFileTemplate name="MUnit Config"/>
